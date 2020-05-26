@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:paddingStart="16dp">
+
+    <LinearLayout
+        android:id="@+id/recycler_data_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/recycler_number"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.2"
+            android:textColor="@color/colorOnSurfaceLight"
+            android:gravity="bottom"
+            android:fontFamily="@font/comfortaa_medium"
+            android:text="+7 895 742 36 15" />
+
+        <TextView
+            android:id="@+id/recycler_label"
+            android:layout_width="match_parent"
+            android:layout_height="24dp"
+            android:layout_marginTop="4dp"
+            android:textSize="18sp"
+            android:textColor="@color/colorOnSurface"
+            android:gravity="bottom"
+            android:fontFamily="@font/comfortaa_medium"
+            android:text="Long and cool name" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/recycler_img"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_more"
+        android:tint="@color/colorOnSurface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/recycler_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorDivider"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
