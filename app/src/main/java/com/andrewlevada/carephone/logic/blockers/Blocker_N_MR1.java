@@ -18,18 +18,18 @@ public class Blocker_N_MR1 extends Blocker {
 
     @Override
     public void initiateBlocking() {
-        IntentFilter intentFilter = new IntentFilter(android.intent.action.PHONE_STATE);
-        //intentFilter.addAction("PHONE_STATE");
-        receiver = new IncomingCallReceiver();
-        context.registerReceiver(receiver, intentFilter);
+//        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_CALL);
+//        //intentFilter.addAction("PHONE_STATE");
+//        receiver = new IncomingCallReceiver();
+//        context.registerReceiver(receiver, intentFilter);
     }
 
     @Override
     public void onDestroy() {
-        if (receiver != null) {
-            context.unregisterReceiver(receiver);
-            receiver = null;
-        }
+//        if (receiver != null) {
+//            context.unregisterReceiver(receiver);
+//            receiver = null;
+//        }
     }
 
     public static class IncomingCallReceiver extends BroadcastReceiver {
@@ -55,6 +55,7 @@ public class Blocker_N_MR1 extends Blocker {
                 m.setAccessible(true);
                 ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
 
+                Toolbox.FastLog("DONE");
                 telephonyService.endCall();
 //                if (number == null || !WhitelistAccesser.isInList(number)) {
 //                    telephonyService.endCall();

@@ -14,6 +14,14 @@ public class WhitelistAccesser {
         whitelist.add(new PhoneNumber("+7 984 567 24 59", "Человек"));
         whitelist.add(new PhoneNumber("+7 970 687 36 85", "Котттичичечичек"));
         whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
+        whitelist.add(new PhoneNumber("+7 863 234 23 74", "Hello world"));
     }
 
     public static boolean isInList(@NonNull String number) {

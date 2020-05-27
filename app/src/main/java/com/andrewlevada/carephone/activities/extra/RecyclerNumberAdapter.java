@@ -25,25 +25,6 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
         this.dataset = dataset;
         this.isExtended = isExtended;
         context = recyclerView.getContext();
-
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback =
-                new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-
-                    @Override
-                    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                        return false;
-                    }
-
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        int position = viewHolder.getAdapterPosition();
-                        dataset.remove(position);
-                        notifyDataSetChanged();
-                    }
-                };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @NonNull

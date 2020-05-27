@@ -7,8 +7,15 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.transition.AutoTransition;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
@@ -18,6 +25,11 @@ public class HomeActivity extends AppCompatActivity {
     private Blocker blocker;
     private int currentHomeFragmentId;
 
+    private ConstraintLayout layout;
+
+    private ConstraintSet defaultConstraint;
+    private ConstraintSet fullscreenConstraint;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +37,19 @@ public class HomeActivity extends AppCompatActivity {
 
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
+        layout = findViewById(R.id.home_layout);
+
+        // Setup ConstraintSets for fullscreen animations
+        defaultConstraint = new ConstraintSet();
+        defaultConstraint.clone(layout);
+        fullscreenConstraint = new ConstraintSet();
+        fullscreenConstraint.load(getApplicationContext(), R.layout.activity_home_fullscreen);
 
         // Loading default learn fragment screen
-        loadHomeFragment(new WhitelistFragment(), R.id.home_nav_list);
+        loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
 
         // Process bottom navigation buttons clicks
+        final HomeActivity itself = this;
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -44,7 +64,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.home_nav_list:
-                        fragment = new WhitelistFragment();
+                        fragment = new WhitelistFragment(itself);
                         break;
 
                     case R.id.home_nav_stats:
@@ -93,6 +113,24 @@ public class HomeActivity extends AppCompatActivity {
         transition.commit();
 
         return true;
+    }
+
+    public void updateFullscreen(boolean extend) {
+        ConstraintSet constraintSet;
+
+        // Load needed layout
+        if (extend) constraintSet = fullscreenConstraint;
+        else constraintSet = defaultConstraint;
+
+        // Setup transition
+        Transition transition = new AutoTransition();
+        transition.setDuration(600);
+        if (extend) transition.setInterpolator(new FastOutSlowInInterpolator());
+        else transition.setInterpolator(new FastOutLinearInInterpolator());
+
+        // Make transition
+        TransitionManager.beginDelayedTransition(layout, transition);
+        constraintSet.applyTo(layout);
     }
 
     @Override

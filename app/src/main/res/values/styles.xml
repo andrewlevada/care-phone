@@ -1,5 +1,5 @@
 <resources>
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
@@ -7,9 +7,34 @@
         <item name="android:colorBackground">@color/colorPrimary</item>
 
         <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="colorOnBackground">@color/colorOnBackground</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
+
+        <item name="toolbarStyle">@style/Widget.Custom.Toolbar</item>
+    </style>
+
+    <style name="Widget.Custom.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+        <item name="titleTextAppearance">@style/TextAppearance.Toolbar.Headline6</item>
+        <item name="subtitleTextAppearance">@style/TextAppearance.Toolbar.Subtitle1</item>
+    </style>
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+    </style>
+
+    <style name="TextAppearance.Toolbar.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/roboto_slab_bold</item>
+        <item name="android:fontFamily">@font/roboto_slab_bold</item>
+    </style>
+
+    <style name="TextAppearance.Toolbar.Subtitle1" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/roboto_slab_regular</item>
+        <item name="android:fontFamily">@font/roboto_slab_regular</item>
     </style>
 </resources>
