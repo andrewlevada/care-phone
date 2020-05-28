@@ -95,8 +95,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load whitelist blocker
         blocker = Blocker.getSuitableVersion(getApplicationContext());
-        if (blocker == null) {
-        } // TODO: Process phone with wrong api
+        if (blocker == null) { } // TODO: Process phone with wrong api
         else blocker.initiateBlocking();
     }
 

@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".logic.blockers.Blocker_N_MR1$IncomingCallReceiver">
+        <receiver android:name=".logic.blockers.Blocker_N_MR1$IncomingCallReceiver" android:enabled="true" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>

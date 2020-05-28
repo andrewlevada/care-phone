@@ -1,12 +1,14 @@
 package com.andrewlevada.carephone.activities;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,16 +16,9 @@ import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerNumberAdapter;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
-
-import static android.view.View.GONE;
 
 public class WhitelistFragment extends Fragment {
     private RecyclerView recyclerView;
@@ -41,7 +36,7 @@ public class WhitelistFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public WhitelistFragment(HomeActivity parentingActivity) {
+    WhitelistFragment(HomeActivity parentingActivity) {
         this.parentingActivity = parentingActivity;
     }
 
@@ -102,7 +97,7 @@ public class WhitelistFragment extends Fragment {
         Transition transition = new AutoTransition();
         transition.setDuration(600);
         if (doExtend) transition.setInterpolator(new FastOutSlowInInterpolator());
-        else transition.setInterpolator(new FastOutLinearInInterpolator());
+        else transition.setInterpolator(new FastOutSlowInInterpolator());
 
         // Make transition
         TransitionManager.beginDelayedTransition(layout, transition);
