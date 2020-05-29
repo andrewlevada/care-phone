@@ -1,48 +1,16 @@
 package com.andrewlevada.carephone.logic.blockers;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.telephony.TelephonyManager;
 
-import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.android.internal.telephony.ITelephony;
 
 import java.lang.reflect.Method;
 
 public class Blocker_N_MR1 extends Blocker {
 
-    @Override
-    public void initiateBlocking() {
-        // Receiver is processed in manifest
-    }
-
-    @Override
-    public void onDestroy() {
-        // Receiver is processed in manifest
-    }
-
-    public static class IncomingCallReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N_MR1
-                || intent.getAction() == null
-                || !intent.getAction().equals("android.intent.action.PHONE_STATE")) return;
-
-            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String number = intent.getExtras() != null ?
-                    intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
-
-            if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) return;
-
-            if (number == null || !WhitelistAccesser.isInList(number)) declineCall(context);
-            else continueCall(context);
-        }
-    }
-
-    private static void declineCall(Context context) {
+    void declineCall(Context context) {
         try {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (telephonyManager == null) return;
@@ -59,12 +27,8 @@ public class Blocker_N_MR1 extends Blocker {
         }
     }
 
-    private static void continueCall(Context context) {
+    void continueCall(Context context) {
 //        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 //        if (audioManager != null) audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-    }
-
-    Blocker_N_MR1(Context context) {
-        super(context);
     }
 }

@@ -26,7 +26,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeActivity extends AppCompatActivity {
-    private Blocker blocker;
     private int currentHomeFragmentId;
 
     private ConstraintLayout layout;
@@ -108,9 +107,9 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
         // Load whitelist blocker
-        blocker = Blocker.getSuitableVersion(getApplicationContext());
-        if (blocker == null) { } // TODO: Process phone with wrong api
-        else blocker.initiateBlocking();
+        if (!Blocker.enable()) {
+            // TODO: Process unsupported device
+        }
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id) {
@@ -156,11 +155,5 @@ public class HomeActivity extends AppCompatActivity {
         // Make transition
         TransitionManager.beginDelayedTransition(layout, transition);
         constraintSet.applyTo(layout);
-    }
-
-    @Override
-    protected void onDestroy() {
-        blocker.onDestroy();
-        super.onDestroy();
     }
 }
