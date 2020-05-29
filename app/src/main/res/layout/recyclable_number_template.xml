@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="top"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="64dp"
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
@@ -41,10 +41,11 @@
 
     <ImageView
         android:id="@+id/recycler_img"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:padding="8dp"
         android:src="@drawable/ic_more"
         android:tint="@color/colorOnSurface"
         app:layout_constraintEnd_toEndOf="parent"

@@ -20,7 +20,7 @@ public class WhitelistAccesser {
         number = number.replaceAll("\\s","").toLowerCase();
 
         for (PhoneNumber phoneNumber : whitelist) {
-            String tempPhoneNumber = phoneNumber.number.replaceAll("\\s","").toLowerCase();
+            String tempPhoneNumber = phoneNumber.phone.replaceAll("\\s","").toLowerCase();
             if (number.equals(tempPhoneNumber)) return true;
 
             while (number.length() != tempPhoneNumber.length()) {

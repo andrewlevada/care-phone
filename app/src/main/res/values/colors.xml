@@ -5,6 +5,7 @@
     <color name="colorSurface">#FFFFFF</color>
 
     <color name="colorOnSurface">#212121</color>
+    <color name="colorOnSurfaceDark">#161616</color>
     <color name="colorOnSurfaceLight">#666666</color>
     <color name="colorOnBackground">#FFFFFF</color>
     <color name="colorOnPrimary">#FFFFFF</color>

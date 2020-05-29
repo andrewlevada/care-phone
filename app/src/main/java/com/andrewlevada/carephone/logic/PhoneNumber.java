@@ -5,11 +5,11 @@ import androidx.annotation.Nullable;
 
 public class PhoneNumber {
     @NonNull
-    public String number;
+    public String phone;
     public String label;
 
-    public PhoneNumber(@NonNull String number, @Nullable String label) {
-        this.number = number;
+    public PhoneNumber(@NonNull String phone, @Nullable String label) {
+        this.phone = phone;
         this.label = label;
     }
 }

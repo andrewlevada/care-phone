@@ -44,4 +44,30 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/backdrop_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorOnSurface"
+        android:elevation="0dp"
+        app:layout_constraintBottom_toTopOf="parent"
+        android:layout_marginBottom="1dp"
+        app:navigationIcon="@drawable/ic_back_onprimary" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/backdrop_guideline"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"/>
+
+    <LinearLayout
+        android:id="@+id/backdrop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="parent"
+        android:background="@color/colorSurface"
+        android:elevation="16dp"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

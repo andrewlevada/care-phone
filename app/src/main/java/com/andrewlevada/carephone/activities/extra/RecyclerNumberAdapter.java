@@ -1,12 +1,14 @@
 package com.andrewlevada.carephone.activities.extra;
 
 import android.content.Context;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
@@ -20,11 +22,10 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
     private Context context;
     private boolean isExtended;
 
-    public RecyclerNumberAdapter(RecyclerView recyclerView, final List<PhoneNumber> dataset,
-                                 boolean isExtended) {
+    public RecyclerNumberAdapter(RecyclerView recyclerView, final List<PhoneNumber> dataset) {
         this.dataset = dataset;
-        this.isExtended = isExtended;
         context = recyclerView.getContext();
+        isExtended = false;
     }
 
     @NonNull
@@ -41,15 +42,19 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
         ViewGroup item = (ViewGroup) holder.itemView;
         PhoneNumber number = dataset.get(position);
 
-        ((TextView) item.findViewById(R.id.recycler_number)).setText(number.number);
+        ((TextView) item.findViewById(R.id.recycler_number)).setText(number.phone);
         ((TextView) item.findViewById(R.id.recycler_label)).setText(number.label);
 
         // Show and process additional image button if recycler view is extended
         if (isExtended) {
+            item.findViewById(R.id.recycler_img).setVisibility(View.VISIBLE);
             item.findViewById(R.id.recycler_img).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO: Extend more options
+                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY, R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
+                    popupMenu.getMenuInflater().inflate(R.menu.whitelist_editor, popupMenu.getMenu());
+                    popupMenu.show();
+                    popupMenu.setOnMenuItemClickListener(new OnMenuItemClick(position));
                 }
             });
         } else item.findViewById(R.id.recycler_img).setVisibility(View.GONE);
@@ -63,10 +68,40 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
         return dataset.size();
     }
 
-    public static class BasicViewHolder extends RecyclerView.ViewHolder {
+    public boolean isExtended() {
+        return isExtended;
+    }
 
-        public BasicViewHolder(@NonNull View itemView) {
+    public void setExtended(boolean extended) {
+        isExtended = extended;
+        notifyDataSetChanged();
+    }
+
+    static class BasicViewHolder extends RecyclerView.ViewHolder {
+
+        BasicViewHolder(@NonNull View itemView) {
             super(itemView);
+        }
+    }
+
+    private class OnMenuItemClick implements PopupMenu.OnMenuItemClickListener {
+        private int index;
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            if (item.getItemId() == R.id.whitelist_editor_edit) {
+                // TODO: Implement editing on backdrop
+            } else if (item.getItemId() == R.id.whitelist_editor_delete) {
+                // TODO: Add warning for deleting
+                dataset.remove(index);
+                notifyDataSetChanged();
+            }
+
+            return false;
+        }
+
+        OnMenuItemClick(int index) {
+            this.index = index;
         }
     }
 }

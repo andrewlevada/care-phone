@@ -9,4 +9,6 @@
     <string name="whitelist_title">Белый список:</string>
     <string name="timeout_action">Временно отключить блок</string>
     <string name="add">Добавить</string>
+    <string name="general_edit">Редактировать</string>
+    <string name="general_delete">Удалить</string>
 </resources>
