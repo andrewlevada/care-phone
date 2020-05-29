@@ -89,6 +89,10 @@ public class WhitelistFragment extends Fragment {
         isFullscreen = doExtend;
         onclick.setVisibility(doExtend ? View.GONE : View.VISIBLE);
 
+        // Request fab
+        if (doExtend) parentingActivity.requestFAB(new OnFABclick());
+        else parentingActivity.hideFAB();
+
         // Load needed layout
         if (doExtend) constraintSet = fullscreenConstraint;
         else constraintSet = defaultConstraint;
@@ -110,5 +114,12 @@ public class WhitelistFragment extends Fragment {
 
         RecyclerNumberAdapter adapter = new RecyclerNumberAdapter(recyclerView, WhitelistAccesser.whitelist, false);
         recyclerView.setAdapter(adapter);
+    }
+
+    private class OnFABclick implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 }

@@ -2,10 +2,13 @@ package com.andrewlevada.carephone.activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -20,12 +23,14 @@ import androidx.transition.TransitionManager;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeActivity extends AppCompatActivity {
     private Blocker blocker;
     private int currentHomeFragmentId;
 
     private ConstraintLayout layout;
+    private FloatingActionButton fabView;
 
     private ConstraintSet defaultConstraint;
     private ConstraintSet fullscreenConstraint;
@@ -38,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
         layout = findViewById(R.id.home_layout);
+        fabView = findViewById(R.id.home_fab);
 
         // Setup ConstraintSets for fullscreen animations
         defaultConstraint = new ConstraintSet();
@@ -77,7 +83,7 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // Check for permissions
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
                 String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
@@ -85,13 +91,21 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
                 String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
                 requestPermissions(permissions, 2); // TODO: Change 2 for constant and process
             }
         }
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            NotificationManager n = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+//            if(n != null && !n.isNotificationPolicyAccessGranted()) {
+//                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+//                startActivityForResult(intent, 1); // TODO: Replace 1 with constant and process
+//            }
+//        }
 
         // Load whitelist blocker
         blocker = Blocker.getSuitableVersion(getApplicationContext());
@@ -105,6 +119,9 @@ public class HomeActivity extends AppCompatActivity {
         // Remember switching fragment
         currentHomeFragmentId = id;
 
+        // Hide fab. If fragment needs it, it can request it
+        fabView.hide();
+
         // Make transition between fragments
         FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
         transition.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
@@ -112,6 +129,15 @@ public class HomeActivity extends AppCompatActivity {
         transition.commit();
 
         return true;
+    }
+
+    public void requestFAB(@Nullable View.OnClickListener onClickListener) {
+        fabView.show();
+        fabView.setOnClickListener(onClickListener);
+    }
+
+    public void hideFAB() {
+        fabView.hide();
     }
 
     public void updateFullscreen(boolean extend) {

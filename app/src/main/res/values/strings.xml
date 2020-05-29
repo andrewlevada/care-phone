@@ -8,4 +8,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="whitelist_title">Белый список:</string>
     <string name="timeout_action">Временно отключить блок</string>
+    <string name="add">Добавить</string>
 </resources>

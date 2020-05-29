@@ -31,31 +31,37 @@ public class Blocker_N_MR1 extends Blocker {
                 || intent.getAction() == null
                 || !intent.getAction().equals("android.intent.action.PHONE_STATE")) return;
 
-            try {
-                String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-                String number = intent.getExtras() != null ?
-                        intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
+            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+            String number = intent.getExtras() != null ?
+                    intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
 
-                if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) return;
+            if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) return;
 
-                TelephonyManager telephonyManager =
-                        (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephonyManager == null) return;
-
-                @SuppressLint("SoonBlockedPrivateApi")
-                Method m = telephonyManager.getClass().getDeclaredMethod("getITelephony");
-
-                m.setAccessible(true);
-                ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
-                if (telephonyService == null) return;
-
-                if (number == null || !WhitelistAccesser.isInList(number)) {
-                    telephonyService.endCall();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if (number == null || !WhitelistAccesser.isInList(number)) declineCall(context);
+            else continueCall(context);
         }
+    }
+
+    private static void declineCall(Context context) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            if (telephonyManager == null) return;
+
+            @SuppressLint("SoonBlockedPrivateApi")
+            Method m = telephonyManager.getClass().getDeclaredMethod("getITelephony");
+
+            m.setAccessible(true);
+            ITelephony telephonyService = (ITelephony) m.invoke(telephonyManager);
+            if (telephonyService == null) return;
+            telephonyService.endCall();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void continueCall(Context context) {
+//        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+//        if (audioManager != null) audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
     }
 
     Blocker_N_MR1(Context context) {

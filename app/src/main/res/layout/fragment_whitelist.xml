@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_whitelist_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.WhitelistFragment"
-    android:id="@+id/home_whitelist_fragment">
+    tools:context=".activities.WhitelistFragment">
 
     <RelativeLayout
         android:id="@+id/home_whitelist_layout"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:orientation="horizontal"
-        android:background="@drawable/shadow_square_round_16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shadow_square_round_16dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -51,7 +51,7 @@
         <View
             android:id="@+id/home_whitelist_onclick"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </RelativeLayout>
 
@@ -59,10 +59,10 @@
         android:id="@+id/home_timeout_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/shadow_circle"
-        android:orientation="horizontal"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/shadow_circle"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/home_whitelist_layout">
@@ -72,15 +72,15 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@drawable/round_28dp"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/home_timeout_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/timeout_action"
                 android:fontFamily="@font/comfortaa_bold"
+                android:text="@string/timeout_action"
                 android:textAllCaps="true"
                 android:textColor="@color/colorOnSurface"
                 android:textSize="15sp" />
