@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
                         break;
 
                     case R.id.home_nav_stats:
-                        // TODO: Add new fragment
+                        fragment = new StatisticsFragment(itself);
                         break;
                 }
 
