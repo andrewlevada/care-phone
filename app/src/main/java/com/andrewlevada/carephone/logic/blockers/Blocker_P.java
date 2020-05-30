@@ -7,9 +7,14 @@ import androidx.annotation.RequiresApi;
 
 import com.andrewlevada.carephone.Toolbox;
 
-public class Blocker_P extends Blocker {
+@RequiresApi(28)
+class Blocker_P extends Blocker {
 
-    @RequiresApi(28)
+    @Override
+    boolean receivedCall(Context context) {
+        return true;
+    }
+
     void declineCall(Context context) {
         Toolbox.FastLog("IN");
         try {

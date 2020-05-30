@@ -138,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
         // Load whitelist blocker
-        if (!Blocker.enable()) {
+        if (!Blocker.enable(getApplicationContext())) {
             // TODO: Process unsupported device
         }
     }

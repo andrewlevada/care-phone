@@ -10,6 +10,11 @@ import java.lang.reflect.Method;
 
 public class Blocker_N_MR1 extends Blocker {
 
+    @Override
+    boolean receivedCall(Context context) {
+        return false;
+    }
+
     void declineCall(Context context) {
         try {
             TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
