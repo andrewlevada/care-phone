@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthActivity"
+    android:background="@color/colorSurface">
+
+    <ImageView
+        android:id="@+id/auth_wave"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/middle_wave"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/auth_info_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/auth_info_first"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/colorOnPrimary"
+        android:textSize="19sp"
+        app:layout_constraintBottom_toBottomOf="@+id/auth_wave"
+        app:layout_constraintEnd_toStartOf="@+id/auth_track_right"
+        app:layout_constraintStart_toStartOf="@+id/auth_track_left"
+        app:layout_constraintTop_toTopOf="@+id/auth_wave" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/auth_phone_number"
+        app:layout_constraintBottom_toTopOf="@+id/auth_wave"
+        app:layout_constraintEnd_toStartOf="@+id/auth_track_right"
+        app:layout_constraintStart_toStartOf="@+id/auth_track_left"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/auth_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/auth_button"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:text="@string/auth_send_code"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/auth_track_right"
+        app:layout_constraintStart_toStartOf="@+id/auth_track_left"
+        app:layout_constraintTop_toBottomOf="@+id/auth_wave" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/auth_track_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/auth_track_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.8"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

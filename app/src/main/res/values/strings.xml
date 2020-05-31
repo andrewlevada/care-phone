@@ -1,14 +1,31 @@
 <resources>
     <string name="app_name">CarePhone</string>
+
     <string name="home_nav_first">Что-то</string>
     <string name="home_nav_list">Белый список</string>
     <string name="home_nav_stats">Статистика</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="whitelist_title">Белый список:</string>
+
     <string name="timeout_action">Временно отключить блок</string>
-    <string name="add">Добавить</string>
+
+    <string name="general_add">Добавить</string>
     <string name="general_edit">Редактировать</string>
     <string name="general_delete">Удалить</string>
+
+    <string name="hello_button_caretaker">Я забочусь</string>
+    <string name="hello_button_cared">Обо мне заботятся</string>
+    <string name="hello_caretaker_info">Я хочу управлять белым списком того, о ком я забочусь</string>
+    <string name="hello_cared_info">Я хочу использовать белый список на этом телефоне</string>
+
+    <string name="auth_info_first">Введите ваш номер телефона. На него предёт код подтверждения</string>
+    <string name="auth_info_second">Теперь введите код подтверждения из sms</string>
+    <string name="auth_code">Код</string>
+    <string name="auth_send_code">Отправить код</string>
+    <string name="auth_check_code">Проверить код</string>
+    <string name="auth_phone_number">Номер телефона</string>
+    <string name="auth_wrong_phone_number">Неверый номер телефона</string>
+    <string name="auth_enter_phone_number">Введите номер телефона</string>
+    <string name="auth_wrong_code">Неверый код</string>
+    <string name="auth_enter_code">Введите код</string>
 </resources>
