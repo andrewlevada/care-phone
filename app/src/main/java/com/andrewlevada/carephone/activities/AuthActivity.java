@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone;
+package com.andrewlevada.carephone.activities;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.andrewlevada.carephone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -38,7 +40,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private TextView infoTextView;
     private Button button;
-    private TextInputEditText editText;
+    private EditText editText;
 
     private FirebaseAuth auth;
     private AuthCallback authCallback;

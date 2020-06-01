@@ -1,10 +1,12 @@
-package com.andrewlevada.carephone;
+package com.andrewlevada.carephone.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.andrewlevada.carephone.R;
 
 public class HelloActivity extends AppCompatActivity {
 

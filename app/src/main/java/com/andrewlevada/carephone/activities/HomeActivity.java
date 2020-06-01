@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Loading default learn fragment screen
+        // Loading default fragment screen
         loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
 
         // Process bottom navigation buttons clicks
