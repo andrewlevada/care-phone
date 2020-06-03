@@ -2,6 +2,7 @@ package com.andrewlevada.carephone.activities;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -112,7 +114,7 @@ public class AuthActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     FirebaseUser user = task.getResult().getUser();
-                    continueToHomeActivity(user);
+                    continueToNextActivity(user);
                 } else {
                     editText.setError(getText(R.string.auth_wrong_code));
                 }
@@ -120,16 +122,17 @@ public class AuthActivity extends AppCompatActivity {
         });
     }
 
-    private void continueToHomeActivity(FirebaseUser user) {
+    private void continueToNextActivity(FirebaseUser user) {
         Log.e("AUTH_APP", "DONE: " + user.getPhoneNumber());
 
-        if (userType == TYPE_CARED) {
-            Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        } else if (userType == TYPE_CARETAKER) {
+        getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
+                .edit().putInt(PARAM_NAME, userType).apply();
 
-        }
+        Intent intent = null;
+        if (userType == TYPE_CARED) intent = new Intent(AuthActivity.this, HomeActivity.class);
+        else if (userType == TYPE_CARETAKER) intent = new Intent(AuthActivity.this, CaretakerListActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void onCodeSent() {

@@ -1,12 +1,15 @@
 package com.andrewlevada.carephone.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HelloActivity extends AppCompatActivity {
 
@@ -15,20 +18,26 @@ public class HelloActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello);
 
-        // Process buttons
-        findViewById(R.id.hello_button_cared).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchToAuth(AuthActivity.TYPE_CARED);
-            }
-        });
+        // Switch to other activity if user is authed
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Toolbox.FastLog("AUTH REDIRECT");
 
-        findViewById(R.id.hello_button_caretaker).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchToAuth(AuthActivity.TYPE_CARETAKER);
+            int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);
+
+            if (userType != -1) {
+                Intent intent = null;
+
+                if (userType == AuthActivity.TYPE_CARED) intent = new Intent(HelloActivity.this, HomeActivity.class);
+                if (userType == AuthActivity.TYPE_CARETAKER) intent = new Intent(HelloActivity.this, CaretakerListActivity.class);
+
+                startActivity(intent);
+                finish();
             }
-        });
+        }
+
+        // Process buttons
+        findViewById(R.id.hello_button_cared).setOnClickListener(v -> switchToAuth(AuthActivity.TYPE_CARED));
+        findViewById(R.id.hello_button_caretaker).setOnClickListener(v -> switchToAuth(AuthActivity.TYPE_CARETAKER));
     }
 
     private void switchToAuth(int type) {

@@ -1,7 +1,6 @@
 package com.andrewlevada.carephone.activities;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,14 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends BackdropActivity {
     private int currentHomeFragmentId;
@@ -30,14 +27,6 @@ public class HomeActivity extends BackdropActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Switch to auth activity if user is not authed
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            Toolbox.FastLog("AUTH REDIRECT");
-            Intent intent = new Intent(HomeActivity.this, HelloActivity.class);
-            startActivity(intent);
-            finish();
-        }
-
         layoutId = R.layout.activity_home;
         layoutBackdropId = R.layout.activity_home_backdrop;
         super.onCreate(savedInstanceState);
