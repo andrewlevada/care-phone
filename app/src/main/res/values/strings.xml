@@ -28,4 +28,7 @@
     <string name="auth_enter_phone_number">Введите номер телефона</string>
     <string name="auth_wrong_code">Неверый код</string>
     <string name="auth_enter_code">Введите код</string>
+
+    <string name="statistics_periods_title">Время разговоров:</string>
+    <string name="statistics_phones_title">Топ номеров:</string>
 </resources>

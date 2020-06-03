@@ -6,8 +6,6 @@
         <item name="colorSurface">@color/colorSurface</item>
         <item name="android:colorBackground">@color/colorPrimary</item>
 
-        <item name="fontFamily">@font/comfortaa_bold</item>
-
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
 
