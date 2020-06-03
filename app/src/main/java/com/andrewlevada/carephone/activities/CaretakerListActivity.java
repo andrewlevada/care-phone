@@ -1,8 +1,10 @@
 package com.andrewlevada.carephone.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 
 import com.andrewlevada.carephone.R;
@@ -24,6 +26,17 @@ public class CaretakerListActivity extends BackdropActivity {
 
         // Process fab onclick
         fab.setOnClickListener(v -> updateBackdrop(true));
+
+        // Back button processing
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(CaretakerListActivity.this, HelloActivity.class);
+                intent.putExtra(HelloActivity.INTENT_EXTRA_STAY, true);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

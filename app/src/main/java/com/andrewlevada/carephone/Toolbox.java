@@ -49,6 +49,15 @@ public class Toolbox {
         });
     }
 
+    public static String intToHoursString(int num) {
+        if (num == 0) return "Меньше часа";
+        else if (num > 9999) return "Невероятно много";
+        else if (num >= 11 && num <= 14) return num + " часов";
+        else if (num % 10 == 1) return num + " час";
+        else if (num % 10 >= 2 && num % 10 <= 4) return num + " часа";
+        else return num + " часов";
+    }
+
     public interface AuthTokenCallback {
         void onGenerated(String token);
     }

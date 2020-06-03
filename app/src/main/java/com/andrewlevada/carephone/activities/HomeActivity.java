@@ -1,12 +1,14 @@
 package com.andrewlevada.carephone.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -93,6 +95,17 @@ public class HomeActivity extends BackdropActivity {
 //                startActivityForResult(intent, 1); // TODO: Replace 1 with constant and process
 //            }
 //        }
+
+        // Back button processing
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(HomeActivity.this, HelloActivity.class);
+                intent.putExtra(HelloActivity.INTENT_EXTRA_STAY, true);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         // Load whitelist blocker
         WhitelistAccesser.getInstance().initialize(getApplicationContext());

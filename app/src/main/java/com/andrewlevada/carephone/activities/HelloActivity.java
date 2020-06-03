@@ -12,6 +12,7 @@ import com.andrewlevada.carephone.Toolbox;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HelloActivity extends AppCompatActivity {
+    public static final String INTENT_EXTRA_STAY = "INTENT_EXTRA_STAY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +20,7 @@ public class HelloActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hello);
 
         // Switch to other activity if user is authed
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && !getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false)) {
             Toolbox.FastLog("AUTH REDIRECT");
 
             int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);
@@ -36,13 +37,25 @@ public class HelloActivity extends AppCompatActivity {
         }
 
         // Process buttons
-        findViewById(R.id.hello_button_cared).setOnClickListener(v -> switchToAuth(AuthActivity.TYPE_CARED));
-        findViewById(R.id.hello_button_caretaker).setOnClickListener(v -> switchToAuth(AuthActivity.TYPE_CARETAKER));
+        findViewById(R.id.hello_button_cared).setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARED);
+            else switchTo(HomeActivity.class);
+        });
+        findViewById(R.id.hello_button_caretaker).setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARETAKER);
+            else switchTo(CaretakerListActivity.class);
+        });
     }
 
     private void switchToAuth(int type) {
         Intent intent = new Intent(HelloActivity.this, AuthActivity.class);
         intent.putExtra(AuthActivity.PARAM_NAME, type);
+        startActivity(intent);
+        finish();
+    }
+
+    private void switchTo(Class activity) {
+        Intent intent = new Intent(HelloActivity.this, activity);
         startActivity(intent);
         finish();
     }
