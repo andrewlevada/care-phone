@@ -4,21 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.HomeActivity"
-    android:id="@+id/layout">
+    tools:context=".activities.CaretakerListActivity"
+    android:id="@+id/layout"
+    android:background="@color/colorSurface">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/backdrop_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="1dp"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/backdrop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/backdrop_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/backdrop_toolbar">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

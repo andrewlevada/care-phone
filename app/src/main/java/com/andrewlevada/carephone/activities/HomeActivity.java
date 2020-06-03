@@ -3,58 +3,33 @@ package com.andrewlevada.carephone.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.transition.AutoTransition;
-import androidx.transition.Transition;
-import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends BackdropActivity {
     private int currentHomeFragmentId;
 
-    private ConstraintLayout layout;
     private FloatingActionButton fabView;
-    private ViewGroup backdrop;
-
-    private ConstraintSet defaultConstraint;
-    private ConstraintSet backdropConstraint;
-
-    private Window window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
         // Switch to auth activity if user is not authed
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             Toolbox.FastLog("AUTH REDIRECT");
@@ -63,39 +38,16 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         }
 
+        layoutId = R.layout.activity_home;
+        layoutBackdropId = R.layout.activity_home_backdrop;
+        super.onCreate(savedInstanceState);
+
         // Setup Network object
         Network.getInstance().useFirebaseAuthToken();
 
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
-        layout = findViewById(R.id.home_layout);
         fabView = findViewById(R.id.home_fab);
-        backdrop = findViewById(R.id.backdrop);
-
-        // Setup window for change of status bar color
-        window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-        // Setup backdrop
-        Point display = new Point();
-        getWindowManager().getDefaultDisplay().getSize(display);
-        backdrop.getLayoutParams().height = display.y;
-
-        // Setup ConstraintSets for fullscreen animations
-        defaultConstraint = new ConstraintSet();
-        defaultConstraint.clone(layout);
-        backdropConstraint = new ConstraintSet();
-        backdropConstraint.load(getApplicationContext(), R.layout.activity_home_backdrop);
-
-        // Setup backdrop toolbar
-        MaterialToolbar backdropToolbar = findViewById(R.id.backdrop_toolbar);
-        backdropToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateBackdrop(false);
-            }
-        });
 
         // Loading default fragment screen
         loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
@@ -178,21 +130,6 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    public void fillBackdrop(@LayoutRes int layout, @Nullable final SimpleInflater.OnViewInflated callback, @Nullable final View.OnClickListener resultOnClick) {
-        ViewGroup backdrop = findViewById(R.id.backdrop);
-        backdrop.removeAllViews();
-        SimpleInflater.inflateSmooth(new SimpleInflater.OnViewInflated() {
-            @Override
-            public void inflated(View view) {
-                if (callback != null) callback.inflated(view);
-
-                View resultButton = view.findViewById(R.id.backdrop_result_button);
-                if (resultButton != null && resultOnClick != null)
-                    resultButton.setOnClickListener(resultOnClick);
-            }
-        }, (ViewGroup) findViewById(R.id.backdrop), layout);
-    }
-
     public void requestFAB(@Nullable View.OnClickListener onClickListener) {
         fabView.show();
         fabView.setOnClickListener(onClickListener);
@@ -200,46 +137,5 @@ public class HomeActivity extends AppCompatActivity {
 
     public void hideFAB() {
         fabView.hide();
-    }
-
-    public void updateBackdrop(final boolean extend) {
-        ConstraintSet constraintSet;
-
-        // Load needed layout
-        if (extend) constraintSet = backdropConstraint;
-        else constraintSet = defaultConstraint;
-
-        // Change status bar color
-        if (extend) window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorOnSurfaceDark));
-
-        // Setup transition
-        Transition transition = new AutoTransition();
-        transition.setDuration(600);
-        if (extend) transition.setInterpolator(new FastOutSlowInInterpolator());
-        else transition.setInterpolator(new FastOutLinearInInterpolator());
-
-        final HomeActivity itself = this;
-        transition.addListener(new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(@NonNull Transition transition) { }
-
-            @Override
-            public void onTransitionEnd(@NonNull Transition transition) {
-                if (!extend) window.setStatusBarColor(ContextCompat.getColor(itself, R.color.colorPrimaryDark));
-            }
-
-            @Override
-            public void onTransitionCancel(@NonNull Transition transition) { }
-
-            @Override
-            public void onTransitionPause(@NonNull Transition transition) { }
-
-            @Override
-            public void onTransitionResume(@NonNull Transition transition) { }
-        });
-
-        // Make transition
-        TransitionManager.beginDelayedTransition(layout, transition);
-        constraintSet.applyTo(layout);
     }
 }
