@@ -14,13 +14,16 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HelloActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_STAY = "INTENT_EXTRA_STAY";
 
+    private boolean isStayState;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello);
+        isStayState = getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false);
 
         // Switch to other activity if user is authed
-        if (FirebaseAuth.getInstance().getCurrentUser() != null && !getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false)) {
+        if (FirebaseAuth.getInstance().getCurrentUser() != null && !isStayState) {
             Toolbox.FastLog("AUTH REDIRECT");
 
             int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);
@@ -39,11 +42,11 @@ public class HelloActivity extends AppCompatActivity {
         // Process buttons
         findViewById(R.id.hello_button_cared).setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARED);
-            else switchTo(HomeActivity.class);
+            else switchTo(HomeActivity.class, AuthActivity.TYPE_CARED);
         });
         findViewById(R.id.hello_button_caretaker).setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARETAKER);
-            else switchTo(CaretakerListActivity.class);
+            else switchTo(CaretakerListActivity.class, AuthActivity.TYPE_CARETAKER);
         });
     }
 
@@ -54,7 +57,10 @@ public class HelloActivity extends AppCompatActivity {
         finish();
     }
 
-    private void switchTo(Class activity) {
+    private void switchTo(Class activity, int userType) {
+        if (isStayState) getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
+                .edit().putInt(AuthActivity.PARAM_NAME, userType).apply();
+
         Intent intent = new Intent(HelloActivity.this, activity);
         startActivity(intent);
         finish();
