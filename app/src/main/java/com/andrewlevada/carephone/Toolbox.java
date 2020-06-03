@@ -7,6 +7,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
+
 /**
  * This class contains all kinds of tools
  * that could be useful during development.
@@ -31,5 +37,19 @@ public class Toolbox {
 
     public static void FastLog(String value) {
         Log.e("TEST", value);
+    }
+
+    public static void requestFirebaseAuthToken(final AuthTokenCallback callback) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            @Override
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                callback.onGenerated(task.getResult().getToken());
+            }
+        });
+    }
+
+    public interface AuthTokenCallback {
+        void onGenerated(String token);
     }
 }

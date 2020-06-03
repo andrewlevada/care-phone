@@ -2,6 +2,7 @@ package com.andrewlevada.carephone.activities;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import com.andrewlevada.carephone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -122,6 +122,14 @@ public class AuthActivity extends AppCompatActivity {
 
     private void continueToHomeActivity(FirebaseUser user) {
         Log.e("AUTH_APP", "DONE: " + user.getPhoneNumber());
+
+        if (userType == TYPE_CARED) {
+            Intent intent = new Intent(AuthActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (userType == TYPE_CARETAKER) {
+
+        }
     }
 
     private void onCodeSent() {

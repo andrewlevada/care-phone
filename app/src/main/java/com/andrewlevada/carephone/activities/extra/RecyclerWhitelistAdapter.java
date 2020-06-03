@@ -14,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.logic.PhoneNumber;
+import com.andrewlevada.carephone.logic.WhitelistAccesser;
 
-import java.util.List;
-
-public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAdapter.BasicViewHolder> {
-    private List<PhoneNumber> dataset;
+public class RecyclerWhitelistAdapter extends RecyclerView.Adapter<RecyclerWhitelistAdapter.BasicViewHolder> {
+    private WhitelistAccesser whitelistAccesser;
     private Context context;
     private boolean isExtended;
 
-    public RecyclerNumberAdapter(RecyclerView recyclerView, final List<PhoneNumber> dataset) {
-        this.dataset = dataset;
+    public RecyclerWhitelistAdapter(RecyclerView recyclerView) {
+        whitelistAccesser = WhitelistAccesser.getInstance();
         context = recyclerView.getContext();
         isExtended = false;
     }
@@ -40,7 +39,7 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
         if (context == null) return;
 
         ViewGroup item = (ViewGroup) holder.itemView;
-        PhoneNumber number = dataset.get(position);
+        PhoneNumber number = whitelistAccesser.getWhitelistElement(position);
 
         ((TextView) item.findViewById(R.id.recycler_number)).setText(number.phone);
         ((TextView) item.findViewById(R.id.recycler_label)).setText(number.label);
@@ -60,12 +59,12 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
         } else item.findViewById(R.id.recycler_img).setVisibility(View.GONE);
 
         // Hide divider on last element
-        if (position == dataset.size() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
+        if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
     }
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return whitelistAccesser.getWhitelistSize();
     }
 
     public boolean isExtended() {
@@ -93,7 +92,7 @@ public class RecyclerNumberAdapter extends RecyclerView.Adapter<RecyclerNumberAd
                 // TODO: Implement editing on backdrop
             } else if (item.getItemId() == R.id.whitelist_editor_delete) {
                 // TODO: Add warning for deleting
-                dataset.remove(index);
+                whitelistAccesser.removePhoneNumberAt(index);
                 notifyDataSetChanged();
             }
 

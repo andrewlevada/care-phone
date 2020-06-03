@@ -18,7 +18,7 @@ import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.activities.extra.RecyclerNumberAdapter;
+import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 
@@ -31,7 +31,7 @@ public class WhitelistFragment extends Fragment {
     private ConstraintSet fullscreenConstraint;
 
     private HomeActivity parentingActivity;
-    private RecyclerNumberAdapter adapter;
+    private RecyclerWhitelistAdapter adapter;
 
     private boolean isFullscreen;
 
@@ -56,6 +56,10 @@ public class WhitelistFragment extends Fragment {
         // Setup recycler view
         recyclerView = layout.findViewById(R.id.home_whitelist_recycler);
         setupRecyclerView();
+
+        // Setup Whitelist Accesser
+        WhitelistAccesser.getInstance().setAdapter(adapter);
+        WhitelistAccesser.getInstance().syncWhitelist();
 
         // Setup ConstraintSets for fullscreen animations
         defaultConstraint = new ConstraintSet();
@@ -93,6 +97,7 @@ public class WhitelistFragment extends Fragment {
         ConstraintSet constraintSet;
 
         isFullscreen = doExtend;
+        WhitelistAccesser.getInstance().syncWhitelist();
         onclick.setVisibility(doExtend ? View.GONE : View.VISIBLE);
 
         // Request fab
@@ -121,7 +126,7 @@ public class WhitelistFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecyclerNumberAdapter(recyclerView, WhitelistAccesser.whitelist);
+        adapter = new RecyclerWhitelistAdapter(recyclerView);
         recyclerView.setAdapter(adapter);
     }
 
@@ -144,10 +149,10 @@ public class WhitelistFragment extends Fragment {
             // TODO: Add more checks to data and highlight error fields
             if (label.equals("") || phone.equals("")) return;
 
-            WhitelistAccesser.whitelist.add(new PhoneNumber(phone, label));
+            WhitelistAccesser.getInstance().addToWhitelist(new PhoneNumber(phone, label));
+
             labelView.setText("");
             phoneView.setText("");
-            adapter.notifyDataSetChanged();
             parentingActivity.updateBackdrop(false);
         }
     }

@@ -68,7 +68,7 @@ public abstract class Blocker {
             if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
                 return;
 
-            if (number == null || !WhitelistAccesser.isInList(number)) blocker.declineCall(context);
+            if (number == null || !WhitelistAccesser.getInstance().isInList(number)) blocker.declineCall(context);
             else blocker.continueCall(context);
         }
     }

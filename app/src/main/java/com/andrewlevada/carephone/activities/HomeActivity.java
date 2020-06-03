@@ -1,6 +1,7 @@
 package com.andrewlevada.carephone.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
@@ -28,10 +29,14 @@ import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
+import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class HomeActivity extends AppCompatActivity {
     private int currentHomeFragmentId;
@@ -49,6 +54,17 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Switch to auth activity if user is not authed
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toolbox.FastLog("AUTH REDIRECT");
+            Intent intent = new Intent(HomeActivity.this, HelloActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        // Setup Network object
+        Network.getInstance().useFirebaseAuthToken();
 
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
@@ -138,6 +154,7 @@ public class HomeActivity extends AppCompatActivity {
 //        }
 
         // Load whitelist blocker
+        WhitelistAccesser.getInstance().initialize(getApplicationContext());
         if (!Blocker.enable(getApplicationContext())) {
             // TODO: Process unsupported device
         }
