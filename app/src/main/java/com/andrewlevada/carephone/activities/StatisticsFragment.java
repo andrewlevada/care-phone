@@ -113,7 +113,7 @@ public class StatisticsFragment extends Fragment {
         if (getContext() == null) return;
         SharedPreferences.Editor preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit();
 
-        for (int i = 0; i < Config.periodsLabels.size(); i++)
+        for (int i = 0; i < periodsHours.size(); i++)
             preferences.putInt(PREF_PERIOD_HOURS + i, periodsHours.get(i));
 
         preferences.putInt(PREF_PHONES_LENGTH, phonesLabels.size());

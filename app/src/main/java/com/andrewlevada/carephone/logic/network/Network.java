@@ -133,11 +133,11 @@ public class Network {
     // Private Logic
 
     private boolean queueIfNotAuthedYet(Runnable callback) {
-        if (authTokenCallback != null) {
-            authTokenCallback.addCallback(callback);
-            return true;
-        }
-        return false;
+        if (userToken != null) return false;
+
+        if (authTokenCallback == null) useFirebaseAuthToken();
+        authTokenCallback.addCallback(callback);
+        return true;
     }
 
     private RetrofitRequests getRetrofitRequests() {
@@ -154,10 +154,11 @@ public class Network {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 try {
-                    if (response.errorBody() != null) Toolbox.FastLog("RESPONSE ERROR: " + response.errorBody().string());
+                    if (response.errorBody() != null) Toolbox.FastLog("--------------- SERVER ERROR: " + response.errorBody().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 if (callback != null) callback.onSuccess();
             }
 
@@ -172,6 +173,12 @@ public class Network {
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
+                try {
+                    if (response.errorBody() != null) Toolbox.FastLog("--------------- SERVER ERROR: " + response.errorBody().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 if (response.body() != null) callback.onSuccess(response.body());
                 else callback.onFailure(null);
             }
