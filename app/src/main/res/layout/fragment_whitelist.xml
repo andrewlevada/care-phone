@@ -89,6 +89,40 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/whitelist_link_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shadow_circle"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/whitelist_state_layout">
+
+        <LinearLayout
+            android:id="@+id/whitelist_link_inner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/round_28dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/whitelist_link_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/comfortaa_bold"
+                android:text="@string/whitelist_link_user"
+                android:textAllCaps="true"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/home_whitelist_fullscreen_coordinator"
         android:layout_width="match_parent"

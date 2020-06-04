@@ -130,6 +130,26 @@ public class Network {
         getRetrofitRequests().getCaredList(userToken).enqueue(getDefaultOneCallback(callback));
     }
 
+    // Link
+
+    public void makeLinkRequest(@Nullable final NetworkCallbackOne<String> callback) {
+        if (queueIfNotAuthedYet(() -> makeLinkRequest(callback))) return;
+
+        getRetrofitRequests().putLink(userToken).enqueue(getDefaultOneCallback(callback));
+    }
+
+    public void removeLinkRequest(@Nullable final NetworkCallbackZero callback) {
+        if (queueIfNotAuthedYet(() -> removeLinkRequest(callback))) return;
+
+        getRetrofitRequests().deleteLink(userToken).enqueue(getDefaultVoidCallback(callback));
+    }
+
+    public void tryToLinkCaretaker(@NonNull String code, @Nullable final NetworkCallbackOne<Integer> callback) {
+        if (queueIfNotAuthedYet(() -> tryToLinkCaretaker(code, callback))) return;
+
+        getRetrofitRequests().postLink(userToken,code).enqueue(getDefaultOneCallback(callback));
+    }
+
     // Private Logic
 
     private boolean queueIfNotAuthedYet(Runnable callback) {

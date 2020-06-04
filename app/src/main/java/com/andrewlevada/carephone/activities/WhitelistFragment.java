@@ -130,6 +130,26 @@ public class WhitelistFragment extends Fragment {
             });
         });
 
+        // Link user onclick processing
+        layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
+                v -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_link,
+                        view -> {
+                        Network.getInstance().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
+                            @Override
+                            public void onSuccess(String arg) {
+                                ((TextView) view.findViewById(R.id.backdrop_code)).setText(arg);
+                                parentingActivity.doCloseLinkOnBackdropCollapse = true;
+                            }
+
+                            @Override
+                            public void onFailure(@Nullable Throwable throwable) {
+                                // TODO: Process failure better
+                                ((TextView) view.findViewById(R.id.backdrop_code)).setText("000000");
+                            }
+                        });
+                        parentingActivity.updateBackdrop(true);
+                        }, null));
+
         return layout;
     }
 
@@ -191,7 +211,7 @@ public class WhitelistFragment extends Fragment {
     }
 
     private void animateUpdateStateButton() {
-        ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(((GradientDrawable) stateOnclick.getBackground()), "color",
+        ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(stateOnclick.getBackground(), "color",
                 ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
                 ContextCompat.getColor(context, !whitelistState ? R.color.colorSurface : R.color.colorOnSurface));
         backgroundAnimation.setDuration(600);

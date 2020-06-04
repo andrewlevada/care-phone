@@ -62,11 +62,11 @@
         android:padding="16dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/backdrop_text_name_layout"
+            android:id="@+id/backdrop_code_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Имя"
+            android:hint="@string/caretaker_list_code"
             app:counterEnabled="true"
             app:counterMaxLength="40"
             app:helperTextEnabled="false"
@@ -75,34 +75,12 @@
             app:boxStrokeColor="@color/backdrop_text_field_container">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/backdrop_text_name"
+                android:id="@+id/backdrop_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorOnSurface"
                 android:textCursorDrawable="@null"
-                android:inputType="text"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/backdrop_text_phone_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Номер телефона"
-            app:helperTextEnabled="false"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_text_name_layout"
-            app:hintTextColor="@color/colorOnSurface"
-            app:boxStrokeColor="@color/backdrop_text_field_container">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/backdrop_text_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorOnSurface"
-                android:textCursorDrawable="@null"
-                android:inputType="phone" />
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,12 +88,12 @@
             android:id="@+id/backdrop_result_button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
-            android:text="Добавить"
+            android:text="@string/caretaker_list_check"
             app:backgroundTint="@color/colorOnSurface"
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_text_phone_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_code_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

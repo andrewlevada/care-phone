@@ -67,27 +67,19 @@ public abstract class BackdropActivity extends AppCompatActivity {
 
         // Setup backdrop toolbar
         MaterialToolbar backdropToolbar = findViewById(R.id.backdrop_toolbar);
-        backdropToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateBackdrop(false);
-            }
-        });
+        backdropToolbar.setNavigationOnClickListener(v -> updateBackdrop(false));
     }
 
     public void fillBackdrop(@LayoutRes int layout, @Nullable final SimpleInflater.OnViewInflated callback, @Nullable final View.OnClickListener resultOnClick) {
         ViewGroup backdrop = findViewById(R.id.backdrop);
         backdrop.removeAllViews();
-        SimpleInflater.inflateSmooth(new SimpleInflater.OnViewInflated() {
-            @Override
-            public void inflated(View view) {
-                if (callback != null) callback.inflated(view);
+        SimpleInflater.inflateSmooth(view -> {
+            if (callback != null) callback.inflated(view);
 
-                View resultButton = view.findViewById(R.id.backdrop_result_button);
-                if (resultButton != null && resultOnClick != null)
-                    resultButton.setOnClickListener(resultOnClick);
-            }
-        }, (ViewGroup) findViewById(R.id.backdrop), layout);
+            View resultButton = view.findViewById(R.id.backdrop_result_button);
+            if (resultButton != null && resultOnClick != null)
+                resultButton.setOnClickListener(resultOnClick);
+        }, findViewById(R.id.backdrop), layout);
     }
 
     public void updateBackdrop(final boolean extend) {

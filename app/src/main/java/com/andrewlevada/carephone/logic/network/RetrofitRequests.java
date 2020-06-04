@@ -60,4 +60,15 @@ public interface RetrofitRequests {
 
     @GET("/caredList")
     Call<List<String>> getCaredList(@Query("userToken") String userToken);
+
+    // Link
+
+    @PUT("/link")
+    Call<String> putLink(@Query("userToken") String userToken);
+
+    @DELETE("/link")
+    Call<Void> deleteLink(@Query("userToken") String userToken);
+
+    @POST("/link")
+    Call<Integer> postLink(@Query("userToken") String userToken, @Query("code") String code);
 }

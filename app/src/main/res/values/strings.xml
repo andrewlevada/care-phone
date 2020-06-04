@@ -8,10 +8,13 @@
     <string name="whitelist_title">Белый список:</string>
     <string name="whitelist_state_turn_off">Отключить блок</string>
     <string name="whitelist_state_turn_on">Включить блок</string>
+    <string name="whitelist_link_user">Присоединить пользователя</string>
+    <string name="whitelist_link_guide">Это - секретный код для подлючения. Введите его на устройстве, которое хотите подключить.</string>
 
     <string name="general_add">Добавить</string>
     <string name="general_edit">Редактировать</string>
     <string name="general_delete">Удалить</string>
+    <string name="general_something_wrong">Что-то пошло не так!</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -31,4 +34,8 @@
 
     <string name="statistics_periods_title">Время разговоров:</string>
     <string name="statistics_phones_title">Топ номеров:</string>
+
+    <string name="caretaker_list_code">Секретный код</string>
+    <string name="caretaker_list_wrong_code">Неверный код</string>
+    <string name="caretaker_list_check">Проверить</string>
 </resources>

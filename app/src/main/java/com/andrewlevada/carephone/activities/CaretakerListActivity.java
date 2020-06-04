@@ -3,6 +3,7 @@ package com.andrewlevada.carephone.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
@@ -33,6 +34,8 @@ public class CaretakerListActivity extends BackdropActivity {
         super.onCreate(savedInstanceState);
 
         // Find views by ids
+        final EditText codeEditText = findViewById(R.id.backdrop_code);
+        View resultButton = findViewById(R.id.backdrop_result_button);
         fab = findViewById(R.id.caretaker_list_fab);
         recyclerView = findViewById(R.id.caretaker_list_recycler);
 
@@ -51,13 +54,42 @@ public class CaretakerListActivity extends BackdropActivity {
         });
 
         setupRecyclerView();
+        syncCaredList();
 
-        // Get cared list from server
+        // Process backdrop result button onclick
+        resultButton.setOnClickListener(v -> {
+            String code = codeEditText.getText().toString();
+
+            if (code.length() != 6) {
+                codeEditText.setError(getString(R.string.caretaker_list_wrong_code));
+                return;
+            }
+
+            Network.getInstance().tryToLinkCaretaker(code, new Network.NetworkCallbackOne<Integer>() {
+                @Override
+                public void onSuccess(Integer resultCode) {
+                    if (resultCode == 1) {
+                        syncCaredList();
+                        updateBackdrop(false);
+                    } else
+                        codeEditText.setError(getString(R.string.caretaker_list_wrong_code));
+                }
+
+                @Override
+                public void onFailure(@Nullable Throwable throwable) {
+                    codeEditText.setError(getString(R.string.general_something_wrong));
+                }
+            });
+        });
+    }
+
+    private void syncCaredList() {
         Network.getInstance().getCaredList(new Network.NetworkCallbackOne<List<String>>() {
             @Override
             public void onSuccess(List<String> arg) {
                 cared.clear();
                 cared.addAll(arg);
+                adapter.notifyDataSetChanged();
             }
 
             @Override

@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,6 +17,7 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,6 +25,7 @@ public class HomeActivity extends BackdropActivity {
     private int currentHomeFragmentId;
 
     private FloatingActionButton fabView;
+    public boolean doCloseLinkOnBackdropCollapse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,30 +43,27 @@ public class HomeActivity extends BackdropActivity {
 
         // Process bottom navigation buttons clicks
         final HomeActivity itself = this;
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Fragment fragment = null;
-                int itemId = item.getItemId();
+        navigation.setOnNavigationItemSelectedListener(item -> {
+            Fragment fragment = null;
+            int itemId = item.getItemId();
 
-                if (currentHomeFragmentId == itemId) return false;
+            if (currentHomeFragmentId == itemId) return false;
 
-                switch (itemId) {
-                    case R.id.home_nav_log:
-                        fragment = new LogFragment();
-                        break;
+            switch (itemId) {
+                case R.id.home_nav_log:
+                    fragment = new LogFragment();
+                    break;
 
-                    case R.id.home_nav_list:
-                        fragment = new WhitelistFragment(itself);
-                        break;
+                case R.id.home_nav_list:
+                    fragment = new WhitelistFragment(itself);
+                    break;
 
-                    case R.id.home_nav_stats:
-                        fragment = new StatisticsFragment();
-                        break;
-                }
-
-                return loadHomeFragment(fragment, itemId);
+                case R.id.home_nav_stats:
+                    fragment = new StatisticsFragment();
+                    break;
             }
+
+            return loadHomeFragment(fragment, itemId);
         });
 
         // Check for permissions
@@ -129,5 +126,15 @@ public class HomeActivity extends BackdropActivity {
 
     public void hideFAB() {
         fabView.hide();
+    }
+
+    @Override
+    public void updateBackdrop(boolean extend) {
+        super.updateBackdrop(extend);
+
+        if (!extend && doCloseLinkOnBackdropCollapse) {
+            Network.getInstance().removeLinkRequest(null);
+            doCloseLinkOnBackdropCollapse = false;
+        }
     }
 }
