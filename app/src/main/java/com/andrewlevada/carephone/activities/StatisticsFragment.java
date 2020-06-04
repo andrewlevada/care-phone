@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.RecyclerHoursAdapter;
+import com.andrewlevada.carephone.logic.StatisticsPack;
+import com.andrewlevada.carephone.logic.network.Network;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +89,41 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void syncData() {
-        // TODO: Sync data
+        Network.getInstance().syncStatistics(new Network.NetworkCallbackOne<StatisticsPack>() {
+            @Override
+            public void onSuccess(StatisticsPack statisticsPack) {
+                processStatisticsPack(statisticsPack);
+            }
+
+            @Override
+            public void onFailure(@Nullable Throwable throwable) {
+                // TODO: Process failure
+            }
+        });
+    }
+
+    private void processStatisticsPack(StatisticsPack statisticsPack) {
+        periodsHours = statisticsPack.periodsHours;
+        phonesLabels = statisticsPack.phonesLabels;
+        phonesHours = statisticsPack.phonesHours;
+
+        periodsAdapter.notifyDataSetChanged();
+        phonesAdapter.notifyDataSetChanged();
+
+        if (getContext() == null) return;
+        SharedPreferences.Editor preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit();
+
+        for (int i = 0; i < Config.periodsLabels.size(); i++)
+            preferences.putInt(PREF_PERIOD_HOURS + i, periodsHours.get(i));
+
+        preferences.putInt(PREF_PHONES_LENGTH, phonesLabels.size());
+        for (int i = 0; i < phonesLabels.size(); i++) {
+            preferences.putString(PREF_PHONES_LABELS + i, phonesLabels.get(i));
+            preferences.putInt(PREF_PHONES_HOURS + i, phonesHours.get(i));
+        }
+
+        preferences.putLong(PREF_UPDATE_DATE, System.currentTimeMillis() + Config.statisticsSyncPeriodHours * 60 * 60 * 1000);
+        preferences.apply();
     }
 
     private RecyclerView.Adapter setupRecyclerView(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {

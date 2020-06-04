@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
@@ -107,17 +107,16 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void auth() {
-        Task<AuthResult> task = auth.signInWithCredential(credential);
+        Task<AuthResult> authTask = auth.signInWithCredential(credential);
 
-        task.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    FirebaseUser user = task.getResult().getUser();
-                    continueToNextActivity(user);
-                } else {
-                    editText.setError(getText(R.string.auth_wrong_code));
-                }
+        authTask.addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser user = task.getResult().getUser();
+                Network.getInstance().useFirebaseAuthToken();
+                Network.getInstance().addUserIfNew(null);
+                continueToNextActivity(user);
+            } else {
+                editText.setError(getText(R.string.auth_wrong_code));
             }
         });
     }

@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.PhoneNumber;
+import com.andrewlevada.carephone.logic.StatisticsPack;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class Network {
 
     private String userToken;
     private ExtendedAuthTokenCallback authTokenCallback;
+
+    // Config
 
     public void useFirebaseAuthToken() {
         authTokenCallback = new ExtendedAuthTokenCallback() {
@@ -45,21 +49,20 @@ public class Network {
         Toolbox.requestFirebaseAuthToken(authTokenCallback);
     }
 
+    // Users
+
+    public void addUserIfNew(@Nullable final NetworkCallbackZero callback) {
+        if (queueIfNotAuthedYet(() -> addUserIfNew(callback))) return;
+
+        getRetrofitRequests().tryToPutUser(userToken).enqueue(getDefaultVoidCallback(callback));
+    }
+
+    // Whitelist
+
     public void syncWhitelist(@NonNull final NetworkCallbackOne<List<PhoneNumber>> callback) {
         if (queueIfNotAuthedYet(() -> syncWhitelist(callback))) return;
 
-        getRetrofitRequests().getWhitelist(userToken).enqueue(new Callback<List<PhoneNumber>>() {
-            @Override
-            public void onResponse(Call<List<PhoneNumber>> call, Response<List<PhoneNumber>> response) {
-                if (response.body() != null) callback.onSuccess(response.body());
-                else callback.onFailure(null);
-            }
-
-            @Override
-            public void onFailure(Call<List<PhoneNumber>> call, Throwable t) {
-                callback.onFailure(t);
-            }
-        });
+        getRetrofitRequests().getWhitelist(userToken).enqueue(getDefaultOneCallback(callback));
     }
 
     public void addToWhitelist(@NonNull PhoneNumber phoneNumber, @Nullable final NetworkCallbackZero callback) {
@@ -81,6 +84,53 @@ public class Network {
         getRetrofitRequests().postWhitelist(userToken, prevPhone, phoneNumber.phone, phoneNumber.label)
                 .enqueue(getDefaultVoidCallback(callback));
     }
+
+    // Whitelist State
+
+    public void getWhitelistState(@NonNull final NetworkCallbackOne<Boolean> callback) {
+        if (queueIfNotAuthedYet(() -> getWhitelistState(callback))) return;
+
+        getRetrofitRequests().getWhitelistState(userToken).enqueue(getDefaultOneCallback(callback));
+    }
+
+    public void setWhitelistState(@NonNull Boolean state, @Nullable final NetworkCallbackZero callback) {
+        if (queueIfNotAuthedYet(() -> setWhitelistState(state, callback))) return;
+
+        getRetrofitRequests().postWhitelistState(userToken, state).enqueue(getDefaultVoidCallback(callback));
+    }
+
+    // Statistics
+
+    public void syncStatistics(@NonNull final NetworkCallbackOne<StatisticsPack> callback) {
+        if (queueIfNotAuthedYet(() -> syncStatistics(callback))) return;
+
+        getRetrofitRequests().getStatisticsPack(userToken).enqueue(getDefaultOneCallback(callback));
+    }
+
+    // Log
+
+    public void getLog(int limit, int offset, @NonNull final NetworkCallbackOne<List<LogRecord>> callback) {
+        if (queueIfNotAuthedYet(() -> getLog(limit, offset, callback))) return;
+
+        getRetrofitRequests().getLog(userToken, limit, offset).enqueue(getDefaultOneCallback(callback));
+    }
+
+    public void addToLog(@NonNull LogRecord logRecord, @Nullable final NetworkCallbackZero callback) {
+        if (queueIfNotAuthedYet(() -> addToLog(logRecord, callback))) return;
+
+        getRetrofitRequests().putLog(userToken, logRecord.phoneNumber, logRecord.startTimestamp,
+                logRecord.secondsDuration, logRecord.type).enqueue(getDefaultVoidCallback(callback));
+    }
+
+    // Cared List
+
+    public void getCaredList(@NonNull final NetworkCallbackOne<List<String>> callback) {
+        if (queueIfNotAuthedYet(() -> getCaredList(callback))) return;
+
+        getRetrofitRequests().getCaredList(userToken).enqueue(getDefaultOneCallback(callback));
+    }
+
+    // Private Logic
 
     private boolean queueIfNotAuthedYet(Runnable callback) {
         if (authTokenCallback != null) {
@@ -114,6 +164,21 @@ public class Network {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 if (callback != null) callback.onFailure(t);
+            }
+        };
+    }
+
+    private <T> Callback<T> getDefaultOneCallback(NetworkCallbackOne<T> callback) {
+        return new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                if (response.body() != null) callback.onSuccess(response.body());
+                else callback.onFailure(null);
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                callback.onFailure(t);
             }
         };
     }

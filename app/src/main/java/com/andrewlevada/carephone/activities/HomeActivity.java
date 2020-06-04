@@ -18,7 +18,6 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
-import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -32,9 +31,6 @@ public class HomeActivity extends BackdropActivity {
         layoutId = R.layout.activity_home;
         layoutBackdropId = R.layout.activity_home_backdrop;
         super.onCreate(savedInstanceState);
-
-        // Setup Network object
-        Network.getInstance().useFirebaseAuthToken();
 
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
@@ -87,14 +83,6 @@ public class HomeActivity extends BackdropActivity {
                 requestPermissions(permissions, 2); // TODO: Change 2 for constant and process
             }
         }
-
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            NotificationManager n = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-//            if(n != null && !n.isNotificationPolicyAccessGranted()) {
-//                Intent intent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-//                startActivityForResult(intent, 1); // TODO: Replace 1 with constant and process
-//            }
-//        }
 
         // Back button processing
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {

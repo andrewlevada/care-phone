@@ -67,27 +67,24 @@ public class WhitelistFragment extends Fragment {
         fullscreenConstraint = new ConstraintSet();
         fullscreenConstraint.load(container.getContext(), R.layout.fragment_whitelist_fullscreen);
 
+        // Try to get parenting activity if not given
+        if (parentingActivity == null && container.getContext() instanceof HomeActivity)
+            parentingActivity = (HomeActivity) container.getContext();
+
         // Fill backdrop
-        parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick());
+        if (parentingActivity != null)
+            parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick());
 
         // Whitelist onclick processing
-        onclick.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isFullscreen) return;
-                updateFullscreen(true);
-                // parentingActivity.updateFullscreen(true);
-            }
+        onclick.setOnClickListener(v -> {
+            if (isFullscreen) return;
+            updateFullscreen(true);
         });
 
         // Fullscreen toolbar onclick processing
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isFullscreen) return;
-                updateFullscreen(false);
-                // parentingActivity.updateFullscreen(false);
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            if (!isFullscreen) return;
+            updateFullscreen(false);
         });
 
         return layout;
