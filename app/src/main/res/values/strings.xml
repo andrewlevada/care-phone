@@ -6,8 +6,8 @@
     <string name="home_nav_stats">Статистика</string>
 
     <string name="whitelist_title">Белый список:</string>
-
-    <string name="timeout_action">Временно отключить блок</string>
+    <string name="whitelist_state_turn_off">Отключить блок</string>
+    <string name="whitelist_state_turn_on">Включить блок</string>
 
     <string name="general_add">Добавить</string>
     <string name="general_edit">Редактировать</string>

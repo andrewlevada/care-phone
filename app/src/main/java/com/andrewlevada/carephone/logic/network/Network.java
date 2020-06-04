@@ -137,6 +137,7 @@ public class Network {
 
         if (authTokenCallback == null) useFirebaseAuthToken();
         authTokenCallback.addCallback(callback);
+
         return true;
     }
 
@@ -164,6 +165,7 @@ public class Network {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                Toolbox.FastLog("--------------- SERVER ERROR T: " + t.getMessage());
                 if (callback != null) callback.onFailure(t);
             }
         };
@@ -185,6 +187,7 @@ public class Network {
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
+                Toolbox.FastLog("--------------- SERVER ERROR T: " + t.getMessage());
                 callback.onFailure(t);
             }
         };

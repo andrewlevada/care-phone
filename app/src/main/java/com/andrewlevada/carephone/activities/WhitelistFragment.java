@@ -1,14 +1,20 @@
 package com.andrewlevada.carephone.activities;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,14 +24,18 @@ import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
+import com.andrewlevada.carephone.logic.network.Network;
 
 public class WhitelistFragment extends Fragment {
     private RecyclerView recyclerView;
     private ConstraintLayout layout;
-    private View onclick;
+    private View whitelistOnclick;
+    private View stateOnclick;
+    private TextView stateText;
 
     private ConstraintSet defaultConstraint;
     private ConstraintSet fullscreenConstraint;
@@ -34,6 +44,9 @@ public class WhitelistFragment extends Fragment {
     private RecyclerWhitelistAdapter adapter;
 
     private boolean isFullscreen;
+    private boolean whitelistState;
+
+    private Context context;
 
     public WhitelistFragment() {
         // Required empty public constructor
@@ -48,10 +61,13 @@ public class WhitelistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate fragment view
         layout = (ConstraintLayout) inflater.inflate(R.layout.fragment_whitelist, container, false);
+        context = container.getContext();
 
         // Get views by id
         Toolbar toolbar = layout.findViewById(R.id.home_whitelist_fullscreen_toolbar);
-        onclick = layout.findViewById(R.id.home_whitelist_onclick);
+        whitelistOnclick = layout.findViewById(R.id.home_whitelist_onclick);
+        stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
+        stateText = layout.findViewById(R.id.whitelist_state_text);
 
         // Setup recycler view
         recyclerView = layout.findViewById(R.id.home_whitelist_recycler);
@@ -65,18 +81,18 @@ public class WhitelistFragment extends Fragment {
         defaultConstraint = new ConstraintSet();
         defaultConstraint.clone(layout);
         fullscreenConstraint = new ConstraintSet();
-        fullscreenConstraint.load(container.getContext(), R.layout.fragment_whitelist_fullscreen);
+        fullscreenConstraint.load(context, R.layout.fragment_whitelist_fullscreen);
 
         // Try to get parenting activity if not given
-        if (parentingActivity == null && container.getContext() instanceof HomeActivity)
-            parentingActivity = (HomeActivity) container.getContext();
+        if (parentingActivity == null && context instanceof HomeActivity)
+            parentingActivity = (HomeActivity) context;
 
         // Fill backdrop
         if (parentingActivity != null)
             parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick());
 
         // Whitelist onclick processing
-        onclick.setOnClickListener(v -> {
+        whitelistOnclick.setOnClickListener(v -> {
             if (isFullscreen) return;
             updateFullscreen(true);
         });
@@ -87,6 +103,23 @@ public class WhitelistFragment extends Fragment {
             updateFullscreen(false);
         });
 
+        // Whitelist State processing
+        syncWhitelistState();
+
+        stateOnclick.setOnClickListener(v -> {
+            Network.getInstance().setWhitelistState(!whitelistState, new Network.NetworkCallbackZero() {
+                @Override
+                public void onSuccess() {
+                    syncWhitelistState();
+                }
+
+                @Override
+                public void onFailure(@Nullable Throwable throwable) {
+                    // TODO: Process failure
+                }
+            });
+        });
+
         return layout;
     }
 
@@ -95,7 +128,7 @@ public class WhitelistFragment extends Fragment {
 
         isFullscreen = doExtend;
         WhitelistAccesser.getInstance().syncWhitelist();
-        onclick.setVisibility(doExtend ? View.GONE : View.VISIBLE);
+        whitelistOnclick.setVisibility(doExtend ? View.GONE : View.VISIBLE);
 
         // Request fab
         if (doExtend) parentingActivity.requestFAB(new OnFABClick());
@@ -125,6 +158,40 @@ public class WhitelistFragment extends Fragment {
 
         adapter = new RecyclerWhitelistAdapter(recyclerView);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void syncWhitelistState() {
+        Network.getInstance().getWhitelistState(new Network.NetworkCallbackOne<Boolean>() {
+            @Override
+            public void onSuccess(Boolean arg) {
+                Toolbox.FastLog("Hello: " + arg);
+                whitelistState = arg;
+                if (whitelistState) stateText.setText(R.string.whitelist_state_turn_off);
+                else stateText.setText(R.string.whitelist_state_turn_on);
+                animateUpdateStateButton();
+            }
+
+            @Override
+            public void onFailure(@Nullable Throwable throwable) {
+                //TODO: Process failure
+            }
+        });
+    }
+
+    private void animateUpdateStateButton() {
+        ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(((GradientDrawable) stateOnclick.getBackground()), "color",
+                ContextCompat.getColor(context, !whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
+                ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface));
+        backgroundAnimation.setDuration(600);
+
+        ObjectAnimator textAnimation = ObjectAnimator.ofArgb(stateText, "textColor",
+                ContextCompat.getColor(context, !whitelistState ? R.color.colorOnSurface : R.color.colorSurface),
+                ContextCompat.getColor(context, whitelistState ? R.color.colorOnSurface : R.color.colorSurface));
+        textAnimation.setDuration(600);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(backgroundAnimation).with(textAnimation);
+        animatorSet.start();
     }
 
     private class OnFABClick implements View.OnClickListener {

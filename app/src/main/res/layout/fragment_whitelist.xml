@@ -56,7 +56,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/home_timeout_layout"
+        android:id="@+id/whitelist_state_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -68,7 +68,7 @@
         app:layout_constraintTop_toBottomOf="@+id/home_whitelist_layout">
 
         <LinearLayout
-            android:id="@+id/home_timeout_inner_layout"
+            android:id="@+id/whitelist_state_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@drawable/round_28dp"
@@ -76,11 +76,11 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/home_timeout_text"
+                android:id="@+id/whitelist_state_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/comfortaa_bold"
-                android:text="@string/timeout_action"
+                android:text="@string/whitelist_state_turn_off"
                 android:textAllCaps="true"
                 android:textColor="@color/colorOnSurface"
                 android:textSize="15sp" />
