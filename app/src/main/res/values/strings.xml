@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CarePhone</string>
 
-    <string name="home_nav_first">Что-то</string>
+    <string name="home_nav_log">Вызовы</string>
     <string name="home_nav_list">Белый список</string>
     <string name="home_nav_stats">Статистика</string>
 

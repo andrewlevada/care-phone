@@ -33,8 +33,6 @@ public class StatisticsFragment extends Fragment {
     private static final String PREF_PHONES_HOURS = "PREF_PHONES_HOURS";
     private static final String PREF_PHONES_LABELS = "PREF_PHONES_LABELS";
 
-    private HomeActivity parentingActivity;
-
     private RecyclerView.Adapter periodsAdapter;
     private RecyclerView.Adapter phonesAdapter;
 
@@ -45,10 +43,6 @@ public class StatisticsFragment extends Fragment {
 
     // Required empty public constructor
     public StatisticsFragment() { }
-
-    StatisticsFragment(HomeActivity parentingActivity) {
-        this.parentingActivity = parentingActivity;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -23,14 +23,16 @@ import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
+import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;
 
 public class WhitelistFragment extends Fragment {
+    private static final String PREFS_STATE = "PREFS_WHITELIST_STATE";
+
     private RecyclerView recyclerView;
     private ConstraintLayout layout;
     private View whitelistOnclick;
@@ -104,6 +106,14 @@ public class WhitelistFragment extends Fragment {
         });
 
         // Whitelist State processing
+        whitelistState = context.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
+                .getBoolean(PREFS_STATE, true);
+        if (!whitelistState) {
+            stateText.setText(R.string.whitelist_state_turn_on);
+            ((GradientDrawable) stateOnclick.getBackground()).setColor(context.getResources().getColor(R.color.colorOnSurface));
+            stateText.setTextColor(context.getResources().getColor(R.color.colorSurface));
+        }
+
         syncWhitelistState();
 
         stateOnclick.setOnClickListener(v -> {
@@ -164,11 +174,13 @@ public class WhitelistFragment extends Fragment {
         Network.getInstance().getWhitelistState(new Network.NetworkCallbackOne<Boolean>() {
             @Override
             public void onSuccess(Boolean arg) {
-                Toolbox.FastLog("Hello: " + arg);
-                whitelistState = arg;
-                if (whitelistState) stateText.setText(R.string.whitelist_state_turn_off);
+                if (arg) stateText.setText(R.string.whitelist_state_turn_off);
                 else stateText.setText(R.string.whitelist_state_turn_on);
-                animateUpdateStateButton();
+                if (arg != whitelistState) animateUpdateStateButton();
+                whitelistState = arg;
+
+                context.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit().
+                        putBoolean(PREFS_STATE, whitelistState).apply();
             }
 
             @Override
@@ -180,13 +192,13 @@ public class WhitelistFragment extends Fragment {
 
     private void animateUpdateStateButton() {
         ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(((GradientDrawable) stateOnclick.getBackground()), "color",
-                ContextCompat.getColor(context, !whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
-                ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface));
+                ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
+                ContextCompat.getColor(context, !whitelistState ? R.color.colorSurface : R.color.colorOnSurface));
         backgroundAnimation.setDuration(600);
 
         ObjectAnimator textAnimation = ObjectAnimator.ofArgb(stateText, "textColor",
-                ContextCompat.getColor(context, !whitelistState ? R.color.colorOnSurface : R.color.colorSurface),
-                ContextCompat.getColor(context, whitelistState ? R.color.colorOnSurface : R.color.colorSurface));
+                ContextCompat.getColor(context, whitelistState ? R.color.colorOnSurface : R.color.colorSurface),
+                ContextCompat.getColor(context, !whitelistState ? R.color.colorOnSurface : R.color.colorSurface));
         textAnimation.setDuration(600);
 
         AnimatorSet animatorSet = new AnimatorSet();

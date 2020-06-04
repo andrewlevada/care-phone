@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.andrewlevada.carephone.LogFragment;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
@@ -38,6 +39,7 @@ public class HomeActivity extends BackdropActivity {
 
         // Loading default fragment screen
         loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
+        navigation.setSelectedItemId(R.id.home_nav_list);
 
         // Process bottom navigation buttons clicks
         final HomeActivity itself = this;
@@ -50,8 +52,8 @@ public class HomeActivity extends BackdropActivity {
                 if (currentHomeFragmentId == itemId) return false;
 
                 switch (itemId) {
-                    case R.id.home_nav_first:
-                        // TODO: Add new fragment
+                    case R.id.home_nav_log:
+                        fragment = new LogFragment();
                         break;
 
                     case R.id.home_nav_list:
@@ -59,7 +61,7 @@ public class HomeActivity extends BackdropActivity {
                         break;
 
                     case R.id.home_nav_stats:
-                        fragment = new StatisticsFragment(itself);
+                        fragment = new StatisticsFragment();
                         break;
                 }
 
