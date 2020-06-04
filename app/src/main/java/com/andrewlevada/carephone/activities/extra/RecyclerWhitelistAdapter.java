@@ -1,6 +1,5 @@
 package com.andrewlevada.carephone.activities.extra;
 
-import android.content.Context;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -8,37 +7,26 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 
-public class RecyclerWhitelistAdapter extends RecyclerView.Adapter<RecyclerWhitelistAdapter.BasicViewHolder> {
+public class RecyclerWhitelistAdapter extends RecyclerAdapter {
     private WhitelistAccesser whitelistAccesser;
-    private Context context;
     private boolean isExtended;
 
     public RecyclerWhitelistAdapter(RecyclerView recyclerView) {
+        super(recyclerView);
+        itemLayout = R.layout.recyclable_phone_number_template;
+
         whitelistAccesser = WhitelistAccesser.getInstance();
-        context = recyclerView.getContext();
         isExtended = false;
     }
 
-    @NonNull
     @Override
-    public BasicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View item = SimpleInflater.inflate(parent, R.layout.recyclable_number_template, false);
-        return new BasicViewHolder(item);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull final BasicViewHolder holder, final int position) {
-        if (context == null) return;
-
-        ViewGroup item = (ViewGroup) holder.itemView;
+    void fillItemWithData(ViewGroup item, int position) {
         PhoneNumber number = whitelistAccesser.getWhitelistElement(position);
 
         ((TextView) item.findViewById(R.id.recycler_number)).setText(number.phone);
@@ -74,13 +62,6 @@ public class RecyclerWhitelistAdapter extends RecyclerView.Adapter<RecyclerWhite
     public void setExtended(boolean extended) {
         isExtended = extended;
         notifyDataSetChanged();
-    }
-
-    static class BasicViewHolder extends RecyclerView.ViewHolder {
-
-        BasicViewHolder(@NonNull View itemView) {
-            super(itemView);
-        }
     }
 
     private class OnMenuItemClick implements PopupMenu.OnMenuItemClickListener {
