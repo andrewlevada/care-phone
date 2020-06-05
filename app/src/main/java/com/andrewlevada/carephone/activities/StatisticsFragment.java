@@ -41,14 +41,24 @@ public class StatisticsFragment extends Fragment {
     private List<String> phonesLabels;
     private List<Integer> phonesHours;
 
+    private HomeActivity parentingActivity;
+
     // Required empty public constructor
     public StatisticsFragment() { }
+
+    public StatisticsFragment(HomeActivity parentingActivity) {
+        this.parentingActivity = parentingActivity;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        // Try to get parenting activity if not given
+        if (parentingActivity == null && container.getContext() instanceof HomeActivity)
+            parentingActivity = (HomeActivity) container.getContext();
 
         // Setup recycler views
         loadDataFromLocal();
@@ -83,7 +93,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void syncData() {
-        Network.cared().syncStatistics(new Network.NetworkCallbackOne<StatisticsPack>() {
+        Network.router().syncStatistics(parentingActivity.isRemote, new Network.NetworkCallbackOne<StatisticsPack>() {
             @Override
             public void onSuccess(StatisticsPack statisticsPack) {
                 processStatisticsPack(statisticsPack);

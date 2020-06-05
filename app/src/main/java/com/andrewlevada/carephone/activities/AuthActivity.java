@@ -112,7 +112,7 @@ public class AuthActivity extends AppCompatActivity {
         authTask.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = task.getResult().getUser();
-                Network.general().useFirebaseAuthToken();
+                Network.config().useFirebaseAuthToken();
                 Network.cared().addUserIfNew(null);
                 continueToNextActivity(user);
             } else {

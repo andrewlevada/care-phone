@@ -33,9 +33,15 @@ public class LogFragment extends Fragment {
     private int loadedNumber;
     private boolean isLoading;
 
+    private HomeActivity parentingActivity;
+
     // Required empty public constructor
     public LogFragment() {
 
+    }
+
+    public LogFragment(HomeActivity parentingActivity) {
+        this.parentingActivity = parentingActivity;
     }
 
     @Override
@@ -43,6 +49,10 @@ public class LogFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View layout = inflater.inflate(R.layout.fragment_log, container, false);
+
+        // Try to get parenting activity if not given
+        if (parentingActivity == null && container.getContext() instanceof HomeActivity)
+            parentingActivity = (HomeActivity) container.getContext();
 
         // Find views by ids
         recyclerView = layout.findViewById(R.id.log_recycler);
@@ -66,7 +76,8 @@ public class LogFragment extends Fragment {
         if (isLoading) return;
         isLoading = true;
 
-        Network.cared().getLog(numberPerLoad, loadedNumber, new Network.NetworkCallbackOne<List<LogRecord>>() {
+        Network.router().getLog(parentingActivity.isRemote, numberPerLoad, loadedNumber,
+                new Network.NetworkCallbackOne<List<LogRecord>>() {
             @Override
             public void onSuccess(List<LogRecord> arg) {
                 isLoading = false;

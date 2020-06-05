@@ -23,9 +23,11 @@ public class WhitelistAccesser {
     private SharedPreferences preferences;
     private Context context;
     private RecyclerView.Adapter adapter;
+    private boolean isRemote;
 
-    public void initialize(Context context) {
+    public void initialize(Context context, boolean isRemote) {
         this.context = context;
+        this.isRemote = isRemote;
         whitelist = new ArrayList<>();
         loadFromLocal();
         syncWhitelist();
@@ -90,14 +92,14 @@ public class WhitelistAccesser {
 
     public void setWhitelistElement(int index, PhoneNumber element) {
         String prevPhone = whitelist.get(index).phone;
-        Network.cared().editWhitelistRecord(prevPhone, element, null);
+        Network.router().editWhitelistRecord(isRemote, prevPhone, element, null);
         whitelist.set(index, element);
         saveToLocal();
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     public void addToWhitelist(PhoneNumber phoneNumber) {
-        Network.cared().addToWhitelist(phoneNumber, null);
+        Network.router().addToWhitelist(isRemote, phoneNumber, null);
         whitelist.add(phoneNumber);
         saveToLocal();
         if (adapter != null) adapter.notifyDataSetChanged();
@@ -106,14 +108,14 @@ public class WhitelistAccesser {
     public PhoneNumber removePhoneNumberAt(int index) {
         PhoneNumber result = whitelist.remove(index);
         saveToLocal();
-        Network.cared().removeFromWhitelist(result.phone, null);
+        Network.router().removeFromWhitelist(isRemote, result.phone, null);
         return result;
     }
 
     public boolean removeFromWhitelist(@NonNull PhoneNumber o) {
         boolean result = whitelist.remove(o);
         saveToLocal();
-        if (result) Network.cared().removeFromWhitelist(o.phone, null);
+        if (result) Network.router().removeFromWhitelist(isRemote, o.phone, null);
         return result;
     }
 
@@ -122,7 +124,7 @@ public class WhitelistAccesser {
     }
 
     public void syncWhitelist() {
-        Network.cared().syncWhitelist(new Network.NetworkCallbackOne<List<PhoneNumber>>() {
+        Network.router().syncWhitelist(isRemote, new Network.NetworkCallbackOne<List<PhoneNumber>>() {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
                 whitelist = arg;

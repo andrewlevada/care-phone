@@ -21,7 +21,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class HomeActivity extends BackdropActivity {
+    public static final String INTENT_REMOTE = "INTENT_REMOTE";
+
     private int currentHomeFragmentId;
+    boolean isRemote;
 
     private FloatingActionButton fabView;
     public boolean doCloseLinkOnBackdropCollapse;
@@ -31,6 +34,9 @@ public class HomeActivity extends BackdropActivity {
         layoutId = R.layout.activity_home;
         layoutBackdropId = R.layout.activity_home_backdrop;
         super.onCreate(savedInstanceState);
+
+        // Get remote option from intent
+        isRemote = getIntent().getBooleanExtra(INTENT_REMOTE, false);
 
         // Find views by ids
         BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
@@ -50,7 +56,7 @@ public class HomeActivity extends BackdropActivity {
 
             switch (itemId) {
                 case R.id.home_nav_log:
-                    fragment = new LogFragment();
+                    fragment = new LogFragment(itself);
                     break;
 
                 case R.id.home_nav_list:
@@ -58,12 +64,16 @@ public class HomeActivity extends BackdropActivity {
                     break;
 
                 case R.id.home_nav_stats:
-                    fragment = new StatisticsFragment();
+                    fragment = new StatisticsFragment(itself);
                     break;
             }
 
             return loadHomeFragment(fragment, itemId);
         });
+
+        WhitelistAccesser.getInstance().initialize(getApplicationContext(), isRemote);
+
+        if (isRemote) return;
 
         // Check for permissions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -94,7 +104,6 @@ public class HomeActivity extends BackdropActivity {
         });
 
         // Load whitelist blocker
-        WhitelistAccesser.getInstance().initialize(getApplicationContext());
         if (!Blocker.enable(getApplicationContext())) {
             // TODO: Process unsupported device
         }
@@ -131,7 +140,7 @@ public class HomeActivity extends BackdropActivity {
     public void updateBackdrop(boolean extend) {
         super.updateBackdrop(extend);
 
-        if (!extend && doCloseLinkOnBackdropCollapse) {
+        if (!extend && doCloseLinkOnBackdropCollapse && !isRemote) {
             Network.cared().removeLinkRequest(null);
             doCloseLinkOnBackdropCollapse = false;
         }

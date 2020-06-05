@@ -13,11 +13,13 @@ import java.util.List;
 
 public class RecyclerOnlyPhoneAdapter extends RecyclerAdapter {
     private List<CaredUser> dataset;
+    private OnRecyclerItemClick onItemClick;
 
-    public RecyclerOnlyPhoneAdapter(RecyclerView recyclerView, List<CaredUser> dataset) {
+    public RecyclerOnlyPhoneAdapter(RecyclerView recyclerView, List<CaredUser> dataset, OnRecyclerItemClick onItemClick) {
         super(recyclerView);
         itemLayout = R.layout.recyclable_phone_template;
         this.dataset = dataset;
+        this.onItemClick = onItemClick;
     }
 
     @Override
@@ -26,6 +28,8 @@ public class RecyclerOnlyPhoneAdapter extends RecyclerAdapter {
 
         // Hide divider on last element
         if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
+
+        item.setOnClickListener(v -> { if (onItemClick != null) onItemClick.onClick(position); });
     }
 
     @Override

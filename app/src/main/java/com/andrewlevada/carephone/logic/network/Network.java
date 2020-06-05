@@ -102,7 +102,7 @@ public class Network {
         };
     }
 
-    public static Network general() {
+    public static Network config() {
         if (instance == null) instance = new Network();
         return instance;
     }
@@ -113,6 +113,10 @@ public class Network {
     public static NetworkCaretaker caretaker() {
         if (NetworkCaretaker.instance == null) NetworkCaretaker.instance = new NetworkCaretaker();
         return NetworkCaretaker.instance;
+    }
+    public static NetworkBothRouter router() {
+        if (NetworkBothRouter.instance == null) NetworkBothRouter.instance = new NetworkBothRouter();
+        return NetworkBothRouter.instance;
     }
 
     public interface NetworkCallback {

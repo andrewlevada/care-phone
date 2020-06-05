@@ -42,4 +42,8 @@ public abstract class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapt
             super(itemView);
         }
     }
+
+    public interface OnRecyclerItemClick {
+        void onClick(int index);
+    }
 }

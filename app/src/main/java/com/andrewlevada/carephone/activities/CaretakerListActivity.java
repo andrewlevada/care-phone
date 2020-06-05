@@ -105,8 +105,16 @@ public class CaretakerListActivity extends BackdropActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         cared = new ArrayList<>();
-        adapter = new RecyclerOnlyPhoneAdapter(recyclerView, cared);
+        adapter = new RecyclerOnlyPhoneAdapter(recyclerView, cared, index -> launchHomeActivityRemotely(cared.get(index).uid));
         recyclerView.setAdapter(adapter);
+    }
+
+    private void launchHomeActivityRemotely(String rUid) {
+        Network.caretaker().rUid = rUid;
+
+        Intent intent = new Intent(CaretakerListActivity.this, HomeActivity.class);
+        intent.putExtra(HomeActivity.INTENT_REMOTE, true);
+        startActivity(intent);
     }
 
     @Override

@@ -67,6 +67,10 @@ public class WhitelistFragment extends Fragment {
         layout = (ConstraintLayout) inflater.inflate(R.layout.fragment_whitelist, container, false);
         context = container.getContext();
 
+        // Try to get parenting activity if not given
+        if (parentingActivity == null && context instanceof HomeActivity)
+            parentingActivity = (HomeActivity) context;
+
         // Get views by id
         Toolbar toolbar = layout.findViewById(R.id.home_whitelist_fullscreen_toolbar);
         whitelistOnclick = layout.findViewById(R.id.home_whitelist_onclick);
@@ -86,10 +90,6 @@ public class WhitelistFragment extends Fragment {
         defaultConstraint.clone(layout);
         fullscreenConstraint = new ConstraintSet();
         fullscreenConstraint.load(context, R.layout.fragment_whitelist_fullscreen);
-
-        // Try to get parenting activity if not given
-        if (parentingActivity == null && context instanceof HomeActivity)
-            parentingActivity = (HomeActivity) context;
 
         // Whitelist onclick processing
         whitelistOnclick.setOnClickListener(v -> {
@@ -128,25 +128,29 @@ public class WhitelistFragment extends Fragment {
             });
         });
 
-        // Link user onclick processing
-        layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
-                v -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_link,
-                        view -> {
-                        Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
-                            @Override
-                            public void onSuccess(String arg) {
-                                ((TextView) view.findViewById(R.id.backdrop_code)).setText(arg);
-                                parentingActivity.doCloseLinkOnBackdropCollapse = true;
-                            }
+        if (parentingActivity.isRemote) {
+            layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
+        } else {
+            // Link user onclick processing
+            layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
+                    v -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_link,
+                            view -> {
+                                Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
+                                    @Override
+                                    public void onSuccess(String arg) {
+                                        ((TextView) view.findViewById(R.id.backdrop_code)).setText(arg);
+                                        parentingActivity.doCloseLinkOnBackdropCollapse = true;
+                                    }
 
-                            @Override
-                            public void onFailure(@Nullable Throwable throwable) {
-                                // TODO: Process failure better
-                                ((TextView) view.findViewById(R.id.backdrop_code)).setText("000000");
-                            }
-                        });
-                        parentingActivity.updateBackdrop(true);
-                        }, null));
+                                    @Override
+                                    public void onFailure(@Nullable Throwable throwable) {
+                                        // TODO: Process failure better
+                                        ((TextView) view.findViewById(R.id.backdrop_code)).setText("000000");
+                                    }
+                                });
+                                parentingActivity.updateBackdrop(true);
+                            }, null));
+        }
 
         return layout;
     }
@@ -179,8 +183,13 @@ public class WhitelistFragment extends Fragment {
         TransitionManager.beginDelayedTransition(layout, transition);
         constraintSet.applyTo(layout);
 
+        // Hide linking button if remote
+        if (parentingActivity.isRemote)
+            layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
+
         // Fill backdrop after delay
-        new Handler().postDelayed(() -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick()), 650);
+        if (doExtend) new Handler().postDelayed(() ->
+                parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick()), 650);
     }
 
     private void setupRecyclerView() {
@@ -192,7 +201,7 @@ public class WhitelistFragment extends Fragment {
     }
 
     private void syncWhitelistState() {
-        Network.cared().getWhitelistState(new Network.NetworkCallbackOne<Boolean>() {
+        Network.router().getWhitelistState(parentingActivity.isRemote, new Network.NetworkCallbackOne<Boolean>() {
             @Override
             public void onSuccess(Boolean arg) {
                 if (arg) stateText.setText(R.string.whitelist_state_turn_off);
