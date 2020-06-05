@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.StatisticsPack;
@@ -124,7 +125,7 @@ public class Network {
 
     // Cared List
 
-    public void getCaredList(@NonNull final NetworkCallbackOne<List<String>> callback) {
+    public void getCaredList(@NonNull final NetworkCallbackOne<List<CaredUser>> callback) {
         if (queueIfNotAuthedYet(() -> getCaredList(callback))) return;
 
         getRetrofitRequests().getCaredList(userToken).enqueue(getDefaultOneCallback(callback));

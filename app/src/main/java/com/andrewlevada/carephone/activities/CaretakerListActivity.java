@@ -14,6 +14,7 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.activities.extra.RecyclerOnlyPhoneAdapter;
+import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,7 +26,7 @@ public class CaretakerListActivity extends BackdropActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
-    private List<String> cared;
+    private List<CaredUser> cared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +85,9 @@ public class CaretakerListActivity extends BackdropActivity {
     }
 
     private void syncCaredList() {
-        Network.getInstance().getCaredList(new Network.NetworkCallbackOne<List<String>>() {
+        Network.getInstance().getCaredList(new Network.NetworkCallbackOne<List<CaredUser>>() {
             @Override
-            public void onSuccess(List<String> arg) {
+            public void onSuccess(List<CaredUser> arg) {
                 cared.clear();
                 cared.addAll(arg);
                 adapter.notifyDataSetChanged();

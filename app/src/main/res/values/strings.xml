@@ -8,7 +8,7 @@
     <string name="whitelist_title">Белый список:</string>
     <string name="whitelist_state_turn_off">Отключить блок</string>
     <string name="whitelist_state_turn_on">Включить блок</string>
-    <string name="whitelist_link_user">Присоединить пользователя</string>
+    <string name="whitelist_link_user">Добавить заботящегося</string>
     <string name="whitelist_link_guide">Это - секретный код для подлючения. Введите его на устройстве, которое хотите подключить.</string>
 
     <string name="general_add">Добавить</string>

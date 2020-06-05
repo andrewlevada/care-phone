@@ -1,5 +1,6 @@
 package com.andrewlevada.carephone.logic.network;
 
+import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.StatisticsPack;
@@ -59,7 +60,7 @@ public interface RetrofitRequests {
     // Cared List
 
     @GET("/caredList")
-    Call<List<String>> getCaredList(@Query("userToken") String userToken);
+    Call<List<CaredUser>> getCaredList(@Query("userToken") String userToken);
 
     // Link
 
