@@ -81,7 +81,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private void requestCodeSending() {
         if (editText.getText() == null) {
-            editText.setError(getText(R.string.auth_enter_phone_number));
+            editText.setError(getText(R.string.general_enter_phone));
             return;
         }
 
@@ -151,7 +151,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void onInvalidPhoneNumber() {
-        editText.setError(getText(R.string.auth_wrong_phone_number));
+        editText.setError(getText(R.string.general_wrong_phone));
     }
 
     private void animateButton() {

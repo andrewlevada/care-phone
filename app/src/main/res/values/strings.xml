@@ -10,11 +10,15 @@
     <string name="whitelist_state_turn_on">Включить блок</string>
     <string name="whitelist_link_user">Добавить заботящегося</string>
     <string name="whitelist_link_guide">Это - секретный код для подлючения. Введите его на устройстве, которое хотите подключить.</string>
+    <string name="whitelist_enter_name">Введите имя</string>
+    <string name="whitelist_long_name">Длинное имя</string>
 
     <string name="general_add">Добавить</string>
     <string name="general_edit">Редактировать</string>
     <string name="general_delete">Удалить</string>
     <string name="general_something_wrong">Что-то пошло не так!</string>
+    <string name="general_wrong_phone">Неверый номер телефона</string>
+    <string name="general_enter_phone">Введите номер телефона</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -27,8 +31,6 @@
     <string name="auth_send_code">Отправить код</string>
     <string name="auth_check_code">Проверить код</string>
     <string name="auth_phone_number">Номер телефона</string>
-    <string name="auth_wrong_phone_number">Неверый номер телефона</string>
-    <string name="auth_enter_phone_number">Введите номер телефона</string>
     <string name="auth_wrong_code">Неверый код</string>
     <string name="auth_enter_code">Введите код</string>
 

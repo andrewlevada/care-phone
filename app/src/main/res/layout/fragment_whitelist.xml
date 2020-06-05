@@ -71,7 +71,7 @@
             android:id="@+id/whitelist_state_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@drawable/round_28dp"
+            android:background="@drawable/whitelist_state_round_28dp"
             android:gravity="center"
             android:orientation="horizontal">
 

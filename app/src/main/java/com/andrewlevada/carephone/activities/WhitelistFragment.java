@@ -27,6 +27,7 @@ import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
@@ -113,6 +114,10 @@ public class WhitelistFragment extends Fragment {
         }
 
         syncWhitelistState();
+        Toolbox.getSyncThread(this, () -> {
+            syncWhitelistState();
+            WhitelistAccesser.getInstance().syncWhitelist();
+        }).start();
 
         stateOnclick.setOnClickListener(v -> {
             Network.cared().setWhitelistState(!whitelistState, new Network.NetworkCallbackZero() {
@@ -253,8 +258,27 @@ public class WhitelistFragment extends Fragment {
             TextView phoneView = parent.findViewById(R.id.backdrop_content_text_phone);
             String phone = phoneView.getText().toString();
 
-            // TODO: Add more checks to data and highlight error fields
-            if (label.equals("") || phone.equals("")) return;
+            // Process
+            if (phone.length() > 1 && phone.substring(0, 1).equals("8")) {
+                phone = "+7" + phone.substring(1);
+            }
+
+            // Checks
+            if (label.length() == 0) {
+                labelView.setError(getString(R.string.whitelist_enter_name));
+                return;
+            } else if (label.length() > 20) {
+                labelView.setError(getString(R.string.whitelist_long_name));
+                return;
+            }
+
+            if (phone.length() == 0) {
+                phoneView.setError(getString(R.string.general_enter_phone));
+                return;
+            } else if (phone.length() != 12 || !phone.contains("+")) {
+                phoneView.setError(getString(R.string.general_wrong_phone));
+                return;
+            }
 
             WhitelistAccesser.getInstance().addToWhitelist(new PhoneNumber(phone, label));
 

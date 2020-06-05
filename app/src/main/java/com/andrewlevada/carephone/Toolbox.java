@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,7 +59,37 @@ public class Toolbox {
         else return num + " часов";
     }
 
+    public static SyncThread getSyncThread(Fragment fragment, InSyncThread call) {
+        return new SyncThread(fragment, call);
+    }
+
     public interface AuthTokenCallback {
         void onGenerated(String token);
+    }
+
+    public interface InSyncThread {
+        void sync();
+    }
+
+    public static class SyncThread extends Thread {
+        public Fragment fragment;
+        private InSyncThread call;
+
+        @Override
+        public void run() {
+            while (fragment != null && fragment.isAdded()) {
+                try {
+                    Thread.sleep(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                call.sync();
+            }
+        }
+
+        public SyncThread(Fragment fragment, InSyncThread call) {
+            this.fragment = fragment;
+            this.call = call;
+        }
     }
 }
