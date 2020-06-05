@@ -25,7 +25,6 @@ import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
-import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
@@ -34,8 +33,8 @@ import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;
 
 public class WhitelistFragment extends Fragment {
-    private static final String PREFS_STATE = "PREFS_WHITELIST_STATE";
-
+    private WhitelistAccesser whitelistAccesser;
+    
     private RecyclerView recyclerView;
     private ConstraintLayout layout;
     private View whitelistOnclick;
@@ -49,7 +48,8 @@ public class WhitelistFragment extends Fragment {
     private RecyclerWhitelistAdapter adapter;
 
     private boolean isFullscreen;
-    private boolean whitelistState;
+    private boolean memoryWhitelistState;
+    private boolean skipWhitelistStateSync;
 
     private Context context;
 
@@ -83,8 +83,11 @@ public class WhitelistFragment extends Fragment {
         setupRecyclerView();
 
         // Setup Whitelist Accesser
-        WhitelistAccesser.getInstance().setAdapter(adapter);
-        WhitelistAccesser.getInstance().syncWhitelist();
+        whitelistAccesser = WhitelistAccesser.getInstance();
+        whitelistAccesser.setAdapter(adapter);
+        whitelistAccesser.setWhitelistStateChangedCallback(new OnGotWhitelistState());
+        whitelistAccesser.syncWhitelist();
+        whitelistAccesser.syncWhitelistState();
 
         // Setup ConstraintSets for fullscreen animations
         defaultConstraint = new ConstraintSet();
@@ -105,32 +108,22 @@ public class WhitelistFragment extends Fragment {
         });
 
         // Whitelist State processing
-        whitelistState = context.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
-                .getBoolean(PREFS_STATE, true);
-        if (!whitelistState) {
+        memoryWhitelistState = whitelistAccesser.getWhitelistState();
+        if (!memoryWhitelistState) {
             stateText.setText(R.string.whitelist_state_turn_on);
             ((GradientDrawable) stateOnclick.getBackground()).setColor(context.getResources().getColor(R.color.colorOnSurface));
             stateText.setTextColor(context.getResources().getColor(R.color.colorSurface));
         }
 
-        syncWhitelistState();
         Toolbox.getSyncThread(this, () -> {
-            syncWhitelistState();
-            WhitelistAccesser.getInstance().syncWhitelist();
+            whitelistAccesser.syncWhitelist();
+            if (skipWhitelistStateSync) skipWhitelistStateSync = false;
+            else whitelistAccesser.syncWhitelistState();
         }).start();
 
         stateOnclick.setOnClickListener(v -> {
-            Network.cared().setWhitelistState(!whitelistState, new Network.NetworkCallbackZero() {
-                @Override
-                public void onSuccess() {
-                    syncWhitelistState();
-                }
-
-                @Override
-                public void onFailure(@Nullable Throwable throwable) {
-                    // TODO: Process failure
-                }
-            });
+            whitelistAccesser.setWhitelistState(!whitelistAccesser.getWhitelistState());
+            skipWhitelistStateSync = true;
         });
 
         if (parentingActivity.isRemote) {
@@ -164,7 +157,7 @@ public class WhitelistFragment extends Fragment {
         ConstraintSet constraintSet;
 
         isFullscreen = doExtend;
-        WhitelistAccesser.getInstance().syncWhitelist();
+        whitelistAccesser.syncWhitelist();
         whitelistOnclick.setVisibility(doExtend ? View.GONE : View.VISIBLE);
 
         // Request fab
@@ -205,27 +198,7 @@ public class WhitelistFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void syncWhitelistState() {
-        Network.router().getWhitelistState(parentingActivity.isRemote, new Network.NetworkCallbackOne<Boolean>() {
-            @Override
-            public void onSuccess(Boolean arg) {
-                if (arg) stateText.setText(R.string.whitelist_state_turn_off);
-                else stateText.setText(R.string.whitelist_state_turn_on);
-                if (arg != whitelistState) animateUpdateStateButton();
-                whitelistState = arg;
-
-                context.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit().
-                        putBoolean(PREFS_STATE, whitelistState).apply();
-            }
-
-            @Override
-            public void onFailure(@Nullable Throwable throwable) {
-                //TODO: Process failure
-            }
-        });
-    }
-
-    private void animateUpdateStateButton() {
+    private void animateUpdateStateButton(boolean whitelistState) {
         @SuppressLint("ObjectAnimatorBinding")
         ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(stateOnclick.getBackground(), "color",
                 ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
@@ -240,6 +213,17 @@ public class WhitelistFragment extends Fragment {
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(backgroundAnimation).with(textAnimation);
         animatorSet.start();
+    }
+
+    private class OnGotWhitelistState implements Toolbox.CallbackOne<Boolean> {
+        @Override
+        public void invoke(Boolean arg) {
+            Toolbox.FastLog("srdtcfvgbh: " + arg);
+            if (arg) stateText.setText(R.string.whitelist_state_turn_off);
+            else stateText.setText(R.string.whitelist_state_turn_on);
+            if (arg != memoryWhitelistState) animateUpdateStateButton(!arg);
+            memoryWhitelistState = arg;
+        }
     }
 
     private class OnFABClick implements View.OnClickListener {
@@ -262,6 +246,7 @@ public class WhitelistFragment extends Fragment {
             if (phone.length() > 1 && phone.substring(0, 1).equals("8")) {
                 phone = "+7" + phone.substring(1);
             }
+            phone = phone.replaceAll("\\s","").toLowerCase();
 
             // Checks
             if (label.length() == 0) {
@@ -280,7 +265,7 @@ public class WhitelistFragment extends Fragment {
                 return;
             }
 
-            WhitelistAccesser.getInstance().addToWhitelist(new PhoneNumber(phone, label));
+            whitelistAccesser.addToWhitelist(new PhoneNumber(phone, label));
 
             labelView.setText("");
             phoneView.setText("");

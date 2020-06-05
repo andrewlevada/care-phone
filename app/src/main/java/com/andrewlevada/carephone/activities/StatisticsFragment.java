@@ -19,7 +19,6 @@ import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -88,8 +87,9 @@ public class StatisticsFragment extends Fragment {
             phonesHours.add(preferences.getInt(PREF_PHONES_HOURS + i, 0));
         }
 
-        Date nextUpdateDate = new Date(preferences.getLong(PREF_UPDATE_DATE, 0));
-        if (nextUpdateDate.before(new Date(System.currentTimeMillis()))) syncData();
+        // Date nextUpdateDate = new Date(preferences.getLong(PREF_UPDATE_DATE, 0));
+        // if (nextUpdateDate.before(new Date(System.currentTimeMillis()))) syncData();
+        syncData();
     }
 
     private void syncData() {

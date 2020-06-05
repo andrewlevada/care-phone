@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
 
 import java.util.ArrayList;
@@ -16,13 +18,19 @@ public class WhitelistAccesser {
     private static final String PREF_WHITELIST_LENGTH = "PREF_WHITELIST_LENGTH";
     private static final String PREF_WHITELIST_PHONE = "PREF_WHITELIST_PHONE";
     private static final String PREF_WHITELIST_LABEL = "PREF_WHITELIST_LABEL";
+    private static final String PREF_WHITELIST_STATE = "PREFS_WHITELIST_STATE";
 
     private static WhitelistAccesser instance;
 
     private List<PhoneNumber> whitelist;
+    private boolean whitelistState;
+
     private SharedPreferences preferences;
     private Context context;
+
     private RecyclerView.Adapter adapter;
+    private Toolbox.CallbackOne<Boolean> whitelistStateChangedCallback;
+
     private boolean isRemote;
 
     public void initialize(Context context, boolean isRemote) {
@@ -31,10 +39,15 @@ public class WhitelistAccesser {
         whitelist = new ArrayList<>();
         loadFromLocal();
         syncWhitelist();
+        syncWhitelistState();
     }
 
     public void setAdapter(RecyclerView.Adapter newAdapter) {
         adapter = newAdapter;
+    }
+
+    public void setWhitelistStateChangedCallback(Toolbox.CallbackOne<Boolean> whitelistStateChangedCallback) {
+        this.whitelistStateChangedCallback = whitelistStateChangedCallback;
     }
 
     private void loadFromLocal() {
@@ -47,24 +60,20 @@ public class WhitelistAccesser {
             String label = preferences.getString(PREF_WHITELIST_LABEL + i, "");
             whitelist.add(new PhoneNumber(phone, label));
         }
+
+        whitelistState = preferences.getBoolean(PREF_WHITELIST_STATE, true);
     }
 
-    public boolean isInList(@NonNull String number) {
-        number = number.replaceAll("\\s","").toLowerCase();
+    public void doDeclineCall(@NonNull final String phone, Toolbox.CallbackOne<Boolean> callback) {
+        syncWhitelist();
+        syncWhitelistState();
 
-        for (PhoneNumber phoneNumber : whitelist) {
-            String tempPhoneNumber = phoneNumber.phone.replaceAll("\\s","").toLowerCase();
-            if (number.equals(tempPhoneNumber)) return true;
+        if (!whitelistState) callback.invoke(false);
 
-            while (number.length() != tempPhoneNumber.length()) {
-                if (number.length() > tempPhoneNumber.length()) number = number.substring(1);
-                else tempPhoneNumber = tempPhoneNumber.substring(1);
-            }
+        for (PhoneNumber phoneNumber : whitelist)
+            if (phoneNumber.phone.equals(phone)) callback.invoke(false);
 
-            if (number.equals(tempPhoneNumber)) return true;
-        }
-
-        return false;
+        callback.invoke(true);
     }
 
     private void saveToLocal() {
@@ -77,6 +86,8 @@ public class WhitelistAccesser {
             editor.putString(PREF_WHITELIST_PHONE + i, whitelist.get(i).phone);
             editor.putString(PREF_WHITELIST_LABEL + i, whitelist.get(i).label);
         }
+
+        editor.putBoolean(PREF_WHITELIST_STATE, whitelistState);
 
         editor.apply();
     }
@@ -137,6 +148,32 @@ public class WhitelistAccesser {
                 // TODO: Process failure
             }
         });
+    }
+
+    public void syncWhitelistState() {
+        Network.router().getWhitelistState(isRemote, new Network.NetworkCallbackOne<Boolean>() {
+            @Override
+            public void onSuccess(Boolean arg) {
+                whitelistState = arg;
+                if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(arg);
+                saveToLocal();
+            }
+
+            @Override
+            public void onFailure(@Nullable Throwable throwable) {
+                //TODO: Process failure
+            }
+        });
+    }
+
+    public boolean getWhitelistState() {
+        return whitelistState;
+    }
+
+    public void setWhitelistState(boolean newState) {
+        Network.router().setWhitelistState(isRemote, newState, null);
+        whitelistState = newState;
+        if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(newState);
     }
 
     public static WhitelistAccesser getInstance() {

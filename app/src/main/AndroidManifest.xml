@@ -16,26 +16,23 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".logic.blockers.ServiceBlocker_L_to_N_MR1"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="phoneCall"/>
 
         <activity android:name=".activities.HelloActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.CaretakerListActivity"/>
+        <activity android:name=".activities.CaretakerListActivity" />
         <activity android:name=".activities.AuthActivity" />
-        <activity android:name=".activities.HomeActivity"/>
-
-        <receiver
-            android:name=".logic.blockers.Blocker$IncomingCallReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
-            </intent-filter>
-        </receiver>
+        <activity android:name=".activities.HomeActivity" />
     </application>
 
 </manifest>

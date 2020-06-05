@@ -92,4 +92,19 @@ public class Toolbox {
             this.call = call;
         }
     }
+
+    public interface Callback {
+        void invoke();
+    }
+    public interface CallbackOne<T> {
+        void invoke(T arg);
+    }
+    public interface CallbackState {
+        void invoke();
+        void fail();
+    }
+    public interface CallbackStateOne<T> {
+        void invoke(T arg);
+        void fail();
+    }
 }
