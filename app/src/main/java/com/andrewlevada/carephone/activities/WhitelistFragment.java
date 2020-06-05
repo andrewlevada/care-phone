@@ -2,9 +2,11 @@ package com.andrewlevada.carephone.activities;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,10 +91,6 @@ public class WhitelistFragment extends Fragment {
         if (parentingActivity == null && context instanceof HomeActivity)
             parentingActivity = (HomeActivity) context;
 
-        // Fill backdrop
-        if (parentingActivity != null)
-            parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick());
-
         // Whitelist onclick processing
         whitelistOnclick.setOnClickListener(v -> {
             if (isFullscreen) return;
@@ -117,7 +115,7 @@ public class WhitelistFragment extends Fragment {
         syncWhitelistState();
 
         stateOnclick.setOnClickListener(v -> {
-            Network.getInstance().setWhitelistState(!whitelistState, new Network.NetworkCallbackZero() {
+            Network.cared().setWhitelistState(!whitelistState, new Network.NetworkCallbackZero() {
                 @Override
                 public void onSuccess() {
                     syncWhitelistState();
@@ -134,7 +132,7 @@ public class WhitelistFragment extends Fragment {
         layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
                 v -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_link,
                         view -> {
-                        Network.getInstance().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
+                        Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
                             @Override
                             public void onSuccess(String arg) {
                                 ((TextView) view.findViewById(R.id.backdrop_code)).setText(arg);
@@ -180,6 +178,9 @@ public class WhitelistFragment extends Fragment {
         // Make transition
         TransitionManager.beginDelayedTransition(layout, transition);
         constraintSet.applyTo(layout);
+
+        // Fill backdrop after delay
+        new Handler().postDelayed(() -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick()), 650);
     }
 
     private void setupRecyclerView() {
@@ -191,7 +192,7 @@ public class WhitelistFragment extends Fragment {
     }
 
     private void syncWhitelistState() {
-        Network.getInstance().getWhitelistState(new Network.NetworkCallbackOne<Boolean>() {
+        Network.cared().getWhitelistState(new Network.NetworkCallbackOne<Boolean>() {
             @Override
             public void onSuccess(Boolean arg) {
                 if (arg) stateText.setText(R.string.whitelist_state_turn_off);
@@ -211,6 +212,7 @@ public class WhitelistFragment extends Fragment {
     }
 
     private void animateUpdateStateButton() {
+        @SuppressLint("ObjectAnimatorBinding")
         ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(stateOnclick.getBackground(), "color",
                 ContextCompat.getColor(context, whitelistState ? R.color.colorSurface : R.color.colorOnSurface),
                 ContextCompat.getColor(context, !whitelistState ? R.color.colorSurface : R.color.colorOnSurface));

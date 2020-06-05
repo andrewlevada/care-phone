@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -70,6 +71,7 @@ public abstract class BackdropActivity extends AppCompatActivity {
         backdropToolbar.setNavigationOnClickListener(v -> updateBackdrop(false));
     }
 
+    @UiThread
     public void fillBackdrop(@LayoutRes int layout, @Nullable final SimpleInflater.OnViewInflated callback, @Nullable final View.OnClickListener resultOnClick) {
         ViewGroup backdrop = findViewById(R.id.backdrop);
         backdrop.removeAllViews();

@@ -7,8 +7,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.andrewlevada.carephone.LogFragment;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.activities.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
 
 import java.util.List;

@@ -66,7 +66,7 @@ public class CaretakerListActivity extends BackdropActivity {
                 return;
             }
 
-            Network.getInstance().tryToLinkCaretaker(code, new Network.NetworkCallbackOne<Integer>() {
+            Network.caretaker().tryToLinkCaretaker(code, new Network.NetworkCallbackOne<Integer>() {
                 @Override
                 public void onSuccess(Integer resultCode) {
                     if (resultCode == 1) {
@@ -85,7 +85,7 @@ public class CaretakerListActivity extends BackdropActivity {
     }
 
     private void syncCaredList() {
-        Network.getInstance().getCaredList(new Network.NetworkCallbackOne<List<CaredUser>>() {
+        Network.caretaker().getCaredList(new Network.NetworkCallbackOne<List<CaredUser>>() {
             @Override
             public void onSuccess(List<CaredUser> arg) {
                 cared.clear();

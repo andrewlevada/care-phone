@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone;
+package com.andrewlevada.carephone.activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.RecyclerLogAdapter;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.network.Network;
@@ -65,7 +66,7 @@ public class LogFragment extends Fragment {
         if (isLoading) return;
         isLoading = true;
 
-        Network.getInstance().getLog(numberPerLoad, loadedNumber, new Network.NetworkCallbackOne<List<LogRecord>>() {
+        Network.cared().getLog(numberPerLoad, loadedNumber, new Network.NetworkCallbackOne<List<LogRecord>>() {
             @Override
             public void onSuccess(List<LogRecord> arg) {
                 isLoading = false;

@@ -90,14 +90,14 @@ public class WhitelistAccesser {
 
     public void setWhitelistElement(int index, PhoneNumber element) {
         String prevPhone = whitelist.get(index).phone;
-        Network.getInstance().editWhitelistRecord(prevPhone, element, null);
+        Network.cared().editWhitelistRecord(prevPhone, element, null);
         whitelist.set(index, element);
         saveToLocal();
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     public void addToWhitelist(PhoneNumber phoneNumber) {
-        Network.getInstance().addToWhitelist(phoneNumber, null);
+        Network.cared().addToWhitelist(phoneNumber, null);
         whitelist.add(phoneNumber);
         saveToLocal();
         if (adapter != null) adapter.notifyDataSetChanged();
@@ -106,14 +106,14 @@ public class WhitelistAccesser {
     public PhoneNumber removePhoneNumberAt(int index) {
         PhoneNumber result = whitelist.remove(index);
         saveToLocal();
-        Network.getInstance().removeFromWhitelist(result.phone, null);
+        Network.cared().removeFromWhitelist(result.phone, null);
         return result;
     }
 
     public boolean removeFromWhitelist(@NonNull PhoneNumber o) {
         boolean result = whitelist.remove(o);
         saveToLocal();
-        if (result) Network.getInstance().removeFromWhitelist(o.phone, null);
+        if (result) Network.cared().removeFromWhitelist(o.phone, null);
         return result;
     }
 
@@ -122,7 +122,7 @@ public class WhitelistAccesser {
     }
 
     public void syncWhitelist() {
-        Network.getInstance().syncWhitelist(new Network.NetworkCallbackOne<List<PhoneNumber>>() {
+        Network.cared().syncWhitelist(new Network.NetworkCallbackOne<List<PhoneNumber>>() {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
                 whitelist = arg;

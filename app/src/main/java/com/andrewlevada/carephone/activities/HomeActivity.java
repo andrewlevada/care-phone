@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.andrewlevada.carephone.LogFragment;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.extra.BackdropActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
@@ -133,7 +132,7 @@ public class HomeActivity extends BackdropActivity {
         super.updateBackdrop(extend);
 
         if (!extend && doCloseLinkOnBackdropCollapse) {
-            Network.getInstance().removeLinkRequest(null);
+            Network.cared().removeLinkRequest(null);
             doCloseLinkOnBackdropCollapse = false;
         }
     }

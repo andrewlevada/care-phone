@@ -36,6 +36,18 @@ public interface RetrofitRequests {
     @DELETE("/whitelist")
     Call<Void> deleteWhitelist(@Query("userToken") String userToken, @Query("phone") String phoneNumber);
 
+    @GET("/whitelist/r")
+    Call<List<PhoneNumber>> getWhitelistR(@Query("userToken") String userToken, @Query("rUid") String rUid);
+
+    @PUT("/whitelist/r")
+    Call<Void> putWhitelistR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("phone") String phoneNumber, @Query("label") String label);
+
+    @POST("/whitelist/r")
+    Call<Void> postWhitelistR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("prevPhone") String prevPhone, @Query("phone") String phoneNumber, @Query("label") String label);
+
+    @DELETE("/whitelist/r")
+    Call<Void> deleteWhitelistR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("phone") String phoneNumber);
+
     // Whitelist State
 
     @GET("/whitelist/state")
@@ -44,10 +56,19 @@ public interface RetrofitRequests {
     @POST("/whitelist/state")
     Call<Void> postWhitelistState(@Query("userToken") String userToken, @Query("state") Boolean state);
 
+    @GET("/whitelist/state/r")
+    Call<Boolean> getWhitelistStateR(@Query("userToken") String userToken, @Query("rUid") String rUid);
+
+    @POST("/whitelist/state/r")
+    Call<Void> postWhitelistStateR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("state") Boolean state);
+
     // Statistics
 
     @GET("/statistics")
     Call<StatisticsPack> getStatisticsPack(@Query("userToken") String userToken);
+
+    @GET("/statistics/r")
+    Call<StatisticsPack> getStatisticsPackR(@Query("userToken") String userToken, @Query("rUid") String rUid);
 
     // Log
 
@@ -56,6 +77,9 @@ public interface RetrofitRequests {
 
     @PUT("/log")
     Call<Void> putLog(@Query("userToken") String userToken, @Query("phoneNumber") String phoneNumber, @Query("startTimestamp") Date startTimestamp, @Query("secondsDuration") int secondsDuration, @Query("type") int type);
+
+    @GET("/log/r")
+    Call<List<LogRecord>> getLogR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("limit") int limit, @Query("offset") int offset);
 
     // Cared List
 

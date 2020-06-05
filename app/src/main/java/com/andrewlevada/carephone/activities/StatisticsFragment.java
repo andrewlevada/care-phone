@@ -83,7 +83,7 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void syncData() {
-        Network.getInstance().syncStatistics(new Network.NetworkCallbackOne<StatisticsPack>() {
+        Network.cared().syncStatistics(new Network.NetworkCallbackOne<StatisticsPack>() {
             @Override
             public void onSuccess(StatisticsPack statisticsPack) {
                 processStatisticsPack(statisticsPack);

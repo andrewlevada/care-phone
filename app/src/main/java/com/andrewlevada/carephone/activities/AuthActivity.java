@@ -112,8 +112,8 @@ public class AuthActivity extends AppCompatActivity {
         authTask.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = task.getResult().getUser();
-                Network.getInstance().useFirebaseAuthToken();
-                Network.getInstance().addUserIfNew(null);
+                Network.general().useFirebaseAuthToken();
+                Network.cared().addUserIfNew(null);
                 continueToNextActivity(user);
             } else {
                 editText.setError(getText(R.string.auth_wrong_code));
