@@ -218,7 +218,6 @@ public class WhitelistFragment extends Fragment {
     private class OnGotWhitelistState implements Toolbox.CallbackOne<Boolean> {
         @Override
         public void invoke(Boolean arg) {
-            Toolbox.FastLog("srdtcfvgbh: " + arg);
             if (arg) stateText.setText(R.string.whitelist_state_turn_off);
             else stateText.setText(R.string.whitelist_state_turn_on);
             if (arg != memoryWhitelistState) animateUpdateStateButton(!arg);

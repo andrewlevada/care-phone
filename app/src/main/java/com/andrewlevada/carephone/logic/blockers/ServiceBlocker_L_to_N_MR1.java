@@ -18,16 +18,24 @@ import androidx.core.app.NotificationCompat;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.HelloActivity;
+import com.andrewlevada.carephone.activities.LogFragment;
+import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.android.internal.telephony.ITelephony;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 public class ServiceBlocker_L_to_N_MR1 extends Service {
     private NotificationManager notificationManager;
     public static final int DEFAULT_NOTIFICATION_ID = 159;
 
     private IncomingCallReceiver receiver;
+
+    private String prevPhoneState;
+    private Date callStartTime;
+    private int callType;
 
     public ServiceBlocker_L_to_N_MR1() {
     }
@@ -48,6 +56,8 @@ public class ServiceBlocker_L_to_N_MR1 extends Service {
         intentFilter.addAction("android.intent.action.PHONE_STATE");
         receiver = new IncomingCallReceiver();
         registerReceiver(receiver, intentFilter);
+
+        prevPhoneState = TelephonyManager.EXTRA_STATE_IDLE;
 
         return START_REDELIVER_INTENT;
     }
@@ -71,7 +81,7 @@ public class ServiceBlocker_L_to_N_MR1 extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(contentIntent)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.logo)
+                .setSmallIcon(R.drawable.outline_icon)
                 .setTicker(ticker)
                 .setContentTitle(title)
                 .setContentText(text)
@@ -81,27 +91,28 @@ public class ServiceBlocker_L_to_N_MR1 extends Service {
         startForeground(DEFAULT_NOTIFICATION_ID, notification);
     }
 
-    public static class IncomingCallReceiver extends BroadcastReceiver {
+    public class IncomingCallReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toolbox.FastLog("DETECTING");
             if (intent.getAction() == null || !intent.getAction().equals("android.intent.action.PHONE_STATE"))
                 return;
 
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String number = intent.getExtras() != null ?
+            String phone = intent.getExtras() != null ?
                     intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
-            Toolbox.FastLog("DETECTED PHONE: " + number);
+
+            logAction(phone, state);
+            Toolbox.FastLog("STATE: " + state);
 
             if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
                 return;
 
-            if (number == null) {
+            if (phone == null) {
                 declineCall(context);
                 return;
             }
 
-            WhitelistAccesser.getInstance().doDeclineCall(number, arg -> {
+            WhitelistAccesser.getInstance().doDeclineCall(phone, arg -> {
                 if (arg) declineCall(context);
             });
         }
@@ -124,6 +135,26 @@ public class ServiceBlocker_L_to_N_MR1 extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void logAction(String phone, String state) {
+        if (prevPhoneState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING) &&
+            state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+            callStartTime = new Date(System.currentTimeMillis());
+            callType = LogFragment.TYPE_INCOMING;
+        } else if (prevPhoneState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE) &&
+                state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK)) {
+            callStartTime = new Date(System.currentTimeMillis());
+            callType = LogFragment.TYPE_OUTGOING;
+        } else if (prevPhoneState.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_OFFHOOK) &&
+            state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_IDLE)) {
+                int duration = (int)((System.currentTimeMillis() - callStartTime.getTime()) / 1000);
+                Network.cared().addToLog(new LogRecord(phone, callStartTime.getTime(), duration, callType), null);
+                callStartTime = null;
+                callType = -1;
+            }
+
+        prevPhoneState = state;
     }
 
     @Nullable

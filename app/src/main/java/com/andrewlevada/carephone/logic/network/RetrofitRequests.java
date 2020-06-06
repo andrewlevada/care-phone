@@ -5,7 +5,6 @@ import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -76,7 +75,7 @@ public interface RetrofitRequests {
     Call<List<LogRecord>> getLog(@Query("userToken") String userToken, @Query("limit") int limit, @Query("offset") int offset);
 
     @PUT("/log")
-    Call<Void> putLog(@Query("userToken") String userToken, @Query("phoneNumber") String phoneNumber, @Query("startTimestamp") Date startTimestamp, @Query("secondsDuration") int secondsDuration, @Query("type") int type);
+    Call<Void> putLog(@Query("userToken") String userToken, @Query("phoneNumber") String phoneNumber, @Query("startTimestamp") long startTimestamp, @Query("secondsDuration") int secondsDuration, @Query("type") int type);
 
     @GET("/log/r")
     Call<List<LogRecord>> getLogR(@Query("userToken") String userToken, @Query("rUid") String rUid, @Query("limit") int limit, @Query("offset") int offset);

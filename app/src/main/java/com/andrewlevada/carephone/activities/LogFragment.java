@@ -65,6 +65,8 @@ public class LogFragment extends Fragment {
 
     private void setupRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
         recyclerView.setLayoutManager(layoutManager);
 
         logRecords = new ArrayList<>();

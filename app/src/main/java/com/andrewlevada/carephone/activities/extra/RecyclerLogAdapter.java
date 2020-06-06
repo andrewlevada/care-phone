@@ -11,11 +11,15 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RecyclerLogAdapter extends RecyclerAdapter {
     private List<LogRecord> dataset;
     private OnEndReachedCallback callback;
+    private SimpleDateFormat dateFormat;
 
     public RecyclerLogAdapter(RecyclerView recyclerView, List<LogRecord> dataset, OnEndReachedCallback callback) {
         super(recyclerView);
@@ -23,13 +27,14 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
 
         this.dataset = dataset;
         this.callback = callback;
+        dateFormat = new SimpleDateFormat("HH:mm dd LLLL", Locale.getDefault());
     }
 
     @Override
     void fillItemWithData(ViewGroup item, int position) {
         LogRecord log = dataset.get(position);
         ((TextView) item.findViewById(R.id.recycler_phone)).setText(log.phoneNumber);
-        ((TextView) item.findViewById(R.id.recycler_date)).setText(log.startTimestamp.toString());
+        ((TextView) item.findViewById(R.id.recycler_date)).setText(dateFormat.format(new Date(log.startTimestamp)));
 
         // Duration
         int duration = log.secondsDuration;

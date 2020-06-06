@@ -68,10 +68,15 @@ public class WhitelistAccesser {
         syncWhitelist();
         syncWhitelistState();
 
-        if (!whitelistState) callback.invoke(false);
+        if (!whitelistState) {
+            callback.invoke(false);
+            return;
+        }
 
         for (PhoneNumber phoneNumber : whitelist)
-            if (phoneNumber.phone.equals(phone)) callback.invoke(false);
+            if (phoneNumber.phone.equalsIgnoreCase(phone)) {
+                return;
+            }
 
         callback.invoke(true);
     }
