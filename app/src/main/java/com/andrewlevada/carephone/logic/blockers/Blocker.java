@@ -4,8 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 
 import com.andrewlevada.carephone.Toolbox;
 
@@ -26,8 +24,10 @@ public class Blocker {
             blockerClass = ServiceBlocker_L_to_N_MR1.class;
         } else if (sdk == Build.VERSION_CODES.O) return false;
         else if (sdk == Build.VERSION_CODES.O_MR1) return false;
-        else if (sdk == Build.VERSION_CODES.P) return false;
-        else if (sdk == Build.VERSION_CODES.Q) return false;
+        else if (sdk >= Build.VERSION_CODES.P && sdk <= Build.VERSION_CODES.Q) {
+            blockerIntent = new Intent(context, Blocker_P.class);
+            blockerClass = Blocker_P.class;
+        }
         else return false;
 
         Toolbox.FastLog("INITIATING BLOCKER");
@@ -46,26 +46,5 @@ public class Blocker {
             }
         }
         return false;
-    }
-
-    private static class PhoneCallListener extends PhoneStateListener {
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-        Toolbox.FastLog("numberhere: " + incomingNumber);
-            if (TelephonyManager.CALL_STATE_RINGING == state) {
-                // phone ringing
-                Toolbox.FastLog("RINGING, number: " + incomingNumber);
-            }
-
-            if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
-                // active
-                Toolbox.FastLog("OFFHOOK: " + incomingNumber);
-            }
-
-            if (TelephonyManager.CALL_STATE_IDLE == state) {
-
-            }
-        }
     }
 }
