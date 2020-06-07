@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.activities.extra.RecyclerLogAdapter;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.network.Network;
@@ -27,7 +28,7 @@ public class LogFragment extends Fragment {
     private static final int numberPerLoad = 20;
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RecyclerAdapter adapter;
 
     private List<LogRecord> logRecords;
     private int loadedNumber;
@@ -55,7 +56,7 @@ public class LogFragment extends Fragment {
             parentingActivity = (HomeActivity) container.getContext();
 
         // Find views by ids
-        recyclerView = layout.findViewById(R.id.log_recycler);
+        recyclerView = layout.findViewById(R.id.recycler);
 
         setupRecyclerView();
         loadMoreRecords();

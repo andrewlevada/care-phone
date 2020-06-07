@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -65,17 +64,14 @@ public class AuthActivity extends AppCompatActivity {
         authCallback = new AuthCallback(this);
 
         // Find views by ids
-        infoTextView = findViewById(R.id.auth_info_text);
-        button = findViewById(R.id.auth_button);
-        editText = findViewById(R.id.auth_edit_text);
+        infoTextView = findViewById(R.id.info_text);
+        button = findViewById(R.id.button);
+        editText = findViewById(R.id.edit_text);
 
         // Process button onclick
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (state == STATE_PHONE) requestCodeSending();
-                else if (state == STATE_CODE) processEnteredCode();
-            }
+        button.setOnClickListener(v -> {
+            if (state == STATE_PHONE) requestCodeSending();
+            else if (state == STATE_CODE) processEnteredCode();
         });
     }
 
@@ -170,7 +166,7 @@ public class AuthActivity extends AppCompatActivity {
         animatorSet.start();
     }
 
-    private class AuthCallback extends PhoneAuthProvider.OnVerificationStateChangedCallbacks {
+    private static class AuthCallback extends PhoneAuthProvider.OnVerificationStateChangedCallbacks {
         private AuthActivity activity;
 
         @Override

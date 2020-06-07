@@ -10,7 +10,6 @@ import com.andrewlevada.carephone.Toolbox;
 public class Blocker {
 
     public static boolean enable(Context context) {
-        Intent blockerIntent;
         Class<?> blockerClass;
         int sdk = Build.VERSION.SDK_INT;
 
@@ -19,19 +18,20 @@ public class Blocker {
         else if (sdk == Build.VERSION_CODES.JELLY_BEAN_MR1) return false;
         else if (sdk == Build.VERSION_CODES.JELLY_BEAN_MR2) return false;
         else if (sdk == Build.VERSION_CODES.KITKAT) return false;
-        else if (sdk >= Build.VERSION_CODES.LOLLIPOP && sdk <= Build.VERSION_CODES.N_MR1) {
-            blockerIntent = new Intent(context, ServiceBlocker_L_to_N_MR1.class);
-            blockerClass = ServiceBlocker_L_to_N_MR1.class;
-        } else if (sdk == Build.VERSION_CODES.O) return false;
-        else if (sdk == Build.VERSION_CODES.O_MR1) return false;
-        else if (sdk >= Build.VERSION_CODES.P && sdk <= Build.VERSION_CODES.Q) {
-            blockerIntent = new Intent(context, Blocker_P.class);
-            blockerClass = Blocker_P.class;
-        }
+        else if (sdk == Build.VERSION_CODES.LOLLIPOP) blockerClass = Blocker_L_to_N_MR1.class;
+        else if (sdk == Build.VERSION_CODES.LOLLIPOP_MR1) blockerClass = Blocker_L_to_N_MR1.class;
+        else if (sdk == Build.VERSION_CODES.M) blockerClass = Blocker_L_to_N_MR1.class;
+        else if (sdk == Build.VERSION_CODES.N) blockerClass = Blocker_L_to_N_MR1.class;
+        else if (sdk == Build.VERSION_CODES.N_MR1) blockerClass = Blocker_L_to_N_MR1.class;
+        else if (sdk == Build.VERSION_CODES.O) return false; // TODO: Implement blocking for this version
+        else if (sdk == Build.VERSION_CODES.O_MR1) return false; // TODO: Implement blocking for this version
+        else if (sdk == Build.VERSION_CODES.P) blockerClass = Blocker_P.class;
+        else if (sdk == Build.VERSION_CODES.Q) blockerClass = Blocker_P.class;
         else return false;
 
-        Toolbox.FastLog("INITIATING BLOCKER");
-        if (!isServiceRunning(blockerClass, context)) context.startService(blockerIntent);
+        Toolbox.fastLog("INITIATING BLOCKER");
+        if (!isServiceRunning(blockerClass, context))
+            context.startService(new Intent(context, blockerClass));
 
         return true;
     }

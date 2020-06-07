@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.HelloActivity"
+    android:id="@+id/layout"
     android:background="@color/colorSurface">
 
     <Button
-        android:id="@+id/hello_button_cared"
+        android:id="@+id/button_cared"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginBottom="32dp"
         android:text="@string/hello_button_cared"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/hello_wave"
-        app:layout_constraintEnd_toStartOf="@+id/hello_track_right"
-        app:layout_constraintStart_toStartOf="@+id/hello_track_left" />
+        app:layout_constraintBottom_toTopOf="@+id/image"
+        app:layout_constraintEnd_toStartOf="@+id/track_right"
+        app:layout_constraintStart_toStartOf="@+id/track_left" />
 
     <Button
-        android:id="@+id/hello_button_caretaker"
+        android:id="@+id/button_caretaker"
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginTop="32dp"
@@ -27,24 +29,25 @@
         android:text="@string/hello_button_caretaker"
         android:textColor="@color/colorOnSurface"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/hello_track_right"
-        app:layout_constraintStart_toStartOf="@+id/hello_track_left"
-        app:layout_constraintTop_toTopOf="@+id/hello_buttons_guideline" />
+        app:layout_constraintEnd_toStartOf="@+id/track_right"
+        app:layout_constraintStart_toStartOf="@+id/track_left"
+        app:layout_constraintTop_toTopOf="@+id/buttons_guideline" />
 
     <ImageView
-        android:id="@+id/hello_wave"
+        android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
         android:src="@drawable/hello_wave"
-        app:layout_constraintBottom_toTopOf="@id/hello_buttons_guideline" />
+        app:layout_constraintBottom_toTopOf="@id/buttons_guideline"
+        android:contentDescription="@null" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hello_wave"/>
+        app:layout_constraintTop_toBottomOf="@+id/image"/>
 
     <TextView
         android:layout_width="0dp"
@@ -58,9 +61,9 @@
         android:fontFamily="@font/comfortaa_bold"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/hello_track_right"
-        app:layout_constraintStart_toStartOf="@+id/hello_track_left"
-        app:layout_constraintTop_toBottomOf="@+id/hello_button_caretaker" />
+        app:layout_constraintEnd_toStartOf="@+id/track_right"
+        app:layout_constraintStart_toStartOf="@+id/track_left"
+        app:layout_constraintTop_toBottomOf="@+id/button_caretaker" />
 
     <TextView
         android:layout_width="0dp"
@@ -73,27 +76,27 @@
         android:textSize="17sp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/hello_button_cared"
-        app:layout_constraintEnd_toStartOf="@+id/hello_track_right"
-        app:layout_constraintStart_toStartOf="@+id/hello_track_left"
+        app:layout_constraintBottom_toTopOf="@+id/button_cared"
+        app:layout_constraintEnd_toStartOf="@+id/track_right"
+        app:layout_constraintStart_toStartOf="@+id/track_left"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/hello_buttons_guideline"
+        android:id="@+id/buttons_guideline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/hello_track_left"
+        android:id="@+id/track_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.2"/>
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/hello_track_right"
+        android:id="@+id/track_right"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"

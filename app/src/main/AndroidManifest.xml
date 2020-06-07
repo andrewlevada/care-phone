@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ANSWER_PHONE_CALLS" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -16,8 +17,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <service
-            android:name=".logic.blockers.ServiceBlocker_L_to_N_MR1"
+            android:name=".logic.blockers.Blocker_L_to_N_MR1"
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="phoneCall"/>
@@ -25,7 +27,6 @@
         <activity android:name=".activities.HelloActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

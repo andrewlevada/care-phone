@@ -16,6 +16,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Network {
+    private static final String LOG_PREFIX = "--------------- SERVER ERROR: ";
+
     private static Network instance;
     private static RetrofitRequests retrofitRequests;
     private ExtendedAuthTokenCallback authTokenCallback;
@@ -65,7 +67,7 @@ public class Network {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 try {
-                    if (response.errorBody() != null) Toolbox.FastLog("--------------- SERVER ERROR: " + response.errorBody().string());
+                    if (response.errorBody() != null) Toolbox.fastLog(LOG_PREFIX + response.errorBody().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -75,7 +77,7 @@ public class Network {
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toolbox.FastLog("--------------- SERVER ERROR T: " + t.getMessage());
+                Toolbox.fastLog(LOG_PREFIX + t.getMessage());
                 if (callback != null) callback.onFailure(t);
             }
         };
@@ -85,7 +87,7 @@ public class Network {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 try {
-                    if (response.errorBody() != null) Toolbox.FastLog("--------------- SERVER ERROR: " + response.errorBody().string());
+                    if (response.errorBody() != null) Toolbox.fastLog(LOG_PREFIX + response.errorBody().string());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -96,7 +98,7 @@ public class Network {
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                Toolbox.FastLog("--------------- SERVER ERROR T: " + t.getMessage());
+                Toolbox.fastLog(LOG_PREFIX + t.getMessage());
                 callback.onFailure(t);
             }
         };

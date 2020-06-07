@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.logic.network.Network;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ public class WhitelistAccesser {
     private static final String PREF_WHITELIST_LABEL = "PREF_WHITELIST_LABEL";
     private static final String PREF_WHITELIST_STATE = "PREFS_WHITELIST_STATE";
 
+    // TODO: Fix memory leak
     private static WhitelistAccesser instance;
 
     private List<PhoneNumber> whitelist;
@@ -28,7 +29,7 @@ public class WhitelistAccesser {
     private SharedPreferences preferences;
     private Context context;
 
-    private RecyclerView.Adapter adapter;
+    private RecyclerAdapter adapter;
     private Toolbox.CallbackOne<Boolean> whitelistStateChangedCallback;
 
     private boolean isRemote;
@@ -42,7 +43,7 @@ public class WhitelistAccesser {
         syncWhitelistState();
     }
 
-    public void setAdapter(RecyclerView.Adapter newAdapter) {
+    public void setAdapter(RecyclerAdapter newAdapter) {
         adapter = newAdapter;
     }
 
@@ -74,7 +75,7 @@ public class WhitelistAccesser {
         }
 
         for (PhoneNumber phoneNumber : whitelist)
-            if (phoneNumber.phone.equalsIgnoreCase(phone)) {
+            if (phoneNumber.getPhone().equalsIgnoreCase(phone)) {
                 return;
             }
 
@@ -88,8 +89,8 @@ public class WhitelistAccesser {
         editor.putInt(PREF_WHITELIST_LENGTH, whitelist.size());
 
         for (int i = 0; i < whitelist.size(); i++) {
-            editor.putString(PREF_WHITELIST_PHONE + i, whitelist.get(i).phone);
-            editor.putString(PREF_WHITELIST_LABEL + i, whitelist.get(i).label);
+            editor.putString(PREF_WHITELIST_PHONE + i, whitelist.get(i).getPhone());
+            editor.putString(PREF_WHITELIST_LABEL + i, whitelist.get(i).getLabel());
         }
 
         editor.putBoolean(PREF_WHITELIST_STATE, whitelistState);
@@ -107,7 +108,7 @@ public class WhitelistAccesser {
     }
 
     public void setWhitelistElement(int index, PhoneNumber element) {
-        String prevPhone = whitelist.get(index).phone;
+        String prevPhone = whitelist.get(index).getPhone();
         Network.router().editWhitelistRecord(isRemote, prevPhone, element, null);
         whitelist.set(index, element);
         saveToLocal();
@@ -124,14 +125,14 @@ public class WhitelistAccesser {
     public PhoneNumber removePhoneNumberAt(int index) {
         PhoneNumber result = whitelist.remove(index);
         saveToLocal();
-        Network.router().removeFromWhitelist(isRemote, result.phone, null);
+        Network.router().removeFromWhitelist(isRemote, result.getPhone(), null);
         return result;
     }
 
     public boolean removeFromWhitelist(@NonNull PhoneNumber o) {
         boolean result = whitelist.remove(o);
         saveToLocal();
-        if (result) Network.router().removeFromWhitelist(isRemote, o.phone, null);
+        if (result) Network.router().removeFromWhitelist(isRemote, o.getPhone(), null);
         return result;
     }
 

@@ -10,6 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.SimpleInflater;
 
+/**
+ * This is an extension of Recycler view adapter.
+ * It simplifies work with it by implementing inflation
+ * of items and there storing. You should only write how
+ * to fill item with content.
+ * !!! You must set itemLayout variable to your items resource int !!!
+ */
 public abstract class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.BasicViewHolder> {
     @LayoutRes
     int itemLayout;
@@ -35,6 +42,11 @@ public abstract class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapt
         fillItemWithData(item, position);
     }
 
+    /**
+     * Fill recycler item with your content here.
+     * @param item Item to be filled.
+     * @param position Index of item in recycler view.
+     */
     abstract void fillItemWithData(ViewGroup item, int position);
 
     static class BasicViewHolder extends RecyclerView.ViewHolder {

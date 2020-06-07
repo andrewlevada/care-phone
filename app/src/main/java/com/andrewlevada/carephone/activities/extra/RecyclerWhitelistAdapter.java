@@ -1,5 +1,6 @@
 package com.andrewlevada.carephone.activities.extra;
 
+import android.os.Build;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,21 +30,13 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
     void fillItemWithData(ViewGroup item, int position) {
         PhoneNumber number = whitelistAccesser.getWhitelistElement(position);
 
-        ((TextView) item.findViewById(R.id.recycler_number)).setText(number.phone);
-        ((TextView) item.findViewById(R.id.recycler_label)).setText(number.label);
+        ((TextView) item.findViewById(R.id.recycler_number)).setText(number.getPhone());
+        ((TextView) item.findViewById(R.id.recycler_label)).setText(number.getLabel());
 
         // Show and process additional image button if recycler view is extended
         if (isExtended) {
             item.findViewById(R.id.recycler_img).setVisibility(View.VISIBLE);
-            item.findViewById(R.id.recycler_img).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY, R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
-                    popupMenu.getMenuInflater().inflate(R.menu.whitelist_editor, popupMenu.getMenu());
-                    popupMenu.show();
-                    popupMenu.setOnMenuItemClickListener(new OnMenuItemClick(position));
-                }
-            });
+            item.findViewById(R.id.recycler_img).setOnClickListener(v -> inflateActionsMenu(v, position));
         } else item.findViewById(R.id.recycler_img).setVisibility(View.GONE);
 
         // Hide divider on last element
@@ -64,13 +57,24 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
         notifyDataSetChanged();
     }
 
+    private void inflateActionsMenu(View v, int position) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            PopupMenu popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY, R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
+            popupMenu.getMenuInflater().inflate(R.menu.whitelist_editor, popupMenu.getMenu());
+            popupMenu.show();
+            popupMenu.setOnMenuItemClickListener(new OnMenuItemClick(position));
+        } else {
+            // TODO: Very important feature! ASAP
+        }
+    }
+
     private class OnMenuItemClick implements PopupMenu.OnMenuItemClickListener {
         private int index;
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             if (item.getItemId() == R.id.whitelist_editor_edit) {
-                // TODO: Implement editing on backdrop
+                // TODO: Implement editing on same cloud
             } else if (item.getItemId() == R.id.whitelist_editor_delete) {
                 // TODO: Add warning for deleting
                 whitelistAccesser.removePhoneNumberAt(index);

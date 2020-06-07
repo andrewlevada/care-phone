@@ -73,13 +73,13 @@ public class WhitelistFragment extends Fragment {
             parentingActivity = (HomeActivity) context;
 
         // Get views by id
-        Toolbar toolbar = layout.findViewById(R.id.home_whitelist_fullscreen_toolbar);
-        whitelistOnclick = layout.findViewById(R.id.home_whitelist_onclick);
+        Toolbar toolbar = layout.findViewById(R.id.whitelist_fullscreen_toolbar);
+        whitelistOnclick = layout.findViewById(R.id.whitelist_onclick);
         stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
         stateText = layout.findViewById(R.id.whitelist_state_text);
 
         // Setup recycler view
-        recyclerView = layout.findViewById(R.id.home_whitelist_recycler);
+        recyclerView = layout.findViewById(R.id.whitelist_recycler);
         setupRecyclerView();
 
         // Setup Whitelist Accesser
@@ -131,22 +131,23 @@ public class WhitelistFragment extends Fragment {
         } else {
             // Link user onclick processing
             layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
-                    v -> parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_link,
+                    v -> parentingActivity.fillCloud(R.layout.cloud_content_whitelist_link,
                             view -> {
                                 Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
                                     @Override
                                     public void onSuccess(String arg) {
-                                        ((TextView) view.findViewById(R.id.backdrop_code)).setText(arg);
-                                        parentingActivity.doCloseLinkOnBackdropCollapse = true;
+                                        ((TextView) view.findViewById(R.id.cloud_code)).setText(arg);
+                                        parentingActivity.doCloseLinkOnCloudCollapse = true;
                                     }
 
                                     @Override
                                     public void onFailure(@Nullable Throwable throwable) {
                                         // TODO: Process failure better
-                                        ((TextView) view.findViewById(R.id.backdrop_code)).setText("000000");
+                                        ((TextView) view.findViewById(R.id.cloud_code))
+                                                .setText(R.string.whitelist_link_blank_code);
                                     }
                                 });
-                                parentingActivity.updateBackdrop(true);
+                                parentingActivity.updateCloud(true);
                             }, null));
         }
 
@@ -185,9 +186,9 @@ public class WhitelistFragment extends Fragment {
         if (parentingActivity.isRemote)
             layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
 
-        // Fill backdrop after delay
+        // Fill cloud after delay
         if (doExtend) new Handler().postDelayed(() ->
-                parentingActivity.fillBackdrop(R.layout.backdrop_content_whitelist_add, null, new OnBackdropResultClick()), 650);
+                parentingActivity.fillCloud(R.layout.cloud_content_whitelist_add, null, new OnCloudResultClick()), 650);
     }
 
     private void setupRecyclerView() {
@@ -228,17 +229,17 @@ public class WhitelistFragment extends Fragment {
     private class OnFABClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            parentingActivity.updateBackdrop(true);
+            parentingActivity.updateCloud(true);
         }
     }
 
-    private class OnBackdropResultClick implements View.OnClickListener {
+    private class OnCloudResultClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             ViewGroup parent = (ViewGroup) v.getParent();
-            TextView labelView = parent.findViewById(R.id.backdrop_content_text_name);
+            TextView labelView = parent.findViewById(R.id.cloud_text_name);
             String label = labelView.getText().toString();
-            TextView phoneView = parent.findViewById(R.id.backdrop_content_text_phone);
+            TextView phoneView = parent.findViewById(R.id.cloud_text_phone);
             String phone = phoneView.getText().toString();
 
             // Process
@@ -268,7 +269,7 @@ public class WhitelistFragment extends Fragment {
 
             labelView.setText("");
             phoneView.setText("");
-            parentingActivity.updateBackdrop(false);
+            parentingActivity.updateCloud(false);
         }
     }
 }

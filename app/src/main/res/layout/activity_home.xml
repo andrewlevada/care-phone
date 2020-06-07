@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,30 +9,30 @@
     android:id="@+id/layout">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/home_fragment_container"
+        android:id="@+id/fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/home_bottom_navigation" />
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/home_bottom_navigation"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/home_navigation" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/home_fab_layout"
+        android:id="@+id/fab_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/home_fragment_container"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_container"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/home_fab"
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
@@ -45,7 +46,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/backdrop_toolbar"
+        android:id="@+id/cloud_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorOnSurface"
@@ -57,12 +58,12 @@
     <androidx.constraintlayout.widget.Guideline
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/backdrop_guideline"
+        android:id="@+id/cloud_guideline"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2"/>
+        app:layout_constraintGuide_percent="0.6"/>
 
     <LinearLayout
-        android:id="@+id/backdrop"
+        android:id="@+id/cloud"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"

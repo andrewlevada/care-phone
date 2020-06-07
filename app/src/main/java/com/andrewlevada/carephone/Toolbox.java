@@ -8,11 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GetTokenResult;
 
 /**
  * This class contains all kinds of tools
@@ -36,18 +33,8 @@ public class Toolbox {
         return null;
     }
 
-    public static void FastLog(String value) {
+    public static void fastLog(String value) {
         Log.e("TEST", value);
-    }
-
-    public static void requestFirebaseAuthToken(final AuthTokenCallback callback) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) user.getIdToken(true).addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-            @Override
-            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                callback.onGenerated(task.getResult().getToken());
-            }
-        });
     }
 
     public static String intToHoursString(int num) {
@@ -59,18 +46,38 @@ public class Toolbox {
         else return num + " часов";
     }
 
-    public static SyncThread getSyncThread(Fragment fragment, InSyncThread call) {
-        return new SyncThread(fragment, call);
+    public static String getShortStringFromTime(int seconds) {
+        String label;
+        if (seconds < 60) {
+            label = "с";
+        } else if (seconds < 60 * 60) {
+            seconds /= 60;
+            label = "м";
+        } else {
+            seconds /= 60 * 60;
+            label = "ч";
+        }
+
+        return seconds + label;
     }
 
     public interface AuthTokenCallback {
         void onGenerated(String token);
     }
+    public static void requestFirebaseAuthToken(final AuthTokenCallback callback) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) user.getIdToken(true).addOnCompleteListener(
+                task -> callback.onGenerated(task.getResult().getToken()));
+    }
+
+    // Sync thread used for syncing data
 
     public interface InSyncThread {
         void sync();
     }
-
+    public static SyncThread getSyncThread(Fragment fragment, InSyncThread call) {
+        return new SyncThread(fragment, call);
+    }
     public static class SyncThread extends Thread {
         public Fragment fragment;
         private InSyncThread call;
@@ -92,6 +99,8 @@ public class Toolbox {
             this.call = call;
         }
     }
+
+    // Several general callbacks
 
     public interface Callback {
         void invoke();

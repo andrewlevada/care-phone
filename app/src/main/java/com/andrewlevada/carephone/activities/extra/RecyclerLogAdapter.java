@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class RecyclerLogAdapter extends RecyclerAdapter {
+    private static final String dateFormatString = "HH:mm dd LLLL";
     private List<LogRecord> dataset;
     private OnEndReachedCallback callback;
     private SimpleDateFormat dateFormat;
@@ -27,34 +29,24 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
 
         this.dataset = dataset;
         this.callback = callback;
-        dateFormat = new SimpleDateFormat("HH:mm dd LLLL", Locale.getDefault());
+        dateFormat = new SimpleDateFormat(dateFormatString, Locale.getDefault());
     }
 
     @Override
     void fillItemWithData(ViewGroup item, int position) {
         LogRecord log = dataset.get(position);
-        ((TextView) item.findViewById(R.id.recycler_phone)).setText(log.phoneNumber);
-        ((TextView) item.findViewById(R.id.recycler_date)).setText(dateFormat.format(new Date(log.startTimestamp)));
+        ((TextView) item.findViewById(R.id.recycler_phone)).setText(log.getPhoneNumber());
+        ((TextView) item.findViewById(R.id.recycler_date)).setText(dateFormat.format(new Date(log.getStartTimestamp())));
 
         // Duration
-        int duration = log.secondsDuration;
-        String label;
-        if (duration < 60) {
-            label = "с";
-        } else if (duration >= 60 && duration < 60 * 60) {
-            duration /= 60;
-            label = "м";
-        } else {
-            duration /= 60 * 60;
-            label = "ч";
-        }
-
-        ((TextView) item.findViewById(R.id.recycler_duration)).setText(duration + " " + label);
+        int duration = log.getSecondsDuration();
+        ((TextView) item.findViewById(R.id.recycler_duration)).setText(
+                Toolbox.getShortStringFromTime(duration));
 
         // Icon
-        if (log.type == LogFragment.TYPE_INCOMING)
+        if (log.getType() == LogFragment.TYPE_INCOMING)
             ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_call_received);
-        else if (log.type == LogFragment.TYPE_OUTGOING)
+        else if (log.getType() == LogFragment.TYPE_OUTGOING)
             ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_call_made);
         else ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_close);
 

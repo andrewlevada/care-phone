@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,28 +10,28 @@
     android:background="@color/colorSurface">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/caretaker_list_toolbar"
+        android:id="@+id/list_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Люди, о которых вы заботитесь"/>
+        app:title="@string/caretaker_list_title"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/caretaker_list_recycler"
+        android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/caretaker_list_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/list_toolbar" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/caretaker_list_fab_layout"
+        android:id="@+id/fab_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/backdrop"
+        app:layout_constraintBottom_toTopOf="@+id/cloud"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/caretaker_list_fab"
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
@@ -43,7 +44,7 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/backdrop_toolbar"
+        android:id="@+id/cloud_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorOnSurface"
@@ -53,7 +54,7 @@
         app:navigationIcon="@drawable/ic_back_onprimary" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backdrop"
+        android:id="@+id/cloud"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/colorSurface"
@@ -62,7 +63,7 @@
         android:padding="16dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/backdrop_code_layout"
+            android:id="@+id/cloud_code_layout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,10 +72,10 @@
             app:helperTextEnabled="false"
             app:layout_constraintTop_toTopOf="parent"
             app:hintTextColor="@color/colorOnSurface"
-            app:boxStrokeColor="@color/backdrop_text_field_container">
+            app:boxStrokeColor="@color/cloud_text_field_container">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/backdrop_code"
+                android:id="@+id/cloud_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorOnSurface"
@@ -84,7 +85,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/backdrop_result_button"
+            android:id="@+id/cloud_result_button"
             android:layout_width="wrap_content"
             android:layout_height="56dp"
             android:text="@string/caretaker_list_check"
@@ -92,7 +93,7 @@
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backdrop_code_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/cloud_code_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
-import com.andrewlevada.carephone.activities.extra.BackdropActivity;
+import com.andrewlevada.carephone.activities.extra.CloudActivity;
+import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.activities.extra.RecyclerOnlyPhoneAdapter;
 import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.network.Network;
@@ -21,27 +22,27 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CaretakerListActivity extends BackdropActivity {
+public class CaretakerListActivity extends CloudActivity {
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private RecyclerAdapter adapter;
 
     private List<CaredUser> cared;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_caretaker_list;
-        layoutBackdropId = R.layout.activity_caretaker_list_backdrop;
+        layoutCloudId = R.layout.activity_caretaker_list_cloud;
         super.onCreate(savedInstanceState);
 
         // Find views by ids
-        final EditText codeEditText = findViewById(R.id.backdrop_code);
-        View resultButton = findViewById(R.id.backdrop_result_button);
-        fab = findViewById(R.id.caretaker_list_fab);
-        recyclerView = findViewById(R.id.caretaker_list_recycler);
+        final EditText codeEditText = findViewById(R.id.cloud_code);
+        View resultButton = findViewById(R.id.cloud_result_button);
+        fab = findViewById(R.id.fab);
+        recyclerView = findViewById(R.id.recycler);
 
         // Process fab onclick
-        fab.setOnClickListener(v -> updateBackdrop(true));
+        fab.setOnClickListener(v -> updateCloud(true));
 
         // Back button processing
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -57,7 +58,7 @@ public class CaretakerListActivity extends BackdropActivity {
         setupRecyclerView();
         syncCaredList();
 
-        // Process backdrop result button onclick
+        // Process cloud result button onclick
         resultButton.setOnClickListener(v -> {
             String code = codeEditText.getText().toString();
 
@@ -71,7 +72,7 @@ public class CaretakerListActivity extends BackdropActivity {
                 public void onSuccess(Integer resultCode) {
                     if (resultCode == 1) {
                         syncCaredList();
-                        updateBackdrop(false);
+                        updateCloud(false);
                     } else
                         codeEditText.setError(getString(R.string.caretaker_list_wrong_code));
                 }
@@ -105,7 +106,7 @@ public class CaretakerListActivity extends BackdropActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         cared = new ArrayList<>();
-        adapter = new RecyclerOnlyPhoneAdapter(recyclerView, cared, index -> launchHomeActivityRemotely(cared.get(index).uid));
+        adapter = new RecyclerOnlyPhoneAdapter(recyclerView, cared, index -> launchHomeActivityRemotely(cared.get(index).getUid()));
         recyclerView.setAdapter(adapter);
     }
 
@@ -118,13 +119,13 @@ public class CaretakerListActivity extends BackdropActivity {
     }
 
     @Override
-    public void updateBackdrop(boolean extend) {
-        super.updateBackdrop(extend);
+    public void updateCloud(boolean extend) {
+        super.updateCloud(extend);
 
         if (extend) fab.hide();
         else fab.show();
     }
 
     @Override
-    public void fillBackdrop(int layout, @Nullable SimpleInflater.OnViewInflated callback, @Nullable View.OnClickListener resultOnClick) { }
+    public void fillCloud(int layout, @Nullable SimpleInflater.OnViewInflated callback, @Nullable View.OnClickListener resultOnClick) { }
 }

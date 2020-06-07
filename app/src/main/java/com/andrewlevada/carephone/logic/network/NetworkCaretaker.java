@@ -20,30 +20,26 @@ public class NetworkCaretaker extends Network {
     public void syncWhitelistR(@NonNull final NetworkCallbackOne<List<PhoneNumber>> callback) {
         if (queueIfNotAuthedYet(() -> syncWhitelistR(callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().getWhitelistR(userToken, rUid).enqueue(getDefaultOneCallback(callback));
     }
 
     public void addToWhitelistR(@NonNull PhoneNumber phoneNumber, @Nullable final NetworkCallbackZero callback) {
         if (queueIfNotAuthedYet(() -> addToWhitelistR(phoneNumber, callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
-        getRetrofitRequests().putWhitelistR(userToken, rUid, phoneNumber.phone, phoneNumber.label)
+        getRetrofitRequests().putWhitelistR(userToken, rUid, phoneNumber.getPhone(), phoneNumber.getLabel())
                 .enqueue(getDefaultVoidCallback(callback));
     }
 
     public void removeFromWhitelistR(@NonNull String phone, @Nullable final NetworkCallbackZero callback) {
         if (queueIfNotAuthedYet(() -> removeFromWhitelistR(phone, callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().deleteWhitelistR(userToken, rUid, phone).enqueue(getDefaultVoidCallback(callback));
     }
 
     public void editWhitelistRecordR(@NonNull String prevPhone, @NonNull PhoneNumber phoneNumber, @Nullable final NetworkCallbackZero callback) {
         if (queueIfNotAuthedYet(() -> editWhitelistRecordR(prevPhone, phoneNumber, callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
-        getRetrofitRequests().postWhitelistR(userToken, rUid, prevPhone, phoneNumber.phone, phoneNumber.label)
+        getRetrofitRequests().postWhitelistR(userToken, rUid, prevPhone, phoneNumber.getPhone(), phoneNumber.getLabel())
                 .enqueue(getDefaultVoidCallback(callback));
     }
 
@@ -52,14 +48,12 @@ public class NetworkCaretaker extends Network {
     public void getWhitelistStateR(@NonNull final NetworkCallbackOne<Boolean> callback) {
         if (queueIfNotAuthedYet(() -> getWhitelistStateR(callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().getWhitelistStateR(userToken, rUid).enqueue(getDefaultOneCallback(callback));
     }
 
     public void setWhitelistStateR(@NonNull Boolean state, @Nullable final NetworkCallbackZero callback) {
         if (queueIfNotAuthedYet(() -> setWhitelistStateR(state, callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().postWhitelistStateR(userToken, rUid, state).enqueue(getDefaultVoidCallback(callback));
     }
 
@@ -68,7 +62,6 @@ public class NetworkCaretaker extends Network {
     public void syncStatisticsR(@NonNull final NetworkCallbackOne<StatisticsPack> callback) {
         if (queueIfNotAuthedYet(() -> syncStatisticsR(callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().getStatisticsPackR(userToken, rUid).enqueue(getDefaultOneCallback(callback));
     }
 
@@ -77,7 +70,6 @@ public class NetworkCaretaker extends Network {
     public void getLogR(int limit, int offset, @NonNull final NetworkCallbackOne<List<LogRecord>> callback) {
         if (queueIfNotAuthedYet(() -> getLogR(limit, offset, callback))) return;
         if (processRequestIfRUidNotSet(callback)) return;
-
         getRetrofitRequests().getLogR(userToken, rUid, limit, offset).enqueue(getDefaultOneCallback(callback));
     }
 
@@ -85,7 +77,6 @@ public class NetworkCaretaker extends Network {
 
     public void getCaredList(@NonNull final NetworkCallbackOne<List<CaredUser>> callback) {
         if (queueIfNotAuthedYet(() -> getCaredList(callback))) return;
-
         getRetrofitRequests().getCaredList(userToken).enqueue(getDefaultOneCallback(callback));
     }
 
@@ -93,7 +84,6 @@ public class NetworkCaretaker extends Network {
 
     public void tryToLinkCaretaker(@NonNull String code, @Nullable final NetworkCallbackOne<Integer> callback) {
         if (queueIfNotAuthedYet(() -> tryToLinkCaretaker(code, callback))) return;
-
         getRetrofitRequests().postLink(userToken, code).enqueue(getDefaultOneCallback(callback));
     }
 

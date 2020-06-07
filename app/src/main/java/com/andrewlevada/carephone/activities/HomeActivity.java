@@ -13,34 +13,34 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.activities.extra.BackdropActivity;
+import com.andrewlevada.carephone.activities.extra.CloudActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class HomeActivity extends BackdropActivity {
+public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
     private int currentHomeFragmentId;
     boolean isRemote;
 
     private FloatingActionButton fabView;
-    public boolean doCloseLinkOnBackdropCollapse;
+    public boolean doCloseLinkOnCloudCollapse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_home;
-        layoutBackdropId = R.layout.activity_home_backdrop;
+        layoutCloudId = R.layout.activity_home_cloud;
         super.onCreate(savedInstanceState);
 
         // Get remote option from intent
         isRemote = getIntent().getBooleanExtra(INTENT_REMOTE, false);
 
         // Find views by ids
-        BottomNavigationView navigation = findViewById(R.id.home_bottom_navigation);
-        fabView = findViewById(R.id.home_fab);
+        BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
+        fabView = findViewById(R.id.fab);
 
         // Loading default fragment screen
         loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
@@ -121,7 +121,7 @@ public class HomeActivity extends BackdropActivity {
         // Make transition between fragments
         FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
         transition.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
-        transition.replace(R.id.home_fragment_container, fragment);
+        transition.replace(R.id.fragment_container, fragment);
         transition.commit();
 
         return true;
@@ -137,12 +137,12 @@ public class HomeActivity extends BackdropActivity {
     }
 
     @Override
-    public void updateBackdrop(boolean extend) {
-        super.updateBackdrop(extend);
+    public void updateCloud(boolean extend) {
+        super.updateCloud(extend);
 
-        if (!extend && doCloseLinkOnBackdropCollapse && !isRemote) {
+        if (!extend && doCloseLinkOnCloudCollapse && !isRemote) {
             Network.cared().removeLinkRequest(null);
-            doCloseLinkOnBackdropCollapse = false;
+            doCloseLinkOnCloudCollapse = false;
         }
     }
 }

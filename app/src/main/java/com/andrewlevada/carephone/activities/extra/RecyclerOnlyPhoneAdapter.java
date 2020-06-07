@@ -24,7 +24,7 @@ public class RecyclerOnlyPhoneAdapter extends RecyclerAdapter {
 
     @Override
     void fillItemWithData(ViewGroup item, int position) {
-        ((TextView) item.findViewById(R.id.recycler_phone)).setText(dataset.get(position).phone);
+        ((TextView) item.findViewById(R.id.recycler_phone)).setText(dataset.get(position).getPhone());
 
         // Hide divider on last element
         if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);

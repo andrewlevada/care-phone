@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.activities.extra.RecyclerHoursAdapter;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
@@ -32,8 +33,8 @@ public class StatisticsFragment extends Fragment {
     private static final String PREF_PHONES_HOURS = "PREF_PHONES_HOURS";
     private static final String PREF_PHONES_LABELS = "PREF_PHONES_LABELS";
 
-    private RecyclerView.Adapter periodsAdapter;
-    private RecyclerView.Adapter phonesAdapter;
+    private RecyclerAdapter periodsAdapter;
+    private RecyclerAdapter phonesAdapter;
 
     private List<String> periodsLabels;
     private List<Integer> periodsHours;
@@ -62,9 +63,9 @@ public class StatisticsFragment extends Fragment {
         // Setup recycler views
         loadDataFromLocal();
 
-        periodsAdapter = setupRecyclerView(layout.findViewById(R.id.statistics_periods_recycler),
+        periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
                 periodsLabels, periodsHours);
-        phonesAdapter = setupRecyclerView(layout.findViewById(R.id.statistics_phones_recycler),
+        phonesAdapter = setupRecyclerView(layout.findViewById(R.id.phones_recycler),
                 phonesLabels, phonesHours);
 
         return layout;
@@ -107,9 +108,9 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void processStatisticsPack(StatisticsPack statisticsPack) {
-        periodsHours = statisticsPack.periodsHours;
-        phonesLabels = statisticsPack.phonesLabels;
-        phonesHours = statisticsPack.phonesHours;
+        periodsHours = statisticsPack.getPeriodsHours();
+        phonesLabels = statisticsPack.getPhonesLabels();
+        phonesHours = statisticsPack.getPhonesHours();
 
         periodsAdapter.notifyDataSetChanged();
         phonesAdapter.notifyDataSetChanged();
@@ -130,11 +131,11 @@ public class StatisticsFragment extends Fragment {
         preferences.apply();
     }
 
-    private RecyclerView.Adapter setupRecyclerView(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {
+    private RecyclerAdapter setupRecyclerView(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter adapter = new RecyclerHoursAdapter(recyclerView, labels, hours);
+        RecyclerAdapter adapter = new RecyclerHoursAdapter(recyclerView, labels, hours);
         recyclerView.setAdapter(adapter);
 
         return adapter;

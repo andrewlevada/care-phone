@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.StatisticsFragment">
+    tools:context=".activities.StatisticsFragment"
+    android:id="@+id/layout">
 
     <RelativeLayout
-        android:id="@+id/statistics_periods_layout"
+        android:id="@+id/periods_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -20,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/statistics_periods_inner_layout"
+            android:id="@+id/periods_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/round_16dp"
@@ -30,7 +32,7 @@
             android:paddingEnd="20dp">
 
             <TextView
-                android:id="@+id/statistics_periods_title"
+                android:id="@+id/periods_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -41,7 +43,7 @@
                 android:textSize="28sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/statistics_periods_recycler"
+                android:id="@+id/periods_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"/>
@@ -51,7 +53,7 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/statistics_phones_layout"
+        android:id="@+id/phones_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -60,10 +62,10 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statistics_periods_layout">
+        app:layout_constraintTop_toBottomOf="@+id/periods_layout">
 
         <LinearLayout
-            android:id="@+id/statistics_phones_inner_layout"
+            android:id="@+id/phones_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/round_16dp"
@@ -73,7 +75,7 @@
             android:paddingEnd="20dp">
 
             <TextView
-                android:id="@+id/statistics_phones_title"
+                android:id="@+id/phones_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -84,7 +86,7 @@
                 android:textSize="28sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/statistics_phones_recycler"
+                android:id="@+id/phones_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp" />

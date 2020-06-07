@@ -6,21 +6,21 @@
     android:background="@color/colorSurface">
 
     <TextView
-        android:id="@+id/backdrop_code"
+        android:id="@+id/cloud_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="56dp"
         android:fontFamily="@font/roboto_slab_bold"
         android:gravity="center"
         android:letterSpacing="0.3"
-        android:text="365489"
+        android:text="@string/whitelist_link_blank_code"
         android:textColor="@color/colorPrimary"
         android:textSize="58sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/backdrop_guide"
+        android:id="@+id/cloud_guide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
