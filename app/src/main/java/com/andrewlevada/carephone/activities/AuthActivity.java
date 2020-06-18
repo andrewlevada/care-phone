@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -76,12 +77,12 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void requestCodeSending() {
-        if (editText.getText() == null) {
+        if (editText.getText() == null || editText.getText().length() == 0) {
             editText.setError(getText(R.string.general_enter_phone));
             return;
         }
 
-        String phoneNumber = editText.getText().toString();
+        String phoneNumber = Toolbox.processPhone(editText.getText().toString());
         int timeoutSeconds = 120;
 
         PhoneAuthProvider.getInstance()
@@ -91,7 +92,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void processEnteredCode() {
-        if (editText.getText() == null) {
+        if (editText.getText() == null || editText.getText().length() == 0) {
             editText.setError(getText(R.string.auth_enter_code));
             return;
         }

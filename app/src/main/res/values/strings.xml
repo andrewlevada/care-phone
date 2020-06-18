@@ -47,4 +47,14 @@
     <string name="caretaker_list_check">Проверить</string>
 
     <string name="service_notification_text">Белый список активен</string>
+
+    <string name="action_copy_phone">Копировать телефон</string>
+    <string name="action_copy_label">Копировать имя</string>
+
+    <string-array name="periods_labels">
+        <item>За всё время</item>
+        <item>За месяц</item>
+        <item>За неделю</item>
+        <item>За день</item>
+    </string-array>
 </resources>

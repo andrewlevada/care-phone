@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.android.internal.telephony.ITelephony;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.lang.reflect.Method;
 
@@ -96,7 +97,7 @@ public class Blocker_L_to_N_MR1 extends Service {
             telephonyService.endCall();
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
-            e.printStackTrace();
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
 

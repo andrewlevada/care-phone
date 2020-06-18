@@ -51,7 +51,7 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
         else ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_close);
 
         // Only for last element
-        if (position == getItemCount() - 1) {
+        if (position == 0) {
             item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
             callback.reached();
         }

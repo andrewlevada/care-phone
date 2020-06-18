@@ -13,4 +13,14 @@
         app:showAsAction="never"
         android:icon="@drawable/ic_delete"
         android:title="@string/general_delete" />
+    <item
+        android:id="@+id/whitelist_editor_copy_phone"
+        android:enabled="true"
+        app:showAsAction="never"
+        android:title="@string/action_copy_phone" />
+    <item
+        android:id="@+id/whitelist_editor_copy_label"
+        android:enabled="true"
+        app:showAsAction="never"
+        android:title="@string/action_copy_label" />
 </menu>

@@ -84,7 +84,8 @@ public class LogFragment extends Fragment {
             @Override
             public void onSuccess(List<LogRecord> arg) {
                 isLoading = false;
-                loadedNumber += numberPerLoad;
+                if (arg.size() == 0) return;
+                loadedNumber += arg.size();
                 logRecords.addAll(arg);
                 adapter.notifyDataSetChanged();
             }

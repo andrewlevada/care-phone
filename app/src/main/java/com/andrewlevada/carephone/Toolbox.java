@@ -1,5 +1,8 @@
 package com.andrewlevada.carephone;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +64,14 @@ public class Toolbox {
         return seconds + label;
     }
 
+    public static String processPhone(String phone) {
+        if (phone.length() > 1 && phone.substring(0, 1).equals("8")) {
+            phone = "+7" + phone.substring(1);
+        }
+
+        return phone.replaceAll("\\s","").toLowerCase();
+    }
+
     public interface AuthTokenCallback {
         void onGenerated(String token);
     }
@@ -68,6 +79,12 @@ public class Toolbox {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) user.getIdToken(true).addOnCompleteListener(
                 task -> callback.onGenerated(task.getResult().getToken()));
+    }
+
+    public static void putInClipboard(Context context, String label, String text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText(label, text);
+        clipboard.setPrimaryClip(clip);
     }
 
     // Sync thread used for syncing data

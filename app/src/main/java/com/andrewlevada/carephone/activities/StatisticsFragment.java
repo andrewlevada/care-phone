@@ -20,6 +20,7 @@ import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -36,7 +37,7 @@ public class StatisticsFragment extends Fragment {
     private RecyclerAdapter periodsAdapter;
     private RecyclerAdapter phonesAdapter;
 
-    private List<String> periodsLabels;
+    private String[] periodsLabels;
     private List<Integer> periodsHours;
     private List<String> phonesLabels;
     private List<Integer> phonesHours;
@@ -64,7 +65,7 @@ public class StatisticsFragment extends Fragment {
         loadDataFromLocal();
 
         periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
-                periodsLabels, periodsHours);
+                Arrays.asList(getResources().getStringArray(R.array.periods_labels)), periodsHours);
         phonesAdapter = setupRecyclerView(layout.findViewById(R.id.phones_recycler),
                 phonesLabels, phonesHours);
 
@@ -75,9 +76,9 @@ public class StatisticsFragment extends Fragment {
         if (getContext() == null) return;
         SharedPreferences preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
 
-        periodsLabels = Config.periodsLabels;
+        periodsLabels = getResources().getStringArray(R.array.periods_labels);
         periodsHours = new ArrayList<>();
-        for (int i = 0; i < Config.periodsLabels.size(); i++)
+        for (int i = 0; i < periodsLabels.length; i++)
             periodsHours.add(preferences.getInt(PREF_PERIOD_HOURS + i, 0));
 
         phonesLabels = new ArrayList<>();

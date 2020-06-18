@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.andrewlevada.carephone.Toolbox;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class Blocker {
 
@@ -29,7 +29,8 @@ public class Blocker {
         else if (sdk == Build.VERSION_CODES.Q) blockerClass = Blocker_P.class;
         else return false;
 
-        Toolbox.fastLog("INITIATING BLOCKER");
+        FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", blockerClass.getName());
+
         if (!isServiceRunning(blockerClass, context))
             context.startService(new Intent(context, blockerClass));
 

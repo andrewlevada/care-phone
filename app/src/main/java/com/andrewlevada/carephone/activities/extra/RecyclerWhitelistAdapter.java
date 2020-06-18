@@ -1,5 +1,6 @@
 package com.andrewlevada.carephone.activities.extra;
 
+import android.content.Context;
 import android.os.Build;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 
 public class RecyclerWhitelistAdapter extends RecyclerAdapter {
+    private Context context;
     private WhitelistAccesser whitelistAccesser;
     private boolean isExtended;
 
@@ -22,6 +25,7 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
         super(recyclerView);
         itemLayout = R.layout.recyclable_phone_number_template;
 
+        context = recyclerView.getContext();
         whitelistAccesser = WhitelistAccesser.getInstance();
         isExtended = false;
     }
@@ -76,9 +80,14 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
             if (item.getItemId() == R.id.whitelist_editor_edit) {
                 // TODO: Implement editing on same cloud
             } else if (item.getItemId() == R.id.whitelist_editor_delete) {
-                // TODO: Add warning for deleting
                 whitelistAccesser.removePhoneNumberAt(index);
                 notifyDataSetChanged();
+            } else if (item.getItemId() == R.id.whitelist_editor_copy_phone) {
+                Toolbox.putInClipboard(null, context.getString(R.string.general_phone),
+                        whitelistAccesser.getWhitelistElement(index).getPhone());
+            } else if (item.getItemId() == R.id.whitelist_editor_copy_label) {
+                Toolbox.putInClipboard(context, context.getString(R.string.general_name),
+                        whitelistAccesser.getWhitelistElement(index).getLabel());
             }
 
             return false;

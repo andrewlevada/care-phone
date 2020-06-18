@@ -16,7 +16,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Network {
-    private static final String LOG_PREFIX = "--------------- SERVER ERROR: ";
+    private static final String LOG_ERROR_PREFIX = "--------------- SERVER ERROR: ";
+    private static final String LOG_PREFIX = "SERVER: ";
 
     private static Network instance;
     private static RetrofitRequests retrofitRequests;
@@ -66,18 +67,20 @@ public class Network {
         return new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                try {
-                    if (response.errorBody() != null) Toolbox.fastLog(LOG_PREFIX + response.errorBody().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Toolbox.fastLog(response.code() + " with " + response.body());
+                if (response.errorBody() != null)
+                    try {
+                        Toolbox.fastLog("err: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 if (callback != null) callback.onSuccess();
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Toolbox.fastLog(LOG_PREFIX + t.getMessage());
+                Toolbox.fastLog(LOG_ERROR_PREFIX + t.getMessage());
                 if (callback != null) callback.onFailure(t);
             }
         };
@@ -86,11 +89,13 @@ public class Network {
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                try {
-                    if (response.errorBody() != null) Toolbox.fastLog(LOG_PREFIX + response.errorBody().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Toolbox.fastLog(response.code() + " with " + response.body());
+                if (response.errorBody() != null)
+                    try {
+                        Toolbox.fastLog("err: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 if (response.body() != null) callback.onSuccess(response.body());
                 else callback.onFailure(null);
@@ -98,7 +103,7 @@ public class Network {
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                Toolbox.fastLog(LOG_PREFIX + t.getMessage());
+                Toolbox.fastLog(LOG_ERROR_PREFIX + t.getMessage());
                 callback.onFailure(t);
             }
         };

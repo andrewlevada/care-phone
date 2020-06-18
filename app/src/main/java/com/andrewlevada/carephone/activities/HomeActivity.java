@@ -19,6 +19,9 @@ import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
@@ -34,6 +37,11 @@ public class HomeActivity extends CloudActivity {
         layoutId = R.layout.activity_home;
         layoutCloudId = R.layout.activity_home_cloud;
         super.onCreate(savedInstanceState);
+
+        // Analytics
+        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        FirebaseCrashlytics.getInstance().setUserId(userUid);
+        FirebaseAnalytics.getInstance(this).setUserId(userUid);
 
         // Get remote option from intent
         isRemote = getIntent().getBooleanExtra(INTENT_REMOTE, false);
@@ -105,6 +113,7 @@ public class HomeActivity extends CloudActivity {
 
         // Load whitelist blocker
         if (!Blocker.enable(getApplicationContext())) {
+            FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
             // TODO: Process unsupported device
         }
     }

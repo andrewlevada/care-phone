@@ -8,12 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.Toolbox;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class HelloActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_STAY = "INTENT_EXTRA_STAY";
 
+    private FirebaseAnalytics firebaseAnalytics;
     private boolean isStayState;
 
     @Override
@@ -22,13 +24,15 @@ public class HelloActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hello);
         isStayState = getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false);
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // Switch to other activity if user is authed
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !isStayState) {
-            Toolbox.fastLog("AUTH REDIRECT");
-
             int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);
 
             if (userType != -1) {
+                FirebaseCrashlytics.getInstance().setCustomKey("auth_redirect", userType);
+
                 Intent intent = null;
 
                 if (userType == AuthActivity.TYPE_CARED) intent = new Intent(HelloActivity.this, HomeActivity.class);

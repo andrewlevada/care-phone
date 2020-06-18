@@ -240,13 +240,7 @@ public class WhitelistFragment extends Fragment {
             TextView labelView = parent.findViewById(R.id.cloud_text_name);
             String label = labelView.getText().toString();
             TextView phoneView = parent.findViewById(R.id.cloud_text_phone);
-            String phone = phoneView.getText().toString();
-
-            // Process
-            if (phone.length() > 1 && phone.substring(0, 1).equals("8")) {
-                phone = "+7" + phone.substring(1);
-            }
-            phone = phone.replaceAll("\\s","").toLowerCase();
+            String phone = Toolbox.processPhone(phoneView.getText().toString());
 
             // Checks
             if (label.length() == 0) {

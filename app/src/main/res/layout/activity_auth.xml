@@ -28,6 +28,7 @@
         android:textColor="@color/colorOnPrimary"
         android:textSize="19sp"
         android:fontFamily="@font/comfortaa_bold"
+        android:lineSpacingExtra="6sp"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintEnd_toStartOf="@+id/track_right"
         app:layout_constraintStart_toStartOf="@+id/track_left"
