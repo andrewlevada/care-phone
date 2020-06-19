@@ -53,12 +53,16 @@ public class AuthActivity extends AppCompatActivity {
     private String verificationId;
     private PhoneAuthCredential credential;
 
+    private AuthButtonAppearanceController authButtonController;
+
     private boolean isNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
+
+        authButtonController = new AuthButtonAppearanceController();
 
         // Get state from intent
         userType = getIntent().getIntExtra(PARAM_NAME, TYPE_CARED);
@@ -93,7 +97,7 @@ public class AuthActivity extends AppCompatActivity {
         PhoneAuthProvider.getInstance()
                 .verifyPhoneNumber(phoneNumber, timeoutSeconds, TimeUnit.SECONDS, this, authCallback);
 
-        button.setActivated(false);
+        authButtonController.onCodeRequested();
     }
 
     private void processEnteredCode() {
@@ -113,7 +117,17 @@ public class AuthActivity extends AppCompatActivity {
 
         authTask.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    onUnprocessedError();
+                    return;
+                }
+
                 FirebaseUser user = task.getResult().getUser();
+
+                if (user == null) {
+                    onUnprocessedError();
+                    return;
+                }
 
                 Network.config().useFirebaseAuthToken();
                 Network.cared().addUserIfNew(null);
@@ -160,9 +174,7 @@ public class AuthActivity extends AppCompatActivity {
         editText.setHint(getText(R.string.auth_code));
 
         // Setup button
-        animateButton();
-        button.setActivated(true);
-        button.setText(getText(R.string.auth_check_code));
+        authButtonController.onCodeSent();
 
         // Setup text
         infoTextView.setText(getText(R.string.auth_info_second));
@@ -172,20 +184,9 @@ public class AuthActivity extends AppCompatActivity {
         editText.setError(getText(R.string.general_wrong_phone));
     }
 
-    private void animateButton() {
-        ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
-                ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
-                ContextCompat.getColor(getApplicationContext(), R.color.colorSurface));
-        backgroundAnimation.setDuration(600);
-
-        ObjectAnimator textAnimation = ObjectAnimator.ofArgb(button, "textColor",
-                ContextCompat.getColor(getApplicationContext(), R.color.colorOnPrimary),
-                ContextCompat.getColor(getApplicationContext(), R.color.colorOnSurface));
-        textAnimation.setDuration(600);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.play(backgroundAnimation).with(textAnimation);
-        animatorSet.start();
+    private void onUnprocessedError() {
+        editText.setText("");
+        editText.setError(getString(R.string.general_something_wrong));
     }
 
     private static class AuthCallback extends PhoneAuthProvider.OnVerificationStateChangedCallbacks {
@@ -219,6 +220,57 @@ public class AuthActivity extends AppCompatActivity {
 
         AuthCallback(AuthActivity activity) {
             this.activity = activity;
+        }
+    }
+
+    private class AuthButtonAppearanceController {
+        private void onCodeRequested() {
+            button.setActivated(false);
+
+            ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorSurface));
+            backgroundAnimation.setDuration(600);
+            backgroundAnimation.start();
+        }
+
+        private void onCodeSent() {
+            button.setActivated(true);
+            button.setText(getText(R.string.auth_check_code));
+
+            ObjectAnimator textAnimation = ObjectAnimator.ofArgb(button, "textColor",
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorOnPrimary),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorOnSurface));
+            textAnimation.setDuration(600);
+            textAnimation.start();
+        }
+
+        private void onCodeFailedToSend() {
+            button.setActivated(true);
+
+            ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorSurface));
+            backgroundAnimation.setDuration(600);
+            backgroundAnimation.start();
+        }
+
+        private void onReturnToFirstStep() {
+            button.setText(getText(R.string.general_enter_phone));
+
+            ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorSurface),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+            backgroundAnimation.setDuration(600);
+
+            ObjectAnimator textAnimation = ObjectAnimator.ofArgb(button, "textColor",
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorOnSurface),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorOnPrimary));
+            textAnimation.setDuration(600);
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.play(backgroundAnimation).with(textAnimation);
+            animatorSet.start();
         }
     }
 }

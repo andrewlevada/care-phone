@@ -156,10 +156,10 @@ public class WhitelistAccesser {
         Network.router().syncWhitelist(isRemote, new Network.NetworkCallbackOne<List<PhoneNumber>>() {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
-                whitelist = arg;
+                if (whitelist.size() != arg.size()) analytics.setUserProperty(
+                        Config.Analytics.userPropertyWhitelistLength, String.valueOf(arg.size()));
 
-                analytics.setUserProperty(Config.Analytics.userPropertyWhitelistLength,
-                        String.valueOf(arg.size()));
+                whitelist = arg;
 
                 adapter.notifyDataSetChanged();
                 saveToLocal();
@@ -176,9 +176,9 @@ public class WhitelistAccesser {
         Network.router().getWhitelistState(isRemote, new Network.NetworkCallbackOne<Boolean>() {
             @Override
             public void onSuccess(Boolean arg) {
-                whitelistState = arg;
+                if (whitelistState != arg) analytics.setUserProperty(Config.Analytics.userPropertyWhitelistState, arg.toString());
 
-                analytics.setUserProperty(Config.Analytics.userPropertyWhitelistState, arg.toString());
+                whitelistState = arg;
 
                 if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(arg);
                 saveToLocal();
