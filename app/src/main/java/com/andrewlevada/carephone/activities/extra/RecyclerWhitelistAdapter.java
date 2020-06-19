@@ -77,9 +77,7 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
-            if (item.getItemId() == R.id.whitelist_editor_edit) {
-                // TODO: Implement editing on same cloud
-            } else if (item.getItemId() == R.id.whitelist_editor_delete) {
+            if (item.getItemId() == R.id.whitelist_editor_delete) {
                 whitelistAccesser.removePhoneNumberAt(index);
                 notifyDataSetChanged();
             } else if (item.getItemId() == R.id.whitelist_editor_copy_phone) {
