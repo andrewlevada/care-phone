@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.activities.extra.CloudActivity;
@@ -18,11 +19,13 @@ import com.andrewlevada.carephone.activities.extra.RecyclerOnlyPhoneAdapter;
 import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CaretakerListActivity extends CloudActivity {
+    private FirebaseAnalytics analytics;
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
@@ -34,6 +37,8 @@ public class CaretakerListActivity extends CloudActivity {
         layoutId = R.layout.activity_caretaker_list;
         layoutCloudId = R.layout.activity_caretaker_list_cloud;
         super.onCreate(savedInstanceState);
+
+        analytics = FirebaseAnalytics.getInstance(this);
 
         // Find views by ids
         final EditText codeEditText = findViewById(R.id.cloud_code);
@@ -73,6 +78,7 @@ public class CaretakerListActivity extends CloudActivity {
                     if (resultCode == 1) {
                         syncCaredList();
                         updateCloud(false);
+                        analytics.logEvent(Config.Analytics.eventLinkUser, null);
                     } else
                         codeEditText.setError(getString(R.string.caretaker_list_wrong_code));
                 }
@@ -91,6 +97,10 @@ public class CaretakerListActivity extends CloudActivity {
             public void onSuccess(List<CaredUser> arg) {
                 cared.clear();
                 cared.addAll(arg);
+
+                analytics.setUserProperty(Config.Analytics.userPropertyCaretakerListLength,
+                        String.valueOf(arg.size()));
+
                 adapter.notifyDataSetChanged();
             }
 

@@ -2,6 +2,7 @@ package com.andrewlevada.carephone.logic;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class WhitelistAccesser {
     private List<PhoneNumber> whitelist;
     private boolean whitelistState;
 
+    private FirebaseAnalytics analytics;
     private SharedPreferences preferences;
     private Context context;
 
@@ -38,6 +41,8 @@ public class WhitelistAccesser {
         this.context = context;
         this.isRemote = isRemote;
         whitelist = new ArrayList<>();
+        analytics = FirebaseAnalytics.getInstance(context);
+
         loadFromLocal();
         syncWhitelist();
         syncWhitelistState();
@@ -119,6 +124,9 @@ public class WhitelistAccesser {
         Network.router().addToWhitelist(isRemote, phoneNumber, null);
         whitelist.add(phoneNumber);
         saveToLocal();
+
+        analytics.logEvent(Config.Analytics.eventAddToWhitelist, new Bundle());
+
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
@@ -126,14 +134,18 @@ public class WhitelistAccesser {
         PhoneNumber result = whitelist.remove(index);
         saveToLocal();
         Network.router().removeFromWhitelist(isRemote, result.getPhone(), null);
+        analytics.logEvent(Config.Analytics.eventRemoveFromWhitelist, null);
         return result;
     }
 
     public boolean removeFromWhitelist(@NonNull PhoneNumber o) {
         boolean result = whitelist.remove(o);
+        if (!result) return false;
+
         saveToLocal();
-        if (result) Network.router().removeFromWhitelist(isRemote, o.getPhone(), null);
-        return result;
+        Network.router().removeFromWhitelist(isRemote, o.getPhone(), null);
+        analytics.logEvent(Config.Analytics.eventRemoveFromWhitelist, null);
+        return true;
     }
 
     public int getWhitelistSize() {
@@ -145,6 +157,10 @@ public class WhitelistAccesser {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
                 whitelist = arg;
+
+                analytics.setUserProperty(Config.Analytics.userPropertyWhitelistLength,
+                        String.valueOf(arg.size()));
+
                 adapter.notifyDataSetChanged();
                 saveToLocal();
             }
@@ -161,6 +177,9 @@ public class WhitelistAccesser {
             @Override
             public void onSuccess(Boolean arg) {
                 whitelistState = arg;
+
+                analytics.setUserProperty(Config.Analytics.userPropertyWhitelistState, arg.toString());
+
                 if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(arg);
                 saveToLocal();
             }

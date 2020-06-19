@@ -4,8 +4,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,6 +20,7 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -30,6 +31,9 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 public class AuthActivity extends AppCompatActivity {
+    private static final String PREF_FAILED_ATTEMPTS = "auth_failed_attempts";
+    private static final String ANALYTICS_FAILED_ATTEMPTS = "failed_attempts";
+
     public static final String PARAM_NAME = "user_type";
     public static final int TYPE_CARED = 0;
     public static final int TYPE_CARETAKER = 1;
@@ -47,8 +51,9 @@ public class AuthActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private AuthCallback authCallback;
     private String verificationId;
-    private PhoneAuthProvider.ForceResendingToken token;
     private PhoneAuthCredential credential;
+
+    private boolean isNewUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,8 +114,13 @@ public class AuthActivity extends AppCompatActivity {
         authTask.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 FirebaseUser user = task.getResult().getUser();
+
                 Network.config().useFirebaseAuthToken();
                 Network.cared().addUserIfNew(null);
+
+                if (task.getResult().getAdditionalUserInfo() != null)
+                    isNewUser = task.getResult().getAdditionalUserInfo().isNewUser();
+
                 continueToNextActivity(user);
             } else {
                 editText.setError(getText(R.string.auth_wrong_code));
@@ -119,11 +129,22 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void continueToNextActivity(FirebaseUser user) {
-        Log.e("AUTH_APP", "DONE: " + user.getPhoneNumber());
+        SharedPreferences prefs = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
+
+        // Auth analytics
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.METHOD, user.getProviderId());
+        bundle.putInt(ANALYTICS_FAILED_ATTEMPTS, prefs.getInt(PREF_FAILED_ATTEMPTS, 0));
+        FirebaseAnalytics.getInstance(this).logEvent(
+                isNewUser ? FirebaseAnalytics.Event.SIGN_UP : FirebaseAnalytics.Event.LOGIN, bundle);
+
+        // Reset failed attempts counter
+        prefs.edit().putInt(PREF_FAILED_ATTEMPTS, 0).apply();
 
         getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
                 .edit().putInt(PARAM_NAME, userType).apply();
 
+        // Move to next activity
         Intent intent = null;
         if (userType == TYPE_CARED) intent = new Intent(AuthActivity.this, HomeActivity.class);
         else if (userType == TYPE_CARETAKER) intent = new Intent(AuthActivity.this, CaretakerListActivity.class);
@@ -181,14 +202,18 @@ public class AuthActivity extends AppCompatActivity {
             if (e instanceof FirebaseAuthInvalidCredentialsException)
                 activity.onInvalidPhoneNumber();
 
-            Log.e("AUTH_APP", "wrong");
+            // Save number of failed tries for analytics
+            SharedPreferences prefs =
+                    activity.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
+            int amount = prefs.getInt(PREF_FAILED_ATTEMPTS, 0);
+            prefs.edit().putInt(PREF_FAILED_ATTEMPTS, amount + 1).apply();
+
             e.printStackTrace();
         }
 
         @Override
         public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
             activity.verificationId = verificationId;
-            activity.token = token;
             activity.onCodeSent();
         }
 
