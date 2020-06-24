@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CarePhone</string>
+
+    <string name="home_nav_log">Calls Log</string>
+    <string name="home_nav_list">Whitelist</string>
+    <string name="home_nav_stats">Statistics</string>
+
+    <string name="permission_dialog_title">Permissions</string>
+    <string name="permission_dialog_notification_listener">For the app to work properly, you must grant it permission to view notifications. This is necessary for detection and rejection of an incoming call.</string>
+    <string name="permission_dialog_must_accept">For the app to work properly, you must grant it all required permissions.</string>
+
+    <string name="whitelist_title">Whitelist:</string>
+    <string name="whitelist_state_turn_off">Disable block</string>
+    <string name="whitelist_state_turn_on">Enable block</string>
+    <string name="whitelist_link_user">Add caretaker</string>
+    <string name="whitelist_link_guide">This is a secret code. Enter it on device you want to connect to.</string>
+    <string name="whitelist_link_blank_code">000000</string>
+    <string name="whitelist_enter_name">Enter name</string>
+    <string name="whitelist_long_name">Name is too long</string>
+
+    <string name="general_yes">Yes</string>
+    <string name="general_no">No</string>
+    <string name="general_okay">Okay</string>
+    <string name="general_add">Add</string>
+    <string name="general_edit">Edit</string>
+    <string name="general_delete">Delete</string>
+    <string name="general_name">Name</string>
+    <string name="general_phone">Phone number</string>
+    <string name="general_something_wrong">Something went wrong!</string>
+    <string name="general_wrong_phone">Wrong phone number</string>
+    <string name="general_enter_phone">Enter phone number</string>
+
+    <string name="hello_button_caretaker">I care</string>
+    <string name="hello_button_cared">I am cared about</string>
+    <string name="hello_caretaker_info">I want to control whitelist of a person I care about</string>
+    <string name="hello_cared_info">I want to use whitelist on this device</string>
+
+    <string name="auth_info_first">Enter your phone number. A code will be sent to it.</string>
+    <string name="auth_info_second">Now enter the code from sms</string>
+    <string name="auth_code">Code</string>
+    <string name="auth_send_code">Send code</string>
+    <string name="auth_check_code">Check code</string>
+    <string name="auth_wrong_code">Wrong code</string>
+    <string name="auth_enter_code">Enter code</string>
+
+    <string name="statistics_periods_title">Calls time:</string>
+    <string name="statistics_phones_title">Top phones:</string>
+
+    <string name="caretaker_list_title">People you care about:</string>
+    <string name="caretaker_list_code">Secret code</string>
+    <string name="caretaker_list_wrong_code">Wrong code</string>
+    <string name="caretaker_list_check">Check</string>
+
+    <string name="service_notification_text">Whitelist is active</string>
+
+    <string name="action_copy_phone">Copy phone number</string>
+    <string name="action_copy_label">Copy name</string>
+</resources>
