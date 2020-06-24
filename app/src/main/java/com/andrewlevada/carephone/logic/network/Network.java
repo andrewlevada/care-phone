@@ -16,6 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Network {
+    private static final boolean doLog = false;
     private static final String LOG_ERROR_PREFIX = "--------------- SERVER ERROR: ";
     private static final String LOG_PREFIX = "SERVER: ";
 
@@ -67,7 +68,7 @@ public class Network {
         return new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Toolbox.fastLog(response.code() + " with " + response.body());
+                if (doLog) Toolbox.fastLog(response.code() + " with " + response.body());
                 if (response.errorBody() != null)
                     try {
                         Toolbox.fastLog("err: " + response.errorBody().string());
@@ -89,7 +90,7 @@ public class Network {
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                Toolbox.fastLog(response.code() + " with " + response.body());
+                if (doLog) Toolbox.fastLog(response.code() + " with " + response.body());
                 if (response.errorBody() != null)
                     try {
                         Toolbox.fastLog("err: " + response.errorBody().string());

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>nsy_text_ru</key>
+        <value>К сожалению, мы пока не поддерживаем ваше устройство, но скоро обязательно будем! Если хотите, оставьте нам свой email и мы обязательно сообщим вам, когда ЗаботаФОН будет совместим с вашим устройством.</value>
+    </entry>
+
+    <entry>
+        <key>nsy_text_en</key>
+        <value>Unfortunately, we don't support your device yet, but we definitely will soon! If you want, leave us your email, and we will let you know when CarePhone will be compatible with your device.</value>
+    </entry>
+
+    <entry>
+        <key>call_notification_packages</key>
+        <value>["com.google.android.dialer","com.android.incallui"]</value>
+    </entry>
+
+    <entry>
+        <key>call_notification_decline_actions</key>
+        <value>["hang up","decline","cancel","отклонить","сбросить","завершить"]</value>
+    </entry>
+
+    <entry>
+        <key>periods_labels_ru</key>
+        <value>["За всё время","За месяц","За неделю","За день"]</value>
+    </entry>
+
+    <entry>
+        <key>periods_labels_en</key>
+        <value>["All time","This month","This week","Today"]</value>
+    </entry>
+</defaultsMap>

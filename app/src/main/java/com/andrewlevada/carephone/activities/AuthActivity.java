@@ -19,6 +19,7 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.AuthResult;
@@ -47,6 +48,7 @@ public class AuthActivity extends AppCompatActivity {
     private TextView infoTextView;
     private Button button;
     private EditText editText;
+    private TextInputLayout editTextLayout;
 
     private FirebaseAuth auth;
     private AuthCallback authCallback;
@@ -77,6 +79,7 @@ public class AuthActivity extends AppCompatActivity {
         infoTextView = findViewById(R.id.info_text);
         button = findViewById(R.id.button);
         editText = findViewById(R.id.edit_text);
+        editTextLayout = findViewById(R.id.edit_text_layout);
 
         // Process button onclick
         button.setOnClickListener(v -> {
@@ -137,7 +140,8 @@ public class AuthActivity extends AppCompatActivity {
 
                 continueToNextActivity(user);
             } else {
-                editText.setError(getText(R.string.auth_wrong_code));
+                if (verificationId != null) editText.setError(getText(R.string.auth_wrong_code));
+                else editText.setError(getString(R.string.general_something_wrong));
             }
         });
     }
@@ -171,7 +175,7 @@ public class AuthActivity extends AppCompatActivity {
 
         // Setup editText
         editText.setText("");
-        editText.setHint(getText(R.string.auth_code));
+        editTextLayout.setHint(getText(R.string.auth_code));
 
         // Setup button
         authButtonController.onCodeSent();
@@ -225,7 +229,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private class AuthButtonAppearanceController {
         private void onCodeRequested() {
-            button.setActivated(false);
+            button.setEnabled(false);
 
             ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
                     ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
@@ -235,7 +239,7 @@ public class AuthActivity extends AppCompatActivity {
         }
 
         private void onCodeSent() {
-            button.setActivated(true);
+            button.setEnabled(true);
             button.setText(getText(R.string.auth_check_code));
 
             ObjectAnimator textAnimation = ObjectAnimator.ofArgb(button, "textColor",
@@ -246,7 +250,7 @@ public class AuthActivity extends AppCompatActivity {
         }
 
         private void onCodeFailedToSend() {
-            button.setActivated(true);
+            button.setEnabled(true);
 
             ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
                     ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),

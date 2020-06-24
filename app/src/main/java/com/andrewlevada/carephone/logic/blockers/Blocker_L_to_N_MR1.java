@@ -29,7 +29,7 @@ public class Blocker_L_to_N_MR1 extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationFactory.getInstance().pushServiceNotification(this);
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
 
         Toolbox.fastLog("REGISTERING RECEIVER");
         IntentFilter intentFilter = new IntentFilter();
@@ -40,45 +40,48 @@ public class Blocker_L_to_N_MR1 extends Service {
         prevPhoneState = TelephonyManager.EXTRA_STATE_IDLE;
         logger = new DefaultLogger();
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Toolbox.fastLog("DESTROYING 1");
         super.onDestroy();
-        Toolbox.fastLog("DESTROYING 2");
-        NotificationFactory.getInstance().cancelNotification();
+        Toolbox.fastLog("DESTROYING");
+        NotificationFactory.getInstance(this).cancelNotification();
         unregisterReceiver(receiver);
-        stopSelf();
     }
 
     public class IncomingCallReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() == null || !intent.getAction().equals("android.intent.action.PHONE_STATE"))
-                return;
+            try {
+                if (intent.getAction() == null || !intent.getAction().equals("android.intent.action.PHONE_STATE"))
+                    return;
 
-            String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
-            String phone = intent.getExtras() != null ?
-                    intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
+                String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+                String phone = intent.getExtras() != null ?
+                        intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
 
-            logAction(phone, state);
+                logAction(phone, state);
 
-            Toolbox.fastLog("CHANGE: " + phone);
-            Toolbox.fastLog("STATE: " + state);
+                Toolbox.fastLog("CHANGE: " + phone);
+                Toolbox.fastLog("STATE: " + state);
 
-            if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
-                return;
+                if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
+                    return;
 
-            if (phone == null) {
-                declineCall(context);
-                return;
+                if (phone == null) {
+                    declineCall(context);
+                    return;
+                }
+
+                WhitelistAccesser.getInstance().doDeclineCall(phone, arg -> {
+                    if (arg) declineCall(context);
+                });
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                // TODO: Show Unsupported message
             }
-
-            WhitelistAccesser.getInstance().doDeclineCall(phone, arg -> {
-                if (arg) declineCall(context);
-            });
         }
     }
 
@@ -98,6 +101,7 @@ public class Blocker_L_to_N_MR1 extends Service {
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
+            // TODO: Show Unsupported message
         }
     }
 

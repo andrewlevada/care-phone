@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.andrewlevada.carephone.Config;
+import com.andrewlevada.carephone.Toolbox;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class Blocker {
@@ -23,16 +26,24 @@ public class Blocker {
         else if (sdk == Build.VERSION_CODES.M) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N_MR1) blockerClass = Blocker_L_to_N_MR1.class;
-        else if (sdk == Build.VERSION_CODES.O) return false; // TODO: Implement blocking for this version
-        else if (sdk == Build.VERSION_CODES.O_MR1) return false; // TODO: Implement blocking for this version
+        else if (sdk == Build.VERSION_CODES.O) blockerClass = Blocker_O.class;
+        else if (sdk == Build.VERSION_CODES.O_MR1) blockerClass = Blocker_O.class;
         else if (sdk == Build.VERSION_CODES.P) blockerClass = Blocker_P.class;
         else if (sdk == Build.VERSION_CODES.Q) blockerClass = Blocker_P.class;
         else return false;
 
         FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", blockerClass.getName());
+        FirebaseAnalytics.getInstance(context).setUserProperty(
+                Config.Analytics.userPropertyBlockerType, blockerClass.getName());
 
-        if (!isServiceRunning(blockerClass, context))
-            context.startService(new Intent(context, blockerClass));
+        Toolbox.fastLog("INIT BLOCKER?");
+
+        if (!isServiceRunning(blockerClass, context)) {
+            Toolbox.fastLog("YES!");
+            FirebaseCrashlytics.getInstance().setCustomKey("did_blocker_init", true);
+            if (sdk < Build.VERSION_CODES.O) context.startService(new Intent(context, blockerClass));
+            else context.startForegroundService(new Intent(context, blockerClass));
+        }
 
         return true;
     }

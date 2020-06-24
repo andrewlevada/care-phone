@@ -87,6 +87,12 @@ public class Toolbox {
         clipboard.setPrimaryClip(clip);
     }
 
+    public static <T> String arrayToString(T[] array) {
+        StringBuilder string = new StringBuilder();
+        for (int i = 0; i < array.length; i++) string.append(array[i].toString()).append(i == array.length - 1 ? ", " : "");
+        return string.toString();
+    }
+
     // Sync thread used for syncing data
 
     public interface InSyncThread {
@@ -103,7 +109,7 @@ public class Toolbox {
         public void run() {
             while (fragment != null && fragment.isAdded()) {
                 try {
-                    Thread.sleep(1500);
+                    Thread.sleep(2500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

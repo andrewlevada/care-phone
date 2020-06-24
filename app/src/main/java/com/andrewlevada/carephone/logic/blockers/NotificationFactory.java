@@ -16,17 +16,18 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.activities.HelloActivity;
 
 class NotificationFactory {
-    private static final int DEFAULT_NOTIFICATION_ID = 159;
+    public static final int DEFAULT_NOTIFICATION_ID = 159;
     private static final String NOTIFICATION_CHANNEL_ID = "CarePhone_Service_NC";
     private static final String NOTIFICATION_CHANNEL_NAME = "CarePhoneServiceNotificationChannel";
 
     private static NotificationManager notificationManager;
     private static NotificationFactory instance;
 
-    public void pushServiceNotification(Service context) {
+    public NotificationFactory(Context context) {
         notificationManager = ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE));
-        if (notificationManager == null) return;
+    }
 
+    public Notification getNotification(Service context) {
         Intent notificationIntent = new Intent(context, HelloActivity.class);
         notificationIntent.setAction(Intent.ACTION_MAIN);
         notificationIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -42,8 +43,11 @@ class NotificationFactory {
                 .setContentText(context.getString(R.string.service_notification_text))
                 .setWhen(System.currentTimeMillis());
 
-        Notification notification = builder.build();
-        context.startForeground(DEFAULT_NOTIFICATION_ID, notification);
+        return builder.build();
+    }
+
+    public void pushServiceNotification(Service context) {
+        context.startForeground(DEFAULT_NOTIFICATION_ID, getNotification(context));
     }
 
     public void cancelNotification() {
@@ -53,7 +57,7 @@ class NotificationFactory {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotificationChanel(Context context) {
         NotificationChannel channel = new NotificationChannel(
-                NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW);
+                NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
 
         channel.setLightColor(context.getResources().getColor(R.color.colorPrimary));
         channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_SECRET);
@@ -75,8 +79,8 @@ class NotificationFactory {
         return builder;
     }
 
-    public static NotificationFactory getInstance() {
-        if (instance == null) instance = new NotificationFactory();
+    public static NotificationFactory getInstance(Context context) {
+        if (instance == null) instance = new NotificationFactory(context);
         return instance;
     }
 }

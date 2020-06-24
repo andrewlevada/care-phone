@@ -18,10 +18,13 @@ import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.activities.extra.RecyclerHoursAdapter;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -65,7 +68,7 @@ public class StatisticsFragment extends Fragment {
         loadDataFromLocal();
 
         periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
-                Arrays.asList(getResources().getStringArray(R.array.periods_labels)), periodsHours);
+                Arrays.asList(getPeriodsLabels()), periodsHours);
         phonesAdapter = setupRecyclerView(layout.findViewById(R.id.phones_recycler),
                 phonesLabels, phonesHours);
 
@@ -76,7 +79,7 @@ public class StatisticsFragment extends Fragment {
         if (getContext() == null) return;
         SharedPreferences preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
 
-        periodsLabels = getResources().getStringArray(R.array.periods_labels);
+        periodsLabels = getPeriodsLabels();
         periodsHours = new ArrayList<>();
         for (int i = 0; i < periodsLabels.length; i++)
             periodsHours.add(preferences.getInt(PREF_PERIOD_HOURS + i, 0));
@@ -140,5 +143,15 @@ public class StatisticsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         return adapter;
+    }
+
+    private String[] getPeriodsLabels() {
+        String remoteConfigParamName =
+                getResources().getConfiguration().locale.equals(new Locale("ru","RU"))
+                ? Config.Analytics.remoteConfigCallPeriodsLabelsRU
+                : Config.Analytics.remoteConfigCallPeriodsLabelsEN;
+
+        return new GsonBuilder().create().fromJson(
+                FirebaseRemoteConfig.getInstance().getString(remoteConfigParamName), String[].class);
     }
 }

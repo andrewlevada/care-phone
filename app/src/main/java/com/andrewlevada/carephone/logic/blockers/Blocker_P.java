@@ -1,8 +1,10 @@
 package com.andrewlevada.carephone.logic.blockers;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.telecom.TelecomManager;
 import android.telephony.PhoneStateListener;
@@ -10,22 +12,25 @@ import android.telephony.TelephonyManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 @RequiresApi(28)
-class Blocker_P extends Service {
+public class Blocker_P extends Service {
     private DefaultLogger logger;
     private TelephonyManager telephony;
 
     private int prevPhoneState;
 
-    public Blocker_P() { }
+    public Blocker_P() {
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationFactory.getInstance().pushServiceNotification(this);
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
 
         Toolbox.fastLog("REGISTERING LISTENER");
         PhoneCallListener listener = new PhoneCallListener();
@@ -43,7 +48,7 @@ class Blocker_P extends Service {
         Toolbox.fastLog("DESTROYING 1");
         super.onDestroy();
         Toolbox.fastLog("DESTROYING 2");
-        NotificationFactory.getInstance().cancelNotification();
+        NotificationFactory.getInstance(this).cancelNotification();
         telephony.listen(null, PhoneStateListener.LISTEN_NONE);
         stopSelf();
     }
@@ -51,21 +56,26 @@ class Blocker_P extends Service {
     private class PhoneCallListener extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
-            Toolbox.fastLog("CHANGE: " + incomingNumber);
-            Toolbox.fastLog("STATE: " + state);
+            try {
+                Toolbox.fastLog("CHANGE: " + incomingNumber);
+                Toolbox.fastLog("STATE: " + state);
 
-            logAction(incomingNumber, state);
+                logAction(incomingNumber, state);
 
-            if (state != TelephonyManager.CALL_STATE_RINGING) return;
+                if (state != TelephonyManager.CALL_STATE_RINGING) return;
 
-            if (incomingNumber == null) {
-                declineCall();
-                return;
+                if (incomingNumber == null) {
+                    declineCall();
+                    return;
+                }
+
+                WhitelistAccesser.getInstance().doDeclineCall(incomingNumber, arg -> {
+                    if (arg) declineCall();
+                });
+            } catch (Exception e) {
+                FirebaseCrashlytics.getInstance().recordException(e);
+                // TODO: Show Unsupported message
             }
-
-            WhitelistAccesser.getInstance().doDeclineCall(incomingNumber, arg -> {
-                if (arg) declineCall();
-            });
         }
     }
 
@@ -88,12 +98,17 @@ class Blocker_P extends Service {
     void declineCall() {
         try {
             Toolbox.fastLog("BLOCKING CALL");
+
             TelecomManager telecomManager = (TelecomManager) getSystemService(Context.TELECOM_SERVICE);
-            if (telecomManager == null) Toolbox.fastLog("ERROR: NO TELECOM MANAGER");
-            else telecomManager.endCall();
+            if (telecomManager == null) throw new Exception("TelecomManager is null");
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED) return;
+
+            telecomManager.endCall();
+
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
-            e.printStackTrace();
+            FirebaseCrashlytics.getInstance().recordException(e);
+            // TODO: Show Unsupported message
         }
     }
 

@@ -1,27 +1,35 @@
 package com.andrewlevada.carephone.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.CloudActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
@@ -38,10 +46,25 @@ public class HomeActivity extends CloudActivity {
         layoutCloudId = R.layout.activity_home_cloud;
         super.onCreate(savedInstanceState);
 
+        // Check auth
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(HomeActivity.this, HelloActivity.class));
+            finish();
+            return;
+        }
+
         // Analytics
         String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseCrashlytics.getInstance().setUserId(userUid);
         FirebaseAnalytics.getInstance(this).setUserId(userUid);
+
+        // Firebase Remote Config
+        FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(30 * 60)
+                .build();
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        remoteConfig.setConfigSettingsAsync(remoteConfigSettings);
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_default);
 
         // Get remote option from intent
         isRemote = getIntent().getBooleanExtra(INTENT_REMOTE, false);
@@ -83,22 +106,7 @@ public class HomeActivity extends CloudActivity {
 
         if (isRemote) return;
 
-        // Check for permissions
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
-                requestPermissions(permissions, 1); // TODO: Change 1 for constant and process
-            }
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
-                    || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
-                requestPermissions(permissions, 2); // TODO: Change 2 for constant and process
-            }
-        }
+        checkPermissions();
 
         // Back button processing
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -136,6 +144,35 @@ public class HomeActivity extends CloudActivity {
         return true;
     }
 
+    @SuppressLint("InlinedApi")
+    private void checkPermissions() {
+        int sdk = Build.VERSION.SDK_INT;
+
+        if (sdk >= Build.VERSION_CODES.M && sdk <= Build.VERSION_CODES.N_MR1) {
+            if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
+                requestPermissions(permissions, 0);
+            }
+        }
+
+        if (sdk >= Build.VERSION_CODES.O) {
+            if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
+                    || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
+                requestPermissions(permissions, 0);
+            }
+        }
+
+        if (sdk == Build.VERSION_CODES.O || sdk == Build.VERSION_CODES.O_MR1) {
+            String notificationListenerString = Settings.Secure.getString(this.getContentResolver(),"enabled_notification_listeners");
+            if (notificationListenerString == null || !notificationListenerString.contains(getPackageName())) {
+                showBeforePermissionDialog(R.string.permission_dialog_notification_listener, () ->
+                        startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+            }
+        }
+    }
+
     public void requestFAB(@Nullable View.OnClickListener onClickListener) {
         fabView.show();
         fabView.setOnClickListener(onClickListener);
@@ -153,5 +190,25 @@ public class HomeActivity extends CloudActivity {
             Network.cared().removeLinkRequest(null);
             doCloseLinkOnCloudCollapse = false;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        for (int result : grantResults) {
+            if (result == PackageManager.PERMISSION_DENIED) {
+                showBeforePermissionDialog(R.string.permission_dialog_must_accept, this::checkPermissions);
+                return;
+            }
+        }
+    }
+
+    private void showBeforePermissionDialog(@StringRes int messageRes, Toolbox.Callback onClick) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.permission_dialog_title)
+                .setMessage(messageRes)
+                .setPositiveButton(R.string.general_okay, (dialog, which) -> onClick.invoke())
+                .show();
     }
 }

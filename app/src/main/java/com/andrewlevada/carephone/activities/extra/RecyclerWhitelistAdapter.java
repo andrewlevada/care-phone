@@ -62,14 +62,15 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
     }
 
     private void inflateActionsMenu(View v, int position) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            PopupMenu popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY, R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
-            popupMenu.getMenuInflater().inflate(R.menu.whitelist_editor, popupMenu.getMenu());
-            popupMenu.show();
-            popupMenu.setOnMenuItemClickListener(new OnMenuItemClick(position));
-        } else {
-            // TODO: Very important feature! ASAP
-        }
+        PopupMenu popupMenu;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+            popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY,
+                    R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
+        else popupMenu = new PopupMenu(v.getContext(), v, Gravity.NO_GRAVITY);
+
+        popupMenu.getMenuInflater().inflate(R.menu.whitelist_editor, popupMenu.getMenu());
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener(new OnMenuItemClick(position));
     }
 
     private class OnMenuItemClick implements PopupMenu.OnMenuItemClickListener {
