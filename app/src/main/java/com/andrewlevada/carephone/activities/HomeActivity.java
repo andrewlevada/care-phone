@@ -106,8 +106,6 @@ public class HomeActivity extends CloudActivity {
 
         if (isRemote) return;
 
-        checkPermissions();
-
         // Back button processing
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -120,10 +118,8 @@ public class HomeActivity extends CloudActivity {
         });
 
         // Load whitelist blocker
-        if (!Blocker.enable(getApplicationContext())) {
-            FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
-            // TODO: Process unsupported device
-        }
+        if (!checkPermissions()) return;
+        tryToLaunchBlocker();
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id) {
@@ -145,7 +141,7 @@ public class HomeActivity extends CloudActivity {
     }
 
     @SuppressLint("InlinedApi")
-    private void checkPermissions() {
+    private boolean checkPermissions() {
         int sdk = Build.VERSION.SDK_INT;
 
         if (sdk >= Build.VERSION_CODES.M && sdk <= Build.VERSION_CODES.N_MR1) {
@@ -153,6 +149,7 @@ public class HomeActivity extends CloudActivity {
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
                 String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
                 requestPermissions(permissions, 0);
+                return false;
             }
         }
 
@@ -161,6 +158,7 @@ public class HomeActivity extends CloudActivity {
                     || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
                 String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
                 requestPermissions(permissions, 0);
+                return false;
             }
         }
 
@@ -169,8 +167,11 @@ public class HomeActivity extends CloudActivity {
             if (notificationListenerString == null || !notificationListenerString.contains(getPackageName())) {
                 showBeforePermissionDialog(R.string.permission_dialog_notification_listener, () ->
                         startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+                return false;
             }
         }
+
+        return true;
     }
 
     public void requestFAB(@Nullable View.OnClickListener onClickListener) {
@@ -201,6 +202,15 @@ public class HomeActivity extends CloudActivity {
                 showBeforePermissionDialog(R.string.permission_dialog_must_accept, this::checkPermissions);
                 return;
             }
+        }
+
+        tryToLaunchBlocker();
+    }
+
+    private void tryToLaunchBlocker() {
+        if (!Blocker.enable(getApplicationContext())) {
+            FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
+            // TODO: Process unsupported device
         }
     }
 

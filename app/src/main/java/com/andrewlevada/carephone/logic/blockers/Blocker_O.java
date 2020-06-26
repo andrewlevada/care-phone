@@ -19,15 +19,15 @@ import java.util.Arrays;
 
 @RequiresApi(26)
 public class Blocker_O extends NotificationListenerService {
+    private static final String REBIND_ACTION = "com.andrewlevada.carephone.REBIND_SERVICE";
+
     FirebaseRemoteConfig remoteConfig;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toolbox.fastLog("Notification service OnStartCommand");
-
         NotificationFactory.getInstance(this).pushServiceNotification(this);
-        remoteConfig = FirebaseRemoteConfig.getInstance();
-
+        //remoteConfig = FirebaseRemoteConfig.getInstance();
         return START_STICKY;
     }
 
@@ -86,14 +86,18 @@ public class Blocker_O extends NotificationListenerService {
     }
 
     private boolean isCallPackage(String packageName) {
-        return Arrays.stream(new GsonBuilder().create().fromJson(remoteConfig.getString(
-                Config.Analytics.remoteConfigCallNotificationPackages), String[].class))
-                .anyMatch(callPackageHash -> callPackageHash.equalsIgnoreCase(packageName));
+        String serializedArray = remoteConfig.getString(
+                Config.Analytics.remoteConfigCallNotificationPackages);
+
+        return Arrays.stream(new GsonBuilder().create().fromJson(serializedArray, String[].class))
+                .anyMatch(callPackageHash -> callPackageHash.equals(packageName.toLowerCase()));
     }
 
     private boolean isCallDeclineAction(String action) {
-        return Arrays.stream(new GsonBuilder().create().fromJson(remoteConfig.getString(
-                Config.Analytics.remoteConfigCallNotificationDeclineActions), String[].class))
-                .allMatch(declineAction -> declineAction.equalsIgnoreCase(action));
+        String serializedArray = remoteConfig.getString(
+                Config.Analytics.remoteConfigCallNotificationDeclineActions);
+
+        return Arrays.stream(new GsonBuilder().create().fromJson(serializedArray, String[].class))
+                .anyMatch(declineAction -> declineAction.equals(action.toLowerCase()));
     }
 }

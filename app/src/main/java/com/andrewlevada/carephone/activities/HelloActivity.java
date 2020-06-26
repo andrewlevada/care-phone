@@ -22,6 +22,9 @@ public class HelloActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hello);
         isStayState = getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false);
 
+        // Check internet connection
+
+
         // Switch to other activity if user is authed
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !isStayState) {
             int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);

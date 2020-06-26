@@ -26,8 +26,8 @@ public class Blocker {
         else if (sdk == Build.VERSION_CODES.M) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N_MR1) blockerClass = Blocker_L_to_N_MR1.class;
-        else if (sdk == Build.VERSION_CODES.O) blockerClass = Blocker_O.class;
-        else if (sdk == Build.VERSION_CODES.O_MR1) blockerClass = Blocker_O.class;
+        else if (sdk == Build.VERSION_CODES.O) blockerClass = Blocker_O_TEST.class;
+        else if (sdk == Build.VERSION_CODES.O_MR1) blockerClass = Blocker_O_TEST.class;
         else if (sdk == Build.VERSION_CODES.P) blockerClass = Blocker_P.class;
         else if (sdk == Build.VERSION_CODES.Q) blockerClass = Blocker_P.class;
         else return false;

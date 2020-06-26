@@ -77,8 +77,9 @@ public class Toolbox {
     }
     public static void requestFirebaseAuthToken(final AuthTokenCallback callback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) user.getIdToken(true).addOnCompleteListener(
-                task -> callback.onGenerated(task.getResult().getToken()));
+        if (user != null) user.getIdToken(true)
+                .addOnCompleteListener(task -> callback.onGenerated(task.getResult().getToken()))
+                .addOnCanceledListener(() -> callback.onGenerated(null));
     }
 
     public static void putInClipboard(Context context, String label, String text) {
