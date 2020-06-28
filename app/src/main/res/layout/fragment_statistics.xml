@@ -46,7 +46,8 @@
                 android:id="@+id/periods_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp"
+                android:overScrollMode="never"/>
 
         </LinearLayout>
 
@@ -89,7 +90,8 @@
                 android:id="@+id/phones_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="20dp"
+                android:overScrollMode="never"/>
 
         </LinearLayout>
 

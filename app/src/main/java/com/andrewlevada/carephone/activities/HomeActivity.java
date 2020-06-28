@@ -35,6 +35,7 @@ public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
     private int currentHomeFragmentId;
+    private FragmentIndex currentFragmentIndex;
     boolean isRemote;
 
     private FloatingActionButton fabView;
@@ -74,32 +75,48 @@ public class HomeActivity extends CloudActivity {
         fabView = findViewById(R.id.fab);
 
         // Loading default fragment screen
-        loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
+        currentFragmentIndex = FragmentIndex.list;
+        loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list, FragmentIndex.list);
         navigation.setSelectedItemId(R.id.home_nav_list);
 
         // Process bottom navigation buttons clicks
         final HomeActivity itself = this;
         navigation.setOnNavigationItemSelectedListener(item -> {
-            Fragment fragment = null;
             int itemId = item.getItemId();
+            FragmentIndex fragmentIndex;
+            Fragment fragment;
 
             if (currentHomeFragmentId == itemId) return false;
 
             switch (itemId) {
-                case R.id.home_nav_log:
+                case R.id.home_nav_log: {
                     fragment = new LogFragment(itself);
+                    fragmentIndex = FragmentIndex.log;
                     break;
+                }
 
-                case R.id.home_nav_list:
+                case R.id.home_nav_list: {
                     fragment = new WhitelistFragment(itself);
+                    fragmentIndex = FragmentIndex.list;
                     break;
+                }
 
-                case R.id.home_nav_stats:
+                case R.id.home_nav_stats: {
                     fragment = new StatisticsFragment(itself);
+                    fragmentIndex = FragmentIndex.stats;
                     break;
+                }
+
+                case R.id.home_nav_settings: {
+                    fragment = new SettingsFragment(itself);
+                    fragmentIndex = FragmentIndex.settings;
+                    break;
+                }
+
+                default: return false;
             }
 
-            return loadHomeFragment(fragment, itemId);
+            return loadHomeFragment(fragment, itemId, fragmentIndex);
         });
 
         WhitelistAccesser.getInstance().initialize(getApplicationContext(), isRemote);
@@ -126,18 +143,22 @@ public class HomeActivity extends CloudActivity {
         }
     }
 
-    private boolean loadHomeFragment(Fragment fragment, int id) {
+    private boolean loadHomeFragment(Fragment fragment, int id, FragmentIndex fragmentIndex) {
         if (fragment == null) return false;
 
         // Remember switching fragment
         currentHomeFragmentId = id;
+        boolean directionBool = currentFragmentIndex.compareTo(fragmentIndex) > 0;
+        currentFragmentIndex = fragmentIndex;
 
         // Hide fab. If fragment needs it, it can request it
         fabView.hide();
 
         // Make transition between fragments
         FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
-        transition.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        transition.setCustomAnimations(
+                directionBool ? R.anim.float_in_left : R.anim.float_in_right,
+                directionBool ? R.anim.float_out_right : R.anim.float_out_left);
         transition.replace(R.id.fragment_container, fragment);
         transition.commit();
 
@@ -210,5 +231,12 @@ public class HomeActivity extends CloudActivity {
                 .setMessage(messageRes)
                 .setPositiveButton(R.string.general_okay, (dialog, which) -> onClick.invoke())
                 .show();
+    }
+
+    private enum FragmentIndex {
+        log,
+        list,
+        stats,
+        settings
     }
 }

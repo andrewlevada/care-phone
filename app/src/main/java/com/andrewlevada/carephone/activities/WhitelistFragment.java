@@ -72,7 +72,7 @@ public class WhitelistFragment extends Fragment {
         if (parentingActivity == null && context instanceof HomeActivity)
             parentingActivity = (HomeActivity) context;
 
-        // Get views by id
+        // Get views by ids
         Toolbar toolbar = layout.findViewById(R.id.whitelist_fullscreen_toolbar);
         whitelistOnclick = layout.findViewById(R.id.whitelist_onclick);
         stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
