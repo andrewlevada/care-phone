@@ -30,15 +30,22 @@ public class Blocker_P extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
+        final Service itself = this;
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                NotificationFactory.getInstance(itself).pushServiceNotification(itself);
 
-        Toolbox.fastLog("REGISTERING LISTENER");
-        PhoneCallListener listener = new PhoneCallListener();
-        telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        if (telephony != null) telephony.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+                Toolbox.fastLog("REGISTERING LISTENER");
+                PhoneCallListener listener = new PhoneCallListener();
+                telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephony != null) telephony.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 
-        prevPhoneState = TelephonyManager.CALL_STATE_IDLE;
-        logger = new DefaultLogger();
+                prevPhoneState = TelephonyManager.CALL_STATE_IDLE;
+                logger = new DefaultLogger();
+            }
+        };
+        thread.start();
 
         return START_REDELIVER_INTENT;
     }

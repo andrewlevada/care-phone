@@ -29,16 +29,24 @@ public class Blocker_O_TEST extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
+        final Service itself = this;
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                NotificationFactory.getInstance(itself).pushServiceNotification(itself);
 
-        Toolbox.fastLog("REGISTERING RECEIVER");
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.PHONE_STATE");
-        receiver = new IncomingCallReceiver();
-        registerReceiver(receiver, intentFilter);
+                Toolbox.fastLog("REGISTERING RECEIVER");
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("android.intent.action.PHONE_STATE");
+                receiver = new IncomingCallReceiver();
+                registerReceiver(receiver, intentFilter);
 
-        prevPhoneState = TelephonyManager.EXTRA_STATE_IDLE;
-        logger = new DefaultLogger();
+                prevPhoneState = TelephonyManager.EXTRA_STATE_IDLE;
+                logger = new DefaultLogger();
+            }
+        };
+        thread.setName("TRACK ME");
+        thread.start();
 
         return START_STICKY;
     }
@@ -80,6 +88,7 @@ public class Blocker_O_TEST extends Service {
                 });
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
+                Toolbox.fastLog(e.getMessage());
                 // TODO: Show Unsupported message
             }
         }
@@ -101,6 +110,7 @@ public class Blocker_O_TEST extends Service {
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
+            Toolbox.fastLog(e.getMessage());
             // TODO: Show Unsupported message
         }
     }

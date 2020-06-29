@@ -26,8 +26,8 @@ public class Blocker {
         else if (sdk == Build.VERSION_CODES.M) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N) blockerClass = Blocker_L_to_N_MR1.class;
         else if (sdk == Build.VERSION_CODES.N_MR1) blockerClass = Blocker_L_to_N_MR1.class;
-        else if (sdk == Build.VERSION_CODES.O) blockerClass = Blocker_O_TEST.class;
-        else if (sdk == Build.VERSION_CODES.O_MR1) blockerClass = Blocker_O_TEST.class;
+        else if (sdk == Build.VERSION_CODES.O) return false;
+        else if (sdk == Build.VERSION_CODES.O_MR1) return false;
         else if (sdk == Build.VERSION_CODES.P) blockerClass = Blocker_P.class;
         else if (sdk == Build.VERSION_CODES.Q) blockerClass = Blocker_P.class;
         else return false;
@@ -41,8 +41,10 @@ public class Blocker {
         if (!isServiceRunning(blockerClass, context)) {
             Toolbox.fastLog("YES!");
             FirebaseCrashlytics.getInstance().setCustomKey("did_blocker_init", true);
-            if (sdk < Build.VERSION_CODES.O) context.startService(new Intent(context, blockerClass));
-            else context.startForegroundService(new Intent(context, blockerClass));
+
+            context.startService(new Intent(context, blockerClass));
+            //if (sdk < Build.VERSION_CODES.O) context.startService(new Intent(context, blockerClass));
+            //else context.startForegroundService(new Intent(context, blockerClass));
         }
 
         return true;

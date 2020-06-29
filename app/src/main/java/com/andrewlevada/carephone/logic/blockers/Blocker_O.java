@@ -2,6 +2,8 @@ package com.andrewlevada.carephone.logic.blockers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -19,15 +21,11 @@ import java.util.Arrays;
 
 @RequiresApi(26)
 public class Blocker_O extends NotificationListenerService {
-    private static final String REBIND_ACTION = "com.andrewlevada.carephone.REBIND_SERVICE";
-
     FirebaseRemoteConfig remoteConfig;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toolbox.fastLog("Notification service OnStartCommand");
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
-        //remoteConfig = FirebaseRemoteConfig.getInstance();
         return START_STICKY;
     }
 
@@ -66,6 +64,35 @@ public class Blocker_O extends NotificationListenerService {
     public void onListenerConnected() {
         super.onListenerConnected();
         Toolbox.fastLog("Listener connected");
+
+        remoteConfig = FirebaseRemoteConfig.getInstance();
+
+        Service itself = this;
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                Toolbox.fastLog("I AM IN");
+                NotificationFactory.getInstance(itself).pushServiceNotification(itself);
+
+                itself.stopSelf();
+                requestRebind(new ComponentName(itself, Blocker_O.class));
+
+                try {
+                    sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Toolbox.fastLog("I AM OUT");
+            }
+        };
+        thread.start();
+    }
+
+    @Override
+    public void onListenerDisconnected() {
+        super.onListenerDisconnected();
+        Toolbox.fastLog("Listener disconnected");
     }
 
     public void endCall(PendingIntent declineIntent) {
