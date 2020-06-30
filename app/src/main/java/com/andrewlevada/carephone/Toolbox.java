@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -91,6 +93,22 @@ public class Toolbox {
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < array.length; i++) string.append(array[i].toString()).append(i == array.length - 1 ? ", " : "");
         return string.toString();
+    }
+
+    public static void showErrorDialog(Context context) {
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(R.string.general_oh_oh)
+                .setMessage(R.string.general_something_wrong)
+                .setPositiveButton(R.string.general_terrible, (dialog, which) -> {})
+                .show();
+    }
+
+    public static void showSimpleDialog(Context context, @StringRes int title, @StringRes int body) {
+        new MaterialAlertDialogBuilder(context)
+                .setTitle(title)
+                .setMessage(body)
+                .setPositiveButton(R.string.general_okay, (dialog, which) -> {})
+                .show();
     }
 
     // Sync thread used for syncing data

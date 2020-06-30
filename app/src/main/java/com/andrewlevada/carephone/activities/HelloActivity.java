@@ -35,6 +35,7 @@ public class HelloActivity extends AppCompatActivity {
                 if (userType == AuthActivity.TYPE_CARETAKER) intent = new Intent(HelloActivity.this, CaretakerListActivity.class);
 
                 startActivity(intent);
+                finish();
             }
         }
 
@@ -53,7 +54,6 @@ public class HelloActivity extends AppCompatActivity {
         Intent intent = new Intent(HelloActivity.this, AuthActivity.class);
         intent.putExtra(AuthActivity.PARAM_NAME, type);
         startActivity(intent);
-        finish();
     }
 
     private void switchTo(Class<?> activity, int userType) {

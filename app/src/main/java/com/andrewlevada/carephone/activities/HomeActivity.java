@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -124,17 +123,6 @@ public class HomeActivity extends CloudActivity {
         if (isRemote) return;
 
         checkPermissions();
-
-        // Back button processing
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                Intent intent = new Intent(HomeActivity.this, HelloActivity.class);
-                intent.putExtra(HelloActivity.INTENT_EXTRA_STAY, true);
-                startActivity(intent);
-                finish();
-            }
-        });
 
         // Load whitelist blocker
         if (!Blocker.enable(getApplicationContext())) {

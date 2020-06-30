@@ -30,6 +30,8 @@
     <string name="general_something_wrong">Что-то пошло не так!</string>
     <string name="general_wrong_phone">Неверый номер телефона</string>
     <string name="general_enter_phone">Введите номер телефона</string>
+    <string name="general_oh_oh">Упс!</string>
+    <string name="general_terrible">Ужас</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -58,12 +60,14 @@
     <string name="action_copy_label">Копировать имя</string>
 
     <string name="settings_title">Настройки</string>
-
-    <string name="log_title">Журнал вызовов</string>
-    
+    <string name="settings_about_dialog_title">Спасибо</string>
+    <string name="settings_about_dialog_message">Спасибо IT школе Samsung, в рамках которой зародился этот проект. Отдельное спасибо преподавателю Дмитрию Владимировичу Яценко.</string>
     <string-array name="settings_options">
         <item>Сменить тип пользователя</item>
         <item>Выйти из аккаунта</item>
-        <item>О приложении</item>
+        <item>Спасибо</item>
+        <item>Создть быстрое включение</item>
     </string-array>
+
+    <string name="log_title">Журнал вызовов:</string>
 </resources>

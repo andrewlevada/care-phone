@@ -1,6 +1,7 @@
 package com.andrewlevada.carephone.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,7 +60,7 @@ public class LogFragment extends Fragment {
         recyclerView = layout.findViewById(R.id.recycler);
 
         setupRecyclerView();
-        loadMoreRecords();
+        new Handler().postDelayed(this::loadMoreRecords, 100);
 
         return layout;
     }
@@ -88,6 +89,7 @@ public class LogFragment extends Fragment {
                 loadedNumber += arg.size();
                 logRecords.addAll(arg);
                 adapter.notifyDataSetChanged();
+                recyclerView.scheduleLayoutAnimation();
             }
 
             @Override

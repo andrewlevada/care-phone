@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,21 +43,23 @@ public class CaretakerListActivity extends CloudActivity {
         // Find views by ids
         final EditText codeEditText = findViewById(R.id.cloud_code);
         View resultButton = findViewById(R.id.cloud_result_button);
+        Toolbar toolbar = findViewById(R.id.list_toolbar);
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recycler);
 
         // Process fab onclick
         fab.setOnClickListener(v -> updateCloud(true));
 
-        // Back button processing
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                Intent intent = new Intent(CaretakerListActivity.this, HelloActivity.class);
-                intent.putExtra(HelloActivity.INTENT_EXTRA_STAY, true);
-                startActivity(intent);
-                finish();
+        // Process toolbar actions
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.caretaker_list_settings: {
+
+                    return true;
+                }
             }
+
+            return false;
         });
 
         setupRecyclerView();
