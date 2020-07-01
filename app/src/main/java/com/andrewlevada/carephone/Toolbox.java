@@ -103,18 +103,20 @@ public class Toolbox {
     // Dialogs
 
     public static void showErrorDialog(Context context) {
-        new MaterialAlertDialogBuilder(context)
-                .setTitle(R.string.general_oh_oh)
-                .setMessage(R.string.general_something_wrong)
-                .setPositiveButton(R.string.general_terrible, (dialog, which) -> {})
-                .show();
+        showSimpleDialog(context, R.string.general_oh_oh,
+                R.string.general_something_wrong, R.string.general_terrible);
     }
 
     public static void showSimpleDialog(Context context, @StringRes int title, @StringRes int body) {
+       showSimpleDialog(context, title, body, R.string.general_okay);
+    }
+
+    public static void showSimpleDialog(Context context, @StringRes int title, @StringRes int body,
+                                        @StringRes int buttonText) {
         new MaterialAlertDialogBuilder(context)
                 .setTitle(title)
                 .setMessage(body)
-                .setPositiveButton(R.string.general_okay, (dialog, which) -> {})
+                .setPositiveButton(buttonText, (dialog, which) -> {})
                 .show();
     }
 

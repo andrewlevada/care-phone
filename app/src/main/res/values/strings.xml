@@ -32,6 +32,7 @@
     <string name="general_enter_phone">Введите номер телефона</string>
     <string name="general_oh_oh">Упс!</string>
     <string name="general_terrible">Ужас</string>
+    <string name="general_great">Супер!</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -66,7 +67,6 @@
         <item>Сменить тип пользователя</item>
         <item>Выйти из аккаунта</item>
         <item>Спасибо</item>
-        <item>Создть быстрое включение</item>
     </string-array>
 
     <string name="log_title">Журнал вызовов:</string>

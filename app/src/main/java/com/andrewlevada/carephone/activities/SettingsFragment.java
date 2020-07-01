@@ -87,8 +87,8 @@ public class SettingsFragment extends Fragment {
             if (index == SettingsItems.changeUserType.ordinal()) switchActivityToHello();
             else if (index == SettingsItems.logout.ordinal()) logout();
             else if (index == SettingsItems.aboutApp.ordinal()) Toolbox.showSimpleDialog(parentingActivity,
-                    R.string.settings_about_dialog_title, R.string.settings_about_dialog_message);
-            else if (index == SettingsItems.createShortcut.ordinal()) addShortcut();
+                    R.string.settings_about_dialog_title, R.string.settings_about_dialog_message,
+                    R.string.general_great);
         }
     }
 
@@ -109,7 +109,6 @@ public class SettingsFragment extends Fragment {
     private enum SettingsItems {
         changeUserType,
         logout,
-        aboutApp,
-        createShortcut
+        aboutApp
     }
 }
