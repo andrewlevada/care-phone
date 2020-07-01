@@ -33,6 +33,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
@@ -121,7 +124,7 @@ public class HomeActivity extends CloudActivity {
 
         // Load whitelist blocker
         if (!checkPermissions()) return;
-        // tryToLaunchBlocker();
+        tryToLaunchBlocker();
     }
 
     public void launchService() { //How to launch the service, depending the phone's API.
@@ -162,7 +165,7 @@ public class HomeActivity extends CloudActivity {
     @Override
     protected void onStop() {
         Toolbox.fastLog("home onStop()");
-        launchService();
+        // launchService();
         super.onStop();
     }
 
@@ -170,22 +173,27 @@ public class HomeActivity extends CloudActivity {
     private boolean checkPermissions() {
         int sdk = Build.VERSION.SDK_INT;
 
-        if (sdk >= Build.VERSION_CODES.M && sdk <= Build.VERSION_CODES.N_MR1) {
+        List<String> requestedPermissions = new ArrayList<>();
+
+        if (sdk >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
-                requestPermissions(permissions, 0);
-                return false;
+                requestedPermissions.add(Manifest.permission.READ_PHONE_STATE);
+                requestedPermissions.add(Manifest.permission.CALL_PHONE);
             }
         }
 
         if (sdk >= Build.VERSION_CODES.O) {
             if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
-                requestPermissions(permissions, 0);
-                return false;
+                requestedPermissions.add(Manifest.permission.ANSWER_PHONE_CALLS);
+                requestedPermissions.add(Manifest.permission.READ_PHONE_NUMBERS);
             }
+        }
+
+        if (requestedPermissions.size() != 0) {
+            requestPermissions(requestedPermissions.toArray(new String[0]), 0);
+            return false;
         }
 
         if (sdk == Build.VERSION_CODES.O || sdk == Build.VERSION_CODES.O_MR1) {
@@ -226,10 +234,11 @@ public class HomeActivity extends CloudActivity {
         for (int result : grantResults) {
             if (result == PackageManager.PERMISSION_DENIED) {
                 showBeforePermissionDialog(R.string.permission_dialog_must_accept, this::checkPermissions);
-                return;
+                break;
             }
         }
 
+        if (!checkPermissions()) return;
         tryToLaunchBlocker();
     }
 

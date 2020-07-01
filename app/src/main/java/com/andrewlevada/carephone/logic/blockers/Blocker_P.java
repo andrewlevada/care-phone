@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 public class Blocker_P extends Service {
     private DefaultLogger logger;
     private TelephonyManager telephony;
+    private PhoneCallListener listener;
 
     private int prevPhoneState;
 
@@ -30,37 +31,28 @@ public class Blocker_P extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        final Service itself = this;
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                NotificationFactory.getInstance(itself).pushServiceNotification(itself);
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
 
-                Toolbox.fastLog("REGISTERING LISTENER");
-                PhoneCallListener listener = new PhoneCallListener();
-                telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if (telephony != null) telephony.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
+        Toolbox.fastLog("REGISTERING LISTENER");
+        listener = new PhoneCallListener();
+        telephony = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        telephony.listen(listener, PhoneStateListener.LISTEN_CALL_STATE);
 
-                prevPhoneState = TelephonyManager.CALL_STATE_IDLE;
-                logger = new DefaultLogger();
-            }
-        };
-        thread.start();
+        prevPhoneState = TelephonyManager.CALL_STATE_IDLE;
+        logger = new DefaultLogger();
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Toolbox.fastLog("DESTROYING 1");
         super.onDestroy();
-        Toolbox.fastLog("DESTROYING 2");
         NotificationFactory.getInstance(this).cancelNotification();
-        telephony.listen(null, PhoneStateListener.LISTEN_NONE);
+        telephony.listen(listener, PhoneStateListener.LISTEN_NONE);
         stopSelf();
     }
 
-    private class PhoneCallListener extends PhoneStateListener {
+    public class PhoneCallListener extends PhoneStateListener {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             try {
@@ -81,6 +73,7 @@ public class Blocker_P extends Service {
                 });
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
+                Toolbox.fastLog(e.getMessage());
                 // TODO: Show Unsupported message
             }
         }
