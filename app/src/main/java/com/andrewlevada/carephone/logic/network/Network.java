@@ -47,8 +47,13 @@ public class Network {
     }
 
     boolean queueIfNotAuthedYet(Runnable callback) {
+        // If no internet ignore server request
+        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()) return true;
+
+        // If authed proceed
         if (userToken != null) return false;
 
+        // If not authed auth and add callback for this request
         if (authTokenCallback == null) useFirebaseAuthToken();
         authTokenCallback.addCallback(callback);
 

@@ -3,16 +3,21 @@ package com.andrewlevada.carephone.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 public class HelloActivity extends AppCompatActivity {
     public static final String INTENT_EXTRA_STAY = "INTENT_EXTRA_STAY";
+
+    private Button caredButton;
+    private Button caretakerButton;
 
     private boolean isStayState;
 
@@ -22,6 +27,29 @@ public class HelloActivity extends AppCompatActivity {
         setContentView(R.layout.activity_hello);
         isStayState = getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false);
 
+        // Find views by ids
+        caredButton = findViewById(R.id.button_cared);
+        caretakerButton = findViewById(R.id.button_caretaker);
+
+        // Check internet connection
+        Toolbox.InternetConnectionChecker.getInstance().hasInternet(hasInternet -> {
+            if (hasInternet) authCheck();
+            else switchTo(HomeActivity.class, AuthActivity.TYPE_CARED);
+        });
+
+        // Process buttons
+        caredButton.setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARED);
+            else switchTo(HomeActivity.class, AuthActivity.TYPE_CARED);
+        });
+
+        caretakerButton.setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARETAKER);
+            else switchTo(CaretakerListActivity.class, AuthActivity.TYPE_CARETAKER);
+        });
+    }
+
+    private void authCheck() {
         // Switch to other activity if user is authed
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !isStayState) {
             int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(AuthActivity.PARAM_NAME, -1);
@@ -39,15 +67,6 @@ public class HelloActivity extends AppCompatActivity {
             }
         }
 
-        // Process buttons
-        findViewById(R.id.button_cared).setOnClickListener(v -> {
-            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARED);
-            else switchTo(HomeActivity.class, AuthActivity.TYPE_CARED);
-        });
-        findViewById(R.id.button_caretaker).setOnClickListener(v -> {
-            if (FirebaseAuth.getInstance().getCurrentUser() == null) switchToAuth(AuthActivity.TYPE_CARETAKER);
-            else switchTo(CaretakerListActivity.class, AuthActivity.TYPE_CARETAKER);
-        });
     }
 
     private void switchToAuth(int type) {

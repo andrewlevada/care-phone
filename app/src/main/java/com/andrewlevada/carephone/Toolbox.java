@@ -16,6 +16,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+
 /**
  * This class contains all kinds of tools
  * that could be useful during development.
@@ -95,6 +100,8 @@ public class Toolbox {
         return string.toString();
     }
 
+    // Dialogs
+
     public static void showErrorDialog(Context context) {
         new MaterialAlertDialogBuilder(context)
                 .setTitle(R.string.general_oh_oh)
@@ -156,5 +163,46 @@ public class Toolbox {
     public interface CallbackStateOne<T> {
         void invoke(T arg);
         void fail();
+    }
+
+    // Internet connection check
+
+    public static class InternetConnectionChecker {
+        private static InternetConnectionChecker instance;
+
+        private boolean hadInternet;
+
+        public void hasInternet(CallbackOne<Boolean> callback) {
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        int timeoutMs = 1500;
+                        Socket sock = new Socket();
+                        SocketAddress address = new InetSocketAddress("8.8.8.8", 53);
+
+                        sock.connect(address, timeoutMs);
+                        sock.close();
+
+                        hadInternet = true;
+                        callback.invoke(true);
+                    } catch (IOException e) {
+                        hadInternet = false;
+                        callback.invoke(false);
+                    }
+                }
+            };
+            thread.start();
+        }
+
+        public boolean hasInternetSync() {
+            hasInternet(hasInternet -> hadInternet = hasInternet);
+            return hadInternet;
+        }
+
+        public static InternetConnectionChecker getInstance() {
+            if (instance == null) instance = new InternetConnectionChecker();
+            return instance;
+        }
     }
 }

@@ -47,16 +47,23 @@ public class HomeActivity extends CloudActivity {
         super.onCreate(savedInstanceState);
 
         // Check auth
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(HomeActivity.this, HelloActivity.class));
-            finish();
-            return;
-        }
+        Toolbox.InternetConnectionChecker.getInstance().hasInternet(hasInternet -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                if (hasInternet) {
+                    startActivity(new Intent(HomeActivity.this, HelloActivity.class));
+                    finish();
+                } else {
+                    // NO INTERNET
+                }
 
-        // Analytics
-        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseCrashlytics.getInstance().setUserId(userUid);
-        FirebaseAnalytics.getInstance(this).setUserId(userUid);
+                return;
+            }
+
+            // Setup analytics
+            String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseCrashlytics.getInstance().setUserId(userUid);
+            FirebaseAnalytics.getInstance(this).setUserId(userUid);
+        });
 
         // Firebase Remote Config
         FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()

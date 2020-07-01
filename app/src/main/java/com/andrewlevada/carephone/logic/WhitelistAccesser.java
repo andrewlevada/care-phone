@@ -198,6 +198,7 @@ public class WhitelistAccesser {
     public void setWhitelistState(boolean newState) {
         Network.router().setWhitelistState(isRemote, newState, null);
         whitelistState = newState;
+        saveToLocal();
         if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(newState);
     }
 
