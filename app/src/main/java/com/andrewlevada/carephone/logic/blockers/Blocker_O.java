@@ -2,7 +2,6 @@ package com.andrewlevada.carephone.logic.blockers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.service.notification.NotificationListenerService;
@@ -25,8 +24,19 @@ public class Blocker_O extends NotificationListenerService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toolbox.fastLog("Notification service OnStartCommand");
-        return START_STICKY;
+        Toolbox.fastLog("Blocker_O onCreate()");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+
+    @Override
+    public void onCreate() {
+        Toolbox.fastLog("Blocker_O onCreate()");
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
+        super.onCreate();
+
+        requestRebind(new ComponentName(getApplicationContext(), Blocker_O.class));
+        Toolbox.fastLog("Rebind requested");
     }
 
     @Override
@@ -62,37 +72,17 @@ public class Blocker_O extends NotificationListenerService {
 
     @Override
     public void onListenerConnected() {
-        super.onListenerConnected();
         Toolbox.fastLog("Listener connected");
+        super.onListenerConnected();
 
         remoteConfig = FirebaseRemoteConfig.getInstance();
-
-        Service itself = this;
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                Toolbox.fastLog("I AM IN");
-                NotificationFactory.getInstance(itself).pushServiceNotification(itself);
-
-                itself.stopSelf();
-                requestRebind(new ComponentName(itself, Blocker_O.class));
-
-                try {
-                    sleep(20000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Toolbox.fastLog("I AM OUT");
-            }
-        };
-        thread.start();
     }
 
     @Override
-    public void onListenerDisconnected() {
-        super.onListenerDisconnected();
-        Toolbox.fastLog("Listener disconnected");
+    public void onDestroy() {
+        Toolbox.fastLog("Blocker_O onDestroy()");
+        NotificationFactory.getInstance(this).cancelNotification();
+        super.onDestroy();
     }
 
     public void endCall(PendingIntent declineIntent) {
@@ -103,13 +93,6 @@ public class Blocker_O extends NotificationListenerService {
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
         }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Toolbox.fastLog("DESTROYING");
-        NotificationFactory.getInstance(this).cancelNotification();
     }
 
     private boolean isCallPackage(String packageName) {

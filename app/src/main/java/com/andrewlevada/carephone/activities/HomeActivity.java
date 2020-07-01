@@ -13,6 +13,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -21,6 +22,7 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.activities.extra.CloudActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
+import com.andrewlevada.carephone.logic.blockers.TestService;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -119,7 +121,18 @@ public class HomeActivity extends CloudActivity {
 
         // Load whitelist blocker
         if (!checkPermissions()) return;
-        tryToLaunchBlocker();
+        // tryToLaunchBlocker();
+    }
+
+    public void launchService() { //How to launch the service, depending the phone's API.
+        if(Build.VERSION.SDK_INT >= 26) {
+            startForegroundService(new Intent(this, TestService.class));
+        }
+        else{
+            Intent i;
+            i = new Intent(this, TestService.class);
+            ContextCompat.startForegroundService(this, i);
+        }
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id) {
@@ -138,6 +151,19 @@ public class HomeActivity extends CloudActivity {
         transition.commit();
 
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        Toolbox.fastLog("home onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Toolbox.fastLog("home onStop()");
+        launchService();
+        super.onStop();
     }
 
     @SuppressLint("InlinedApi")

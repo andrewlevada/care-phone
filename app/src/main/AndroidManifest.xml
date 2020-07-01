@@ -36,9 +36,6 @@
 
             <service
                 android:name=".logic.blockers.Blocker_O"
-                android:enabled="true"
-                android:exported="false"
-                android:foregroundServiceType="phoneCall"
                 android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
                 <intent-filter>
                     <action android:name="android.service.notification.NotificationListenerService" />
@@ -50,6 +47,8 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="phoneCall" />
+
+        <service android:name=".logic.blockers.TestService"/>
 
         <activity android:name=".activities.HelloActivity">
             <intent-filter>
