@@ -33,6 +33,7 @@
     <string name="general_oh_oh">Упс!</string>
     <string name="general_terrible">Ужас</string>
     <string name="general_great">Супер!</string>
+    <string name="general_empty">Пусто</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>

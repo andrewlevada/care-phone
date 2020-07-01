@@ -34,6 +34,7 @@
     <string name="general_oh_oh">Ouch!</string>
     <string name="general_terrible">So sad</string>
     <string name="general_great">Great!</string>
+    <string name="general_empty">Empty</string>
 
     <string name="hello_button_caretaker">I care</string>
     <string name="hello_button_cared">I am cared about</string>
