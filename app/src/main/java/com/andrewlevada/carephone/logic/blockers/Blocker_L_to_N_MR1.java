@@ -75,9 +75,7 @@ public class Blocker_L_to_N_MR1 extends Service {
                     return;
                 }
 
-                WhitelistAccesser.getInstance().doDeclineCall(phone, arg -> {
-                    if (arg) declineCall(context);
-                });
+                if (WhitelistAccesser.getInstance().doDeclineCall(phone)) declineCall(context);
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 // TODO: Show Unsupported message

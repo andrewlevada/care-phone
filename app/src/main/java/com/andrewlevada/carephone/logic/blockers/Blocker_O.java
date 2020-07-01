@@ -2,7 +2,6 @@ package com.andrewlevada.carephone.logic.blockers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -28,15 +27,10 @@ public class Blocker_O extends NotificationListenerService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-
     @Override
     public void onCreate() {
         Toolbox.fastLog("Blocker_O onCreate()");
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
         super.onCreate();
-
-        requestRebind(new ComponentName(getApplicationContext(), Blocker_O.class));
-        Toolbox.fastLog("Rebind requested");
     }
 
     @Override
@@ -59,8 +53,10 @@ public class Blocker_O extends NotificationListenerService {
                     Toolbox.fastLog("Got title: " + title);
 
                     if (isCallDeclineAction(title)) {
-                        endCall(action.actionIntent);
-                        notification.when = System.currentTimeMillis() + 10000;
+                        if (Blocker_P.doDeclineCurrentCall) {
+                            endCall(action.actionIntent);
+                            cancelNotification(barNotification.getKey());
+                        }
                         return;
                     }
                 }
@@ -75,6 +71,7 @@ public class Blocker_O extends NotificationListenerService {
         Toolbox.fastLog("Listener connected");
         super.onListenerConnected();
 
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
         remoteConfig = FirebaseRemoteConfig.getInstance();
     }
 

@@ -1,10 +1,12 @@
 package com.andrewlevada.carephone.logic.blockers;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.telecom.TelecomManager;
 import android.telephony.PhoneStateListener;
@@ -18,20 +20,25 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-@RequiresApi(28)
+@RequiresApi(26)
 public class Blocker_P extends Service {
     private DefaultLogger logger;
     private TelephonyManager telephony;
     private PhoneCallListener listener;
 
+    public static boolean doDeclineCurrentCall;
+
     private int prevPhoneState;
+    private boolean isAsLogger;
 
     public Blocker_P() {
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
+        isAsLogger = Build.VERSION.SDK_INT < Build.VERSION_CODES.P;
+
+        if (!isAsLogger) NotificationFactory.getInstance(this).pushServiceNotification(this);
 
         Toolbox.fastLog("REGISTERING LISTENER");
         listener = new PhoneCallListener();
@@ -47,12 +54,13 @@ public class Blocker_P extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        NotificationFactory.getInstance(this).cancelNotification();
+        if (!isAsLogger) NotificationFactory.getInstance(this).cancelNotification();
         telephony.listen(listener, PhoneStateListener.LISTEN_NONE);
         stopSelf();
     }
 
     public class PhoneCallListener extends PhoneStateListener {
+        @SuppressLint("NewApi")
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
             try {
@@ -61,16 +69,19 @@ public class Blocker_P extends Service {
 
                 logAction(incomingNumber, state);
 
-                if (state != TelephonyManager.CALL_STATE_RINGING) return;
-
-                if (incomingNumber == null) {
-                    declineCall();
+                if (state != TelephonyManager.CALL_STATE_RINGING) {
+                    doDeclineCurrentCall = false;
                     return;
                 }
 
-                WhitelistAccesser.getInstance().doDeclineCall(incomingNumber, arg -> {
-                    if (arg) declineCall();
-                });
+                if (incomingNumber == null) {
+                    doDeclineCurrentCall = true;
+                    if (!isAsLogger) declineCall();
+                    return;
+                }
+
+                doDeclineCurrentCall = WhitelistAccesser.getInstance().doDeclineCall(incomingNumber);
+                if (doDeclineCurrentCall && !isAsLogger) declineCall();
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Toolbox.fastLog(e.getMessage());
@@ -95,6 +106,7 @@ public class Blocker_P extends Service {
         prevPhoneState = state;
     }
 
+    @RequiresApi(28)
     void declineCall() {
         try {
             Toolbox.fastLog("BLOCKING CALL");
