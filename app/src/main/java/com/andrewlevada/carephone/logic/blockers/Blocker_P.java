@@ -31,8 +31,7 @@ public class Blocker_P extends Service {
     private int prevPhoneState;
     private boolean isAsLogger;
 
-    public Blocker_P() {
-    }
+    public Blocker_P() { }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

@@ -28,6 +28,7 @@ public class LogFragment extends Fragment {
     public static final int TYPE_OUTGOING = 1;
     private static final int numberPerLoad = 20;
 
+    private View emptyView;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
 
@@ -38,9 +39,7 @@ public class LogFragment extends Fragment {
     private HomeActivity parentingActivity;
 
     // Required empty public constructor
-    public LogFragment() {
-
-    }
+    public LogFragment() { }
 
     public LogFragment(HomeActivity parentingActivity) {
         this.parentingActivity = parentingActivity;
@@ -57,6 +56,7 @@ public class LogFragment extends Fragment {
             parentingActivity = (HomeActivity) container.getContext();
 
         // Find views by ids
+        emptyView = layout.findViewById(R.id.empty_view);
         recyclerView = layout.findViewById(R.id.recycler);
 
         setupRecyclerView();
@@ -85,11 +85,14 @@ public class LogFragment extends Fragment {
             @Override
             public void onSuccess(List<LogRecord> arg) {
                 isLoading = false;
-                if (arg.size() == 0) return;
-                loadedNumber += arg.size();
-                logRecords.addAll(arg);
-                adapter.notifyDataSetChanged();
-                recyclerView.scheduleLayoutAnimation();
+                if (arg.size() != 0) {
+                    loadedNumber += arg.size();
+                    logRecords.addAll(arg);
+                    adapter.notifyDataSetChanged();
+                    recyclerView.scheduleLayoutAnimation();
+                } else if (loadedNumber == 0) {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

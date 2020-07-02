@@ -29,4 +29,9 @@
         <key>periods_labels_en</key>
         <value>["All time","This month","This week","Today"]</value>
     </entry>
+
+    <entry>
+        <key>donate_link</key>
+        <value>http://yasobe.ru/na/carephone</value>
+    </entry>
 </defaultsMap>

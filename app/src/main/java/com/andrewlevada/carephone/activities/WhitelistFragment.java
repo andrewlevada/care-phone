@@ -32,6 +32,8 @@ import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;
 
+import java.util.List;
+
 public class WhitelistFragment extends Fragment {
     private WhitelistAccesser whitelistAccesser;
     
@@ -39,6 +41,7 @@ public class WhitelistFragment extends Fragment {
     private ConstraintLayout layout;
     private View whitelistOnclick;
     private View stateOnclick;
+    private View whitelistEmptyView;
     private TextView stateText;
 
     private ConstraintSet defaultConstraint;
@@ -50,6 +53,8 @@ public class WhitelistFragment extends Fragment {
     private boolean isFullscreen;
     private boolean memoryWhitelistState;
     private boolean skipWhitelistStateSync;
+    private boolean isEmpty;
+    private boolean doHideEmpty;
 
     private Context context;
 
@@ -74,17 +79,17 @@ public class WhitelistFragment extends Fragment {
 
         // Get views by ids
         Toolbar toolbar = layout.findViewById(R.id.whitelist_fullscreen_toolbar);
+        recyclerView = layout.findViewById(R.id.whitelist_recycler);
         whitelistOnclick = layout.findViewById(R.id.whitelist_onclick);
         stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
+        whitelistEmptyView = layout.findViewById(R.id.whitelist_empty_layout);
         stateText = layout.findViewById(R.id.whitelist_state_text);
 
-        // Setup recycler view
-        recyclerView = layout.findViewById(R.id.whitelist_recycler);
+        // Setup Whitelist Processing
         setupRecyclerView();
-
-        // Setup Whitelist Accesser
         whitelistAccesser = WhitelistAccesser.getInstance();
         whitelistAccesser.setAdapter(adapter);
+        whitelistAccesser.setWhitelistChangedCallback(new OnGotWhitelist());
         whitelistAccesser.setWhitelistStateChangedCallback(new OnGotWhitelistState());
         whitelistAccesser.syncWhitelist();
         whitelistAccesser.syncWhitelistState();
@@ -179,8 +184,7 @@ public class WhitelistFragment extends Fragment {
         // Setup transition
         Transition transition = new AutoTransition();
         transition.setDuration(600);
-        if (doExtend) transition.setInterpolator(new FastOutSlowInInterpolator());
-        else transition.setInterpolator(new FastOutSlowInInterpolator());
+        transition.setInterpolator(new FastOutSlowInInterpolator());
 
         // Make transition
         TransitionManager.beginDelayedTransition(layout, transition);
@@ -190,6 +194,16 @@ public class WhitelistFragment extends Fragment {
         if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
                 || parentingActivity.isRemote)
             layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
+
+        // Empty label process
+        doHideEmpty = doExtend;
+        if (doExtend) {
+            recyclerView.setVisibility(View.VISIBLE);
+            whitelistEmptyView.setVisibility(View.GONE);
+        } else {
+            recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            whitelistEmptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        }
 
         // Fill cloud after delay
         if (doExtend) new Handler().postDelayed(() ->
@@ -202,6 +216,14 @@ public class WhitelistFragment extends Fragment {
 
         adapter = new RecyclerWhitelistAdapter(recyclerView);
         recyclerView.setAdapter(adapter);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 0) parentingActivity.hideFAB();
+                else if (dy < 0) parentingActivity.requestFAB(new OnFABClick());
+            }
+        });
     }
 
     private void animateUpdateStateButton(boolean whitelistState) {
@@ -228,6 +250,17 @@ public class WhitelistFragment extends Fragment {
             else stateText.setText(R.string.whitelist_state_turn_on);
             if (arg != memoryWhitelistState) animateUpdateStateButton(!arg);
             memoryWhitelistState = arg;
+        }
+    }
+
+    private class OnGotWhitelist implements Toolbox.CallbackOne<List<PhoneNumber>> {
+        @Override
+        public void invoke(List<PhoneNumber> whitelist) {
+            isEmpty = whitelist.size() == 0;
+
+            if (doHideEmpty) return;
+            recyclerView.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+            whitelistEmptyView.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
         }
     }
 

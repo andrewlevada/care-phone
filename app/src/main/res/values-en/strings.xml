@@ -19,6 +19,7 @@
     <string name="whitelist_link_blank_code">000000</string>
     <string name="whitelist_enter_name">Enter name</string>
     <string name="whitelist_long_name">Name is too long</string>
+    <string name="whitelist_add_first">Click here to add first number to whitelist</string>
 
     <string name="general_yes">Yes</string>
     <string name="general_no">No</string>
@@ -62,14 +63,14 @@
     <string name="action_copy_phone">Copy phone number</string>
     <string name="action_copy_label">Copy name</string>
 
-    <string name="settings_title">Settings</string>
-    <string name="settings_about_dialog_title">Thanks</string>
-    <string name="settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko.</string>
-    <string-array name="settings_options">
-        <item>Change user type</item>
-        <item>Sign out</item>
-        <item>Thanks</item>
-    </string-array>
+    <string name="settings_change_user_type">Change user type</string>
+    <string name="settings_sign_out">Sign out</string>
+    <string name="settings_thanks">Thanks</string>
+    <string name="settings_donate">Support financially</string>
+
+    <string name="cared_settings_title">Settings</string>
+    <string name="cared_settings_about_dialog_title">Thanks</string>
+    <string name="cared_settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko.</string>
 
     <string name="log_title">Calls log:</string>
 </resources>

@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/whitelist_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,20 +34,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="@font/roboto_slab_bold"
                 android:text="@string/whitelist_title"
                 android:textColor="@color/colorOnSurface"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/whitelist_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:layoutAnimation="@anim/recycler_appear_layout_normal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/whitelist_title" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/whitelist_empty_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="@font/comfortaa_bold"
+                android:lineSpacingExtra="8dp"
+                android:text="@string/whitelist_add_first"
+                android:textAllCaps="true"
+                android:textColor="@color/colorOnSurface"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/whitelist_title" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/whitelist_onclick"
@@ -63,6 +88,7 @@
         android:layout_marginStart="@dimen/float_general_margin"
         android:layout_marginTop="@dimen/float_top_margin"
         android:layout_marginEnd="@dimen/float_general_margin"
+        android:translationY="-16dp"
         android:background="@drawable/shadow_circle"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -105,6 +131,7 @@
         android:layout_marginStart="@dimen/float_general_margin"
         android:layout_marginTop="@dimen/float_top_margin"
         android:layout_marginEnd="@dimen/float_general_margin"
+        android:translationY="-32dp"
         android:background="@drawable/shadow_circle"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,9 +1,13 @@
 package com.andrewlevada.carephone.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
@@ -14,6 +18,7 @@ import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.activities.extra.CloudActivity;
+import com.andrewlevada.carephone.activities.extra.CommonSettings;
 import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
 import com.andrewlevada.carephone.activities.extra.RecyclerOnlyPhoneAdapter;
 import com.andrewlevada.carephone.logic.CaredUser;
@@ -29,21 +34,25 @@ public class CaretakerListActivity extends CloudActivity {
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private RecyclerAdapter adapter;
+    private Toolbar toolbar;
 
     private List<CaredUser> cared;
+
+    private CaretakerListActivity itself;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         layoutId = R.layout.activity_caretaker_list;
         layoutCloudId = R.layout.activity_caretaker_list_cloud;
         super.onCreate(savedInstanceState);
+        itself = this;
 
         analytics = FirebaseAnalytics.getInstance(this);
 
         // Find views by ids
         final EditText codeEditText = findViewById(R.id.cloud_code);
         View resultButton = findViewById(R.id.cloud_result_button);
-        Toolbar toolbar = findViewById(R.id.list_toolbar);
+        toolbar = findViewById(R.id.list_toolbar);
         fab = findViewById(R.id.fab);
         recyclerView = findViewById(R.id.recycler);
 
@@ -52,11 +61,9 @@ public class CaretakerListActivity extends CloudActivity {
 
         // Process toolbar actions
         toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.caretaker_list_settings: {
-
-                    return true;
-                }
+            if (item.getItemId() == R.id.caretaker_list_settings) {
+                inflateSettingsMenu();
+                return true;
             }
 
             return false;
@@ -130,6 +137,18 @@ public class CaretakerListActivity extends CloudActivity {
         startActivity(intent);
     }
 
+    private void inflateSettingsMenu() {
+        PopupMenu popupMenu;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
+            popupMenu = new PopupMenu(this, toolbar, Gravity.END | Gravity.TOP,
+                    R.attr.popupMenuStyle, R.style.Widget_Custom_PopupMenu);
+        else popupMenu = new PopupMenu(this, toolbar, Gravity.END | Gravity.TOP);
+
+        popupMenu.getMenuInflater().inflate(R.menu.caretaker_settings, popupMenu.getMenu());
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener(new OnSettingsMenuItemClick());
+    }
+
     @Override
     public void updateCloud(boolean extend) {
         super.updateCloud(extend);
@@ -140,4 +159,22 @@ public class CaretakerListActivity extends CloudActivity {
 
     @Override
     public void fillCloud(int layout, @Nullable SimpleInflater.OnViewInflated callback, @Nullable View.OnClickListener resultOnClick) { }
+
+    private class OnSettingsMenuItemClick implements PopupMenu.OnMenuItemClickListener {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            int id = item.getItemId();
+
+            if (id == R.id.caretaker_settings_change_user_type)
+                CommonSettings.switchActivityToHello(itself);
+            else if (id == R.id.caretaker_settings_sign_out)
+                CommonSettings.logout(itself);
+            else if (id == R.id.caretaker_settings_thanks)
+                CommonSettings.showThanksDialog(itself);
+            else if (id == R.id.caretaker_settings_donate)
+                CommonSettings.gotoDonateWebPage(itself);
+
+            return true;
+        }
+    }
 }

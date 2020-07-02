@@ -18,6 +18,7 @@
     <string name="whitelist_link_blank_code">000000</string>
     <string name="whitelist_enter_name">Введите имя</string>
     <string name="whitelist_long_name">Длинное имя</string>
+    <string name="whitelist_add_first">Нажмите тут, чтобы добавить первый номер телефона в белый список.</string>
 
     <string name="general_yes">Да</string>
     <string name="general_no">Нет</string>
@@ -61,13 +62,19 @@
     <string name="action_copy_phone">Копировать телефон</string>
     <string name="action_copy_label">Копировать имя</string>
 
-    <string name="settings_title">Настройки</string>
-    <string name="settings_about_dialog_title">Спасибо</string>
-    <string name="settings_about_dialog_message">Спасибо IT школе Samsung, в рамках которой зародился этот проект. Отдельное спасибо преподавателю Дмитрию Владимировичу Яценко.</string>
-    <string-array name="settings_options">
-        <item>Сменить тип пользователя</item>
-        <item>Выйти из аккаунта</item>
-        <item>Спасибо</item>
+    <string name="settings_change_user_type">Сменить тип пользователя</string>
+    <string name="settings_sign_out">Выйти из аккаунта</string>
+    <string name="settings_thanks">Благодарности</string>
+    <string name="settings_donate">Финансово поддержать</string>
+
+    <string name="cared_settings_title">Настройки</string>
+    <string name="cared_settings_about_dialog_title">Спасибо</string>
+    <string name="cared_settings_about_dialog_message">Благодарю IT школу Samsung, без которой этот проект был бы не возможен. Отдельное спасибо преподавателю Дмитрию Владимировичу Яценко.</string>
+    <string-array name="cared_settings">
+        <item>@string/settings_change_user_type</item>
+        <item>@string/settings_sign_out</item>
+        <item>@string/settings_thanks</item>
+        <item>@string/settings_donate</item>
     </string-array>
 
     <string name="log_title">Журнал вызовов:</string>

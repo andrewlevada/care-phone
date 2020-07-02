@@ -44,7 +44,8 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
         } else item.findViewById(R.id.recycler_img).setVisibility(View.GONE);
 
         // Hide divider on last element
-        if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
+        // if (position == getItemCount() - 1)
+        //     item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
     }
 
     @Override

@@ -23,5 +23,6 @@ public class Config {
         public static final String remoteConfigCallNotificationDeclineActions = "call_notification_decline_actions";
         public static final String remoteConfigCallPeriodsLabelsRU = "periods_labels_ru";
         public static final String remoteConfigCallPeriodsLabelsEN = "periods_labels_en";
+        public static final String remoteConfigDonateLink = "donate_link";
     }
 }

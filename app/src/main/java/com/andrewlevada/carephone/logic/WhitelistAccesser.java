@@ -33,6 +33,7 @@ public class WhitelistAccesser {
     private Context context;
 
     private RecyclerAdapter adapter;
+    private Toolbox.CallbackOne<List<PhoneNumber>> whitelistChangedCallback;
     private Toolbox.CallbackOne<Boolean> whitelistStateChangedCallback;
 
     private boolean isRemote;
@@ -54,6 +55,12 @@ public class WhitelistAccesser {
 
     public void setWhitelistStateChangedCallback(Toolbox.CallbackOne<Boolean> whitelistStateChangedCallback) {
         this.whitelistStateChangedCallback = whitelistStateChangedCallback;
+        whitelistStateChangedCallback.invoke(whitelistState);
+    }
+
+    public void setWhitelistChangedCallback(Toolbox.CallbackOne<List<PhoneNumber>> whitelistChangedCallback) {
+        this.whitelistChangedCallback = whitelistChangedCallback;
+        whitelistChangedCallback.invoke(whitelist);
     }
 
     private void loadFromLocal() {
@@ -98,6 +105,9 @@ public class WhitelistAccesser {
         editor.putBoolean(PREF_WHITELIST_STATE, whitelistState);
 
         editor.apply();
+
+        if (whitelistChangedCallback != null) whitelistChangedCallback.invoke(whitelist);
+        if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(whitelistState);
     }
 
     private void requirePreferences() {
@@ -153,12 +163,13 @@ public class WhitelistAccesser {
         Network.router().syncWhitelist(isRemote, new Network.NetworkCallbackOne<List<PhoneNumber>>() {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
+                if (whitelist.hashCode() == arg.hashCode()) return;
+
                 if (whitelist.size() != arg.size()) analytics.setUserProperty(
                         Config.Analytics.userPropertyWhitelistLength, String.valueOf(arg.size()));
 
                 whitelist = arg;
-
-                adapter.notifyDataSetChanged();
+                if (adapter != null) adapter.notifyDataSetChanged();
                 saveToLocal();
             }
 
@@ -173,11 +184,10 @@ public class WhitelistAccesser {
         Network.router().getWhitelistState(isRemote, new Network.NetworkCallbackOne<Boolean>() {
             @Override
             public void onSuccess(Boolean arg) {
-                if (whitelistState != arg) analytics.setUserProperty(Config.Analytics.userPropertyWhitelistState, arg.toString());
+                if (whitelistState == arg) return;
 
                 whitelistState = arg;
-
-                if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(arg);
+                analytics.setUserProperty(Config.Analytics.userPropertyWhitelistState, arg.toString());
                 saveToLocal();
             }
 
@@ -197,6 +207,12 @@ public class WhitelistAccesser {
         whitelistState = newState;
         saveToLocal();
         if (whitelistStateChangedCallback != null) whitelistStateChangedCallback.invoke(newState);
+    }
+
+    public void clearData() {
+        if (whitelist != null) whitelist.clear();
+        whitelistState = true;
+        saveToLocal();
     }
 
     public static WhitelistAccesser getInstance() {

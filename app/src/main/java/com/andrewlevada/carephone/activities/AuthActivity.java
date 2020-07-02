@@ -186,6 +186,7 @@ public class AuthActivity extends AppCompatActivity {
 
     private void onInvalidPhoneNumber() {
         editText.setError(getText(R.string.general_wrong_phone));
+        authButtonController.onCodeFailedToSend();
     }
 
     private void onUnprocessedError() {
@@ -253,8 +254,8 @@ public class AuthActivity extends AppCompatActivity {
             button.setEnabled(true);
 
             ObjectAnimator backgroundAnimation = ObjectAnimator.ofArgb(button, "backgroundColor",
-                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary),
-                    ContextCompat.getColor(getApplicationContext(), R.color.colorSurface));
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorSurface),
+                    ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
             backgroundAnimation.setDuration(600);
             backgroundAnimation.start();
         }

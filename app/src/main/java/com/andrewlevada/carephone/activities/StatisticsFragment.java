@@ -46,6 +46,8 @@ public class StatisticsFragment extends Fragment {
     private List<Integer> phonesHours;
 
     private HomeActivity parentingActivity;
+    private RecyclerView phonesRecyclerView;
+    private View emptyView;
 
     // Required empty public constructor
     public StatisticsFragment() { }
@@ -64,12 +66,17 @@ public class StatisticsFragment extends Fragment {
         if (parentingActivity == null && container.getContext() instanceof HomeActivity)
             parentingActivity = (HomeActivity) container.getContext();
 
+        // Find views by ids
+        phonesRecyclerView = layout.findViewById(R.id.phones_recycler);
+        emptyView = layout.findViewById(R.id.empty_view);
+
         // Setup recycler views
         loadDataFromLocal();
+        syncData();
 
         periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
                 Arrays.asList(getPeriodsLabels()), periodsHours);
-        phonesAdapter = setupRecyclerView(layout.findViewById(R.id.phones_recycler),
+        phonesAdapter = setupRecyclerView(phonesRecyclerView,
                 phonesLabels, phonesHours);
 
         return layout;
@@ -92,9 +99,12 @@ public class StatisticsFragment extends Fragment {
             phonesHours.add(preferences.getInt(PREF_PHONES_HOURS + i, 0));
         }
 
+        // Empty processing
+        phonesRecyclerView.setVisibility(phonesLabels.size() == 0 ? View.GONE : View.VISIBLE);
+        emptyView.setVisibility(phonesLabels.size() == 0 ? View.VISIBLE : View.GONE);
+
         // Date nextUpdateDate = new Date(preferences.getLong(PREF_UPDATE_DATE, 0));
         // if (nextUpdateDate.before(new Date(System.currentTimeMillis()))) syncData();
-        syncData();
     }
 
     private void syncData() {
@@ -118,6 +128,10 @@ public class StatisticsFragment extends Fragment {
 
         periodsAdapter.notifyDataSetChanged();
         phonesAdapter.notifyDataSetChanged();
+
+        // Empty processing
+        phonesRecyclerView.setVisibility(phonesLabels.size() == 0 ? View.GONE : View.VISIBLE);
+        emptyView.setVisibility(phonesLabels.size() == 0 ? View.VISIBLE : View.GONE);
 
         if (getContext() == null) return;
         SharedPreferences.Editor preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit();

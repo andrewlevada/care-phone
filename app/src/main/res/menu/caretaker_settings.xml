@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/caretaker_settings_change_user_type"
+        android:enabled="true"
+        android:title="@string/settings_change_user_type"/>
+
+    <item
+        android:id="@+id/caretaker_settings_sign_out"
+        android:enabled="true"
+        android:title="@string/settings_sign_out"/>
+
+    <item
+        android:id="@+id/caretaker_settings_thanks"
+        android:enabled="true"
+        android:title="@string/settings_thanks"/>
+
+    <item
+        android:id="@+id/caretaker_settings_donate"
+        android:enabled="true"
+        android:title="@string/settings_donate"/>
+</menu>

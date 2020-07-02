@@ -26,7 +26,7 @@
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="@color/colorOnPrimary"
-        android:textSize="19sp"
+        android:textSize="17sp"
         android:fontFamily="@font/comfortaa_bold"
         android:lineSpacingExtra="6sp"
         app:layout_constraintBottom_toBottomOf="@+id/image"
