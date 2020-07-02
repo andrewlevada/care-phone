@@ -4,6 +4,7 @@
     <string name="home_nav_log">Вызовы</string>
     <string name="home_nav_list">Белый список</string>
     <string name="home_nav_stats">Статистика</string>
+    <string name="home_nav_settings">Настройки</string>
 
     <string name="permission_dialog_title">Разрешения</string>
     <string name="permission_dialog_notification_listener">Для корректной работы приложения необходимо предоставить ему разрешение на просмотр уведомлений. Это нужно для определения входящего вызова и его отклонения.</string>
@@ -29,6 +30,10 @@
     <string name="general_something_wrong">Что-то пошло не так!</string>
     <string name="general_wrong_phone">Неверый номер телефона</string>
     <string name="general_enter_phone">Введите номер телефона</string>
+    <string name="general_oh_oh">Упс!</string>
+    <string name="general_terrible">Ужас</string>
+    <string name="general_great">Супер!</string>
+    <string name="general_empty">Пусто</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -55,4 +60,15 @@
 
     <string name="action_copy_phone">Копировать телефон</string>
     <string name="action_copy_label">Копировать имя</string>
+
+    <string name="settings_title">Настройки</string>
+    <string name="settings_about_dialog_title">Спасибо</string>
+    <string name="settings_about_dialog_message">Спасибо IT школе Samsung, в рамках которой зародился этот проект. Отдельное спасибо преподавателю Дмитрию Владимировичу Яценко.</string>
+    <string-array name="settings_options">
+        <item>Сменить тип пользователя</item>
+        <item>Выйти из аккаунта</item>
+        <item>Спасибо</item>
+    </string-array>
+
+    <string name="log_title">Журнал вызовов:</string>
 </resources>

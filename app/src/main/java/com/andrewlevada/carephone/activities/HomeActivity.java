@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -38,6 +37,7 @@ public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
     private int currentHomeFragmentId;
+    private FragmentIndex currentFragmentIndex;
     boolean isRemote;
 
     private FloatingActionButton fabView;
@@ -50,16 +50,23 @@ public class HomeActivity extends CloudActivity {
         super.onCreate(savedInstanceState);
 
         // Check auth
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            startActivity(new Intent(HomeActivity.this, HelloActivity.class));
-            finish();
-            return;
-        }
+        Toolbox.InternetConnectionChecker.getInstance().hasInternet(hasInternet -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                if (hasInternet) {
+                    startActivity(new Intent(HomeActivity.this, HelloActivity.class));
+                    finish();
+                } else {
+                    // NO INTERNET
+                }
 
-        // Analytics
-        String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        FirebaseCrashlytics.getInstance().setUserId(userUid);
-        FirebaseAnalytics.getInstance(this).setUserId(userUid);
+                return;
+            }
+
+            // Setup analytics
+            String userUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            FirebaseCrashlytics.getInstance().setUserId(userUid);
+            FirebaseAnalytics.getInstance(this).setUserId(userUid);
+        });
 
         // Firebase Remote Config
         FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
@@ -77,66 +84,75 @@ public class HomeActivity extends CloudActivity {
         fabView = findViewById(R.id.fab);
 
         // Loading default fragment screen
-        loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list);
+        currentFragmentIndex = FragmentIndex.list;
+        loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list, FragmentIndex.list);
         navigation.setSelectedItemId(R.id.home_nav_list);
 
         // Process bottom navigation buttons clicks
         final HomeActivity itself = this;
         navigation.setOnNavigationItemSelectedListener(item -> {
-            Fragment fragment = null;
             int itemId = item.getItemId();
+            FragmentIndex fragmentIndex;
+            Fragment fragment;
 
             if (currentHomeFragmentId == itemId) return false;
 
             switch (itemId) {
-                case R.id.home_nav_log:
+                case R.id.home_nav_log: {
                     fragment = new LogFragment(itself);
+                    fragmentIndex = FragmentIndex.log;
                     break;
+                }
 
-                case R.id.home_nav_list:
+                case R.id.home_nav_list: {
                     fragment = new WhitelistFragment(itself);
+                    fragmentIndex = FragmentIndex.list;
                     break;
+                }
 
-                case R.id.home_nav_stats:
+                case R.id.home_nav_stats: {
                     fragment = new StatisticsFragment(itself);
+                    fragmentIndex = FragmentIndex.stats;
                     break;
+                }
+
+                case R.id.home_nav_settings: {
+                    fragment = new SettingsFragment(itself);
+                    fragmentIndex = FragmentIndex.settings;
+                    break;
+                }
+
+                default: return false;
             }
 
-            return loadHomeFragment(fragment, itemId);
+            return loadHomeFragment(fragment, itemId, fragmentIndex);
         });
 
         WhitelistAccesser.getInstance().initialize(getApplicationContext(), isRemote);
 
         if (isRemote) return;
 
-        // Back button processing
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                Intent intent = new Intent(HomeActivity.this, HelloActivity.class);
-                intent.putExtra(HelloActivity.INTENT_EXTRA_STAY, true);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         // Load whitelist blocker
         if (!checkPermissions()) return;
         tryToLaunchBlocker();
     }
 
-    private boolean loadHomeFragment(Fragment fragment, int id) {
+    private boolean loadHomeFragment(Fragment fragment, int id, FragmentIndex fragmentIndex) {
         if (fragment == null) return false;
 
         // Remember switching fragment
         currentHomeFragmentId = id;
+        boolean directionBool = currentFragmentIndex.compareTo(fragmentIndex) > 0;
+        currentFragmentIndex = fragmentIndex;
 
         // Hide fab. If fragment needs it, it can request it
         fabView.hide();
 
         // Make transition between fragments
         FragmentTransaction transition = getSupportFragmentManager().beginTransaction();
-        transition.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out);
+        transition.setCustomAnimations(
+                directionBool ? R.anim.float_in_left : R.anim.float_in_right,
+                directionBool ? R.anim.float_out_right : R.anim.float_out_left);
         transition.replace(R.id.fragment_container, fragment);
         transition.commit();
 
@@ -233,8 +249,6 @@ public class HomeActivity extends CloudActivity {
             FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
             // TODO: Process unsupported device
         }
-
-        // startService(new Intent(this, Blocker_Ob.class));
     }
 
     private void showBeforePermissionDialog(@StringRes int messageRes, Toolbox.Callback onClick) {
@@ -243,5 +257,12 @@ public class HomeActivity extends CloudActivity {
                 .setMessage(messageRes)
                 .setPositiveButton(R.string.general_okay, (dialog, which) -> onClick.invoke())
                 .show();
+    }
+
+    private enum FragmentIndex {
+        log,
+        list,
+        stats,
+        settings
     }
 }

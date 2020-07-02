@@ -72,7 +72,7 @@ public class WhitelistFragment extends Fragment {
         if (parentingActivity == null && context instanceof HomeActivity)
             parentingActivity = (HomeActivity) context;
 
-        // Get views by id
+        // Get views by ids
         Toolbar toolbar = layout.findViewById(R.id.whitelist_fullscreen_toolbar);
         whitelistOnclick = layout.findViewById(R.id.whitelist_onclick);
         stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
@@ -115,18 +115,22 @@ public class WhitelistFragment extends Fragment {
             stateText.setTextColor(context.getResources().getColor(R.color.colorSurface));
         }
 
+        // Data sync setup
         Toolbox.getSyncThread(this, () -> {
             whitelistAccesser.syncWhitelist();
             if (skipWhitelistStateSync) skipWhitelistStateSync = false;
             else whitelistAccesser.syncWhitelistState();
         }).start();
 
+        // State change button onclick listener
         stateOnclick.setOnClickListener(v -> {
             whitelistAccesser.setWhitelistState(!whitelistAccesser.getWhitelistState());
             skipWhitelistStateSync = true;
         });
 
-        if (parentingActivity.isRemote) {
+        // Disable linking without internet and from remote
+        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
+                || parentingActivity.isRemote) {
             layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
         } else {
             // Link user onclick processing
@@ -183,7 +187,8 @@ public class WhitelistFragment extends Fragment {
         constraintSet.applyTo(layout);
 
         // Hide linking button if remote
-        if (parentingActivity.isRemote)
+        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
+                || parentingActivity.isRemote)
             layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
 
         // Fill cloud after delay

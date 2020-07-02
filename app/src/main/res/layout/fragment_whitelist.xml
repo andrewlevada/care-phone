@@ -12,9 +12,9 @@
         android:id="@+id/whitelist_layout"
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/float_general_margin"
+        android:layout_marginTop="@dimen/float_first_top_margin"
+        android:layout_marginEnd="@dimen/float_general_margin"
         android:background="@drawable/shadow_square_round_16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,15 +60,16 @@
         android:id="@+id/whitelist_state_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/float_general_margin"
+        android:layout_marginTop="@dimen/float_top_margin"
+        android:layout_marginEnd="@dimen/float_general_margin"
         android:background="@drawable/shadow_circle"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/whitelist_layout">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/whitelist_state_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -76,17 +77,24 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
             <TextView
                 android:id="@+id/whitelist_state_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:fontFamily="@font/comfortaa_bold"
                 android:text="@string/whitelist_state_turn_off"
                 android:textAllCaps="true"
                 android:textColor="@color/colorOnSurface"
+                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="14sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -94,15 +102,16 @@
         android:id="@+id/whitelist_link_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/float_general_margin"
+        android:layout_marginTop="@dimen/float_top_margin"
+        android:layout_marginEnd="@dimen/float_general_margin"
         android:background="@drawable/shadow_circle"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/whitelist_state_layout">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/whitelist_link_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -110,17 +119,24 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
             <TextView
                 android:id="@+id/whitelist_link_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:fontFamily="@font/comfortaa_bold"
                 android:text="@string/whitelist_link_user"
                 android:textAllCaps="true"
                 android:textColor="@color/colorOnSurface"
+                android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="14sp" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

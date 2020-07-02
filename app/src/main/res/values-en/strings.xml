@@ -5,6 +5,7 @@
     <string name="home_nav_log">Calls Log</string>
     <string name="home_nav_list">Whitelist</string>
     <string name="home_nav_stats">Statistics</string>
+    <string name="home_nav_settings">Settings</string>
 
     <string name="permission_dialog_title">Permissions</string>
     <string name="permission_dialog_notification_listener">For the app to work properly, you must grant it permission to view notifications. This is necessary for detection and rejection of an incoming call.</string>
@@ -30,6 +31,10 @@
     <string name="general_something_wrong">Something went wrong!</string>
     <string name="general_wrong_phone">Wrong phone number</string>
     <string name="general_enter_phone">Enter phone number</string>
+    <string name="general_oh_oh">Ouch!</string>
+    <string name="general_terrible">So sad</string>
+    <string name="general_great">Great!</string>
+    <string name="general_empty">Empty</string>
 
     <string name="hello_button_caretaker">I care</string>
     <string name="hello_button_cared">I am cared about</string>
@@ -56,4 +61,15 @@
 
     <string name="action_copy_phone">Copy phone number</string>
     <string name="action_copy_label">Copy name</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_about_dialog_title">Thanks</string>
+    <string name="settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko.</string>
+    <string-array name="settings_options">
+        <item>Change user type</item>
+        <item>Sign out</item>
+        <item>Thanks</item>
+    </string-array>
+
+    <string name="log_title">Calls log:</string>
 </resources>
