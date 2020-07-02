@@ -70,21 +70,18 @@ public class WhitelistAccesser {
         whitelistState = preferences.getBoolean(PREF_WHITELIST_STATE, true);
     }
 
-    public void doDeclineCall(@NonNull final String phone, Toolbox.CallbackOne<Boolean> callback) {
+    public boolean doDeclineCall(@NonNull final String phone) {
         syncWhitelist();
         syncWhitelistState();
 
-        if (!whitelistState) {
-            callback.invoke(false);
-            return;
-        }
+        if (!whitelistState) return false;
 
         for (PhoneNumber phoneNumber : whitelist)
             if (phoneNumber.getPhone().equalsIgnoreCase(phone)) {
-                return;
+                return false;
             }
 
-        callback.invoke(true);
+        return true;
     }
 
     private void saveToLocal() {

@@ -23,12 +23,14 @@ public class Blocker_O extends NotificationListenerService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toolbox.fastLog("Notification service OnStartCommand");
+        Toolbox.fastLog("Blocker_O onCreate()");
+        return super.onStartCommand(intent, flags, startId);
+    }
 
-        NotificationFactory.getInstance(this).pushServiceNotification(this);
-        remoteConfig = FirebaseRemoteConfig.getInstance();
-
-        return START_STICKY;
+    @Override
+    public void onCreate() {
+        Toolbox.fastLog("Blocker_O onCreate()");
+        super.onCreate();
     }
 
     @Override
@@ -51,8 +53,10 @@ public class Blocker_O extends NotificationListenerService {
                     Toolbox.fastLog("Got title: " + title);
 
                     if (isCallDeclineAction(title)) {
-                        endCall(action.actionIntent);
-                        notification.when = System.currentTimeMillis() + 10000;
+                        if (Blocker_P.doDeclineCurrentCall) {
+                            endCall(action.actionIntent);
+                            cancelNotification(barNotification.getKey());
+                        }
                         return;
                     }
                 }
@@ -64,8 +68,18 @@ public class Blocker_O extends NotificationListenerService {
 
     @Override
     public void onListenerConnected() {
-        super.onListenerConnected();
         Toolbox.fastLog("Listener connected");
+        super.onListenerConnected();
+
+        NotificationFactory.getInstance(this).pushServiceNotification(this);
+        remoteConfig = FirebaseRemoteConfig.getInstance();
+    }
+
+    @Override
+    public void onDestroy() {
+        Toolbox.fastLog("Blocker_O onDestroy()");
+        NotificationFactory.getInstance(this).cancelNotification();
+        super.onDestroy();
     }
 
     public void endCall(PendingIntent declineIntent) {
@@ -78,22 +92,19 @@ public class Blocker_O extends NotificationListenerService {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Toolbox.fastLog("DESTROYING");
-        NotificationFactory.getInstance(this).cancelNotification();
-    }
-
     private boolean isCallPackage(String packageName) {
-        return Arrays.stream(new GsonBuilder().create().fromJson(remoteConfig.getString(
-                Config.Analytics.remoteConfigCallNotificationPackages), String[].class))
-                .anyMatch(callPackageHash -> callPackageHash.equalsIgnoreCase(packageName));
+        String serializedArray = remoteConfig.getString(
+                Config.Analytics.remoteConfigCallNotificationPackages);
+
+        return Arrays.stream(new GsonBuilder().create().fromJson(serializedArray, String[].class))
+                .anyMatch(callPackageHash -> callPackageHash.equals(packageName.toLowerCase()));
     }
 
     private boolean isCallDeclineAction(String action) {
-        return Arrays.stream(new GsonBuilder().create().fromJson(remoteConfig.getString(
-                Config.Analytics.remoteConfigCallNotificationDeclineActions), String[].class))
-                .allMatch(declineAction -> declineAction.equalsIgnoreCase(action));
+        String serializedArray = remoteConfig.getString(
+                Config.Analytics.remoteConfigCallNotificationDeclineActions);
+
+        return Arrays.stream(new GsonBuilder().create().fromJson(serializedArray, String[].class))
+                .anyMatch(declineAction -> declineAction.equals(action.toLowerCase()));
     }
 }

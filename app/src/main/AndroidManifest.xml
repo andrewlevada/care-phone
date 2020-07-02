@@ -17,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
+        android:persistent="true"
         android:theme="@style/AppTheme">
 
         <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
@@ -32,23 +33,34 @@
             android:name=".logic.blockers.Blocker_O"
             android:enabled="true"
             android:exported="false"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"/>
+            android:foregroundServiceType="phoneCall"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".logic.blockers.Blocker_P"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="phoneCall" />
+            android:foregroundServiceType="phoneCall"
+            android:permission="android.permission.READ_PHONE_STATE"/>
 
-        <activity android:name=".activities.HelloActivity">
+        <activity android:name=".activities.HelloActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".activities.CaretakerListActivity" />
-        <activity android:name=".activities.AuthActivity" />
+
+        <activity android:name=".activities.AuthActivity"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".activities.HomeActivity" />
     </application>
 

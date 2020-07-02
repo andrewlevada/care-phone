@@ -30,6 +30,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeActivity extends CloudActivity {
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
@@ -129,13 +132,9 @@ public class HomeActivity extends CloudActivity {
 
         if (isRemote) return;
 
-        checkPermissions();
-
         // Load whitelist blocker
-        if (!Blocker.enable(getApplicationContext())) {
-            FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
-            // TODO: Process unsupported device
-        }
+        if (!checkPermissions()) return;
+        tryToLaunchBlocker();
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id, FragmentIndex fragmentIndex) {
@@ -160,24 +159,43 @@ public class HomeActivity extends CloudActivity {
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        Toolbox.fastLog("home onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Toolbox.fastLog("home onStop()");
+        super.onStop();
+    }
+
     @SuppressLint("InlinedApi")
-    private void checkPermissions() {
+    private boolean checkPermissions() {
         int sdk = Build.VERSION.SDK_INT;
 
-        if (sdk >= Build.VERSION_CODES.M && sdk <= Build.VERSION_CODES.N_MR1) {
+        List<String> requestedPermissions = new ArrayList<>();
+
+        if (sdk >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE};
-                requestPermissions(permissions, 0);
+                requestedPermissions.add(Manifest.permission.READ_PHONE_STATE);
+                requestedPermissions.add(Manifest.permission.CALL_PHONE);
             }
         }
 
         if (sdk >= Build.VERSION_CODES.O) {
             if (checkSelfPermission(Manifest.permission.ANSWER_PHONE_CALLS) == PackageManager.PERMISSION_DENIED
                     || checkSelfPermission(Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_DENIED) {
-                String[] permissions = {Manifest.permission.ANSWER_PHONE_CALLS, Manifest.permission.READ_PHONE_NUMBERS};
-                requestPermissions(permissions, 0);
+                requestedPermissions.add(Manifest.permission.ANSWER_PHONE_CALLS);
+                requestedPermissions.add(Manifest.permission.READ_PHONE_NUMBERS);
             }
+        }
+
+        if (requestedPermissions.size() != 0) {
+            requestPermissions(requestedPermissions.toArray(new String[0]), 0);
+            return false;
         }
 
         if (sdk == Build.VERSION_CODES.O || sdk == Build.VERSION_CODES.O_MR1) {
@@ -185,8 +203,11 @@ public class HomeActivity extends CloudActivity {
             if (notificationListenerString == null || !notificationListenerString.contains(getPackageName())) {
                 showBeforePermissionDialog(R.string.permission_dialog_notification_listener, () ->
                         startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
+                return false;
             }
         }
+
+        return true;
     }
 
     public void requestFAB(@Nullable View.OnClickListener onClickListener) {
@@ -215,8 +236,18 @@ public class HomeActivity extends CloudActivity {
         for (int result : grantResults) {
             if (result == PackageManager.PERMISSION_DENIED) {
                 showBeforePermissionDialog(R.string.permission_dialog_must_accept, this::checkPermissions);
-                return;
+                break;
             }
+        }
+
+        if (!checkPermissions()) return;
+        tryToLaunchBlocker();
+    }
+
+    private void tryToLaunchBlocker() {
+        if (!Blocker.enable(getApplicationContext())) {
+            FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
+            // TODO: Process unsupported device
         }
     }
 
