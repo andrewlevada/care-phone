@@ -7,16 +7,35 @@
     android:background="@color/colorSurface">
 
     <ImageView
+        android:id="@+id/wave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:src="@drawable/wave_repeat"
+        android:scaleType="fitEnd"
+        app:layout_constraintBottom_toBottomOf="@id/guideline" />
+
+    <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/logo"
-        android:layout_margin="56dp"
+        android:src="@drawable/ic_tutorial_help"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="100dp"
         android:contentDescription="@null"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/wave" />
 
     <TextView
         android:id="@+id/text"
@@ -26,10 +45,10 @@
         android:fontFamily="@font/comfortaa_bold"
         android:gravity="center"
         android:text="35 часов"
-        android:textColor="@color/colorOnSurface"
+        android:textColor="@color/colorOnPrimary"
         android:textSize="19sp"
         android:lineSpacingExtra="6sp"
-        android:layout_margin="32dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +59,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.75" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

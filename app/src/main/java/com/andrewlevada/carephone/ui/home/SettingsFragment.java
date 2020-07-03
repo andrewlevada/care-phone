@@ -27,7 +27,7 @@ public class SettingsFragment extends Fragment {
 
     private RecyclerView recyclerView;
 
-    // Required empty public constructor
+    // Required fragment_tutorial_empty public constructor
     public SettingsFragment() { }
 
     public SettingsFragment(HomeActivity parentingActivity) {

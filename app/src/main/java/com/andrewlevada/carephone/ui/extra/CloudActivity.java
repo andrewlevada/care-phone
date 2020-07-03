@@ -81,7 +81,7 @@ public abstract class CloudActivity extends AppCompatActivity {
 
     /**
      * If cloud is used in one activity several times,
-     * you should leave in empty in resource file
+     * you should leave in fragment_tutorial_empty in resource file
      * and use this method to fill it with some layout.
      * Do not fill it when animations are ongoing.
      * @param layout Layout resource id with which cloud is going to be filled

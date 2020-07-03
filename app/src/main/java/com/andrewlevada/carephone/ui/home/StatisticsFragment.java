@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerHoursAdapter;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerHoursAdapter;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.GsonBuilder;
 
@@ -49,7 +49,7 @@ public class StatisticsFragment extends Fragment {
     private RecyclerView phonesRecyclerView;
     private View emptyView;
 
-    // Required empty public constructor
+    // Required fragment_tutorial_empty public constructor
     public StatisticsFragment() { }
 
     public StatisticsFragment(HomeActivity parentingActivity) {

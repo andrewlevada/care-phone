@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerLogAdapter;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerLogAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class LogFragment extends Fragment {
 
     private HomeActivity parentingActivity;
 
-    // Required empty public constructor
+    // Required fragment_tutorial_empty public constructor
     public LogFragment() { }
 
     public LogFragment(HomeActivity parentingActivity) {

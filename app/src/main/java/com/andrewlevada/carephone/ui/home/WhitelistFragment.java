@@ -59,7 +59,7 @@ public class WhitelistFragment extends Fragment {
     private Context context;
 
     public WhitelistFragment() {
-        // Required empty public constructor
+        // Required fragment_tutorial_empty public constructor
     }
 
     WhitelistFragment(HomeActivity parentingActivity) {

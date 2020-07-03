@@ -1,6 +1,5 @@
 package com.andrewlevada.carephone.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ public class TutorialActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tutoial);
+        setContentView(R.layout.activity_tutorial);
         int userType = getIntent().getIntExtra(INTENT_USER_TYPE, AuthActivity.TYPE_CARED);
         nextActivityName = getIntent().getStringExtra(INTENT_NEXT_ACTIVITY);
 
@@ -53,6 +52,13 @@ public class TutorialActivity extends AppCompatActivity {
 
         // Setup pager adapter
         pager.setAdapter(new TutorialPageAdapter(this));
+        pager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == texts.length) finished();
+            }
+        });
 
         // Onclick processing
         findViewById(R.id.onclick).setOnClickListener(view -> {
@@ -82,22 +88,20 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     private class TutorialPageAdapter extends FragmentStateAdapter {
-        Activity activity;
-
         public TutorialPageAdapter(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
-            activity = fragmentActivity;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
+            if (position == texts.length) return new TutorialFragment();
             return new TutorialFragment(texts[position], drawables.getResourceId(position, 0));
         }
 
         @Override
         public int getItemCount() {
-            return texts.length;
+            return texts.length + 1;
         }
     }
 }

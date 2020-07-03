@@ -19,7 +19,7 @@ public class TutorialFragment extends Fragment {
     private String text;
     private int imageRes;
 
-    // Required empty public constructor
+    // Required fragment_tutorial_empty public constructor
     public TutorialFragment() { }
 
     public TutorialFragment(String text, @DrawableRes int imageRes) {
@@ -31,9 +31,10 @@ public class TutorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.fragment_tutorial, container, false);
+        View layout = inflater.inflate(text != null ? R.layout.fragment_tutorial : R.layout.fragment_tutorial_empty,
+                container, false);
 
-        if (getContext() == null) return layout;
+        if (getContext() == null || text == null) return layout;
 
         // Find views by ids
         TextView textView = layout.findViewById(R.id.text);
