@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;

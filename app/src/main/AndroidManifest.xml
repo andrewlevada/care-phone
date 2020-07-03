@@ -20,8 +20,8 @@
         android:persistent="true"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
-        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="true" />
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="true" />
 
         <service
             android:name=".logic.blockers.Blocker_L_to_N_MR1"
@@ -47,7 +47,7 @@
             android:foregroundServiceType="phoneCall"
             android:permission="android.permission.READ_PHONE_STATE"/>
 
-        <activity android:name=".activities.HelloActivity"
+        <activity android:name=".ui.HelloActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,12 +56,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.CaretakerListActivity" />
+        <activity android:name=".ui.CaretakerListActivity" />
 
-        <activity android:name=".activities.AuthActivity"
+        <activity android:name=".ui.AuthActivity"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".activities.HomeActivity" />
+        <activity android:name=".ui.home.HomeActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities.extra;
+package com.andrewlevada.carephone.ui.extra.recycleradapters;
 
 import android.content.Context;
 import android.os.Build;

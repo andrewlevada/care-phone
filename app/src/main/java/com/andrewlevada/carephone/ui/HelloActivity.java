@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 

@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui.home;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
-import com.andrewlevada.carephone.activities.extra.RecyclerLogAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerLogAdapter;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.network.Network;
 

@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities.extra;
+package com.andrewlevada.carephone.ui.extra.recycleradapters;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.activities.LogFragment;
+import com.andrewlevada.carephone.ui.home.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
 
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui;
 
 import android.content.Intent;
 import android.os.Build;
@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
-import com.andrewlevada.carephone.activities.extra.CloudActivity;
-import com.andrewlevada.carephone.activities.extra.CommonSettings;
-import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
-import com.andrewlevada.carephone.activities.extra.RecyclerOnlyPhoneAdapter;
+import com.andrewlevada.carephone.ui.extra.CloudActivity;
+import com.andrewlevada.carephone.ui.extra.CommonSettings;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerOnlyPhoneAdapter;
+import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

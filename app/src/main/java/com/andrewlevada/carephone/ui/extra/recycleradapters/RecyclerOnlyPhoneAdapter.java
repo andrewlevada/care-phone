@@ -1,32 +1,30 @@
-package com.andrewlevada.carephone.activities.extra;
+package com.andrewlevada.carephone.ui.extra.recycleradapters;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.logic.CaredUser;
 
 import java.util.List;
 
-public class RecyclerClickMenuAdapter extends RecyclerAdapter {
-    private List<String> dataset;
+public class RecyclerOnlyPhoneAdapter extends RecyclerAdapter {
+    private List<CaredUser> dataset;
     private OnRecyclerItemClick onItemClick;
 
-    public RecyclerClickMenuAdapter(@NonNull RecyclerView recyclerView,
-                                    @NonNull List<String> dataset,
-                                    @NonNull OnRecyclerItemClick onItemClick) {
+    public RecyclerOnlyPhoneAdapter(RecyclerView recyclerView, List<CaredUser> dataset, OnRecyclerItemClick onItemClick) {
         super(recyclerView);
-        itemLayout = R.layout.recyclable_oneline_template;
+        itemLayout = R.layout.recyclable_phone_template;
         this.dataset = dataset;
         this.onItemClick = onItemClick;
     }
 
     @Override
     void fillItemWithData(ViewGroup item, int position) {
-        ((TextView) item.findViewById(R.id.recycler_text)).setText(dataset.get(position));
+        ((TextView) item.findViewById(R.id.recycler_phone)).setText(dataset.get(position).getPhone());
 
         // Hide divider on last element
         if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);

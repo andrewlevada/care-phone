@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui.home;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
-import com.andrewlevada.carephone.activities.extra.RecyclerAdapter;
-import com.andrewlevada.carephone.activities.extra.RecyclerHoursAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerHoursAdapter;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;

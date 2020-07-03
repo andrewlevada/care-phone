@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui.home;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -27,7 +27,7 @@ import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.activities.extra.RecyclerWhitelistAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;

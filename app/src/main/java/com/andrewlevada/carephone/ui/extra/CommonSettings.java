@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities.extra;
+package com.andrewlevada.carephone.ui.extra;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,7 @@ import android.net.Uri;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.activities.HelloActivity;
+import com.andrewlevada.carephone.ui.HelloActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;

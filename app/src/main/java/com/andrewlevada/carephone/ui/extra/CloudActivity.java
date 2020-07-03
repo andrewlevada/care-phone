@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities.extra;
+package com.andrewlevada.carephone.ui.extra;
 
 import android.app.Activity;
 import android.graphics.Point;

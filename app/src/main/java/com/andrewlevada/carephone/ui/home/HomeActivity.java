@@ -1,4 +1,4 @@
-package com.andrewlevada.carephone.activities;
+package com.andrewlevada.carephone.ui.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,7 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.activities.extra.CloudActivity;
+import com.andrewlevada.carephone.ui.HelloActivity;
+import com.andrewlevada.carephone.ui.extra.CloudActivity;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.Blocker;
 import com.andrewlevada.carephone.logic.network.Network;

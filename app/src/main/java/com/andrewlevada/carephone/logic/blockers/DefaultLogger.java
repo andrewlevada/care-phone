@@ -1,6 +1,6 @@
 package com.andrewlevada.carephone.logic.blockers;
 
-import com.andrewlevada.carephone.activities.LogFragment;
+import com.andrewlevada.carephone.ui.home.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.network.Network;
 
