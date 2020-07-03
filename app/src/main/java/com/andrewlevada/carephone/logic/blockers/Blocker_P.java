@@ -20,8 +20,9 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-@RequiresApi(26)
 public class Blocker_P extends Service {
+    private static Blocker_P instance;
+
     private DefaultLogger logger;
     private TelephonyManager telephony;
     private PhoneCallListener listener;
@@ -35,6 +36,7 @@ public class Blocker_P extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        instance = this;
         isAsLogger = Build.VERSION.SDK_INT < Build.VERSION_CODES.P;
 
         if (!isAsLogger) NotificationFactory.getInstance(this).pushServiceNotification(this);
@@ -127,5 +129,9 @@ public class Blocker_P extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public static void tryStop() {
+        if (instance != null) instance.stopSelf();
     }
 }

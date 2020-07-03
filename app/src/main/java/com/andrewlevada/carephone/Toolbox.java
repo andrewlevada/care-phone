@@ -33,6 +33,10 @@ public class Toolbox {
      * @param parent {@link ViewGroup} which's child to find
      * @return Last child {@link View} or null if parent has no children.
      */
+
+    private static final String LOG_TAG = "CAREPHONE";
+    private static final boolean DOLOG = true;
+
     @Nullable
     public static View getLastChild(@NonNull ViewGroup parent) {
         for (int i = parent.getChildCount() - 1; i >= 0; i--) {
@@ -44,7 +48,7 @@ public class Toolbox {
     }
 
     public static void fastLog(String value) {
-        Log.e("TEST", value);
+        if (DOLOG) Log.e(LOG_TAG, value);
     }
 
     public static String intToHoursString(int num) {
@@ -79,14 +83,14 @@ public class Toolbox {
         return phone.replaceAll("\\s","").toLowerCase();
     }
 
-    public interface AuthTokenCallback {
-        void onGenerated(String token);
-    }
     public static void requestFirebaseAuthToken(final AuthTokenCallback callback) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) user.getIdToken(true)
                 .addOnCompleteListener(task -> callback.onGenerated(task.getResult().getToken()))
                 .addOnCanceledListener(() -> callback.onGenerated(null));
+    }
+    public interface AuthTokenCallback {
+        void onGenerated(String token);
     }
 
     public static void putInClipboard(Context context, String label, String text) {

@@ -41,7 +41,7 @@
     <string name="hello_caretaker_info">Я хочу управлять белым списком того, о ком я забочусь</string>
     <string name="hello_cared_info">Я хочу использовать белый список на этом телефоне</string>
 
-    <string name="auth_info_first">Введите ваш номер телефона. На него предёт код подтверждения</string>
+    <string name="auth_info_first">Введите ваш номер телефона. На него придёт код подтверждения</string>
     <string name="auth_info_second">Теперь введите код подтверждения из sms</string>
     <string name="auth_code">Код</string>
     <string name="auth_send_code">Отправить код</string>
@@ -66,6 +66,8 @@
     <string name="settings_sign_out">Выйти из аккаунта</string>
     <string name="settings_thanks">Благодарности</string>
     <string name="settings_donate">Финансово поддержать</string>
+
+    <string name="settings_dialog_no_browser">На вышем устройстве не найден веб браузер!</string>
 
     <string name="cared_settings_title">Настройки</string>
     <string name="cared_settings_about_dialog_title">Спасибо</string>

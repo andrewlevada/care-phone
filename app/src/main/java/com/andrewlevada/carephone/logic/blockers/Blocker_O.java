@@ -2,7 +2,6 @@ package com.andrewlevada.carephone.logic.blockers;
 
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.Intent;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 
@@ -17,22 +16,12 @@ import com.google.gson.GsonBuilder;
 
 import java.util.Arrays;
 
-@RequiresApi(26)
 public class Blocker_O extends NotificationListenerService {
+    private static Blocker_O instance;
+
     FirebaseRemoteConfig remoteConfig;
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Toolbox.fastLog("Blocker_O onCreate()");
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onCreate() {
-        Toolbox.fastLog("Blocker_O onCreate()");
-        super.onCreate();
-    }
-
+    @RequiresApi(26)
     @Override
     public void onNotificationPosted(StatusBarNotification barNotification) {
         try {
@@ -69,6 +58,7 @@ public class Blocker_O extends NotificationListenerService {
     @Override
     public void onListenerConnected() {
         Toolbox.fastLog("Listener connected");
+        instance = this;
         super.onListenerConnected();
 
         NotificationFactory.getInstance(this).pushServiceNotification(this);
@@ -92,6 +82,7 @@ public class Blocker_O extends NotificationListenerService {
         }
     }
 
+    @RequiresApi(26)
     private boolean isCallPackage(String packageName) {
         String serializedArray = remoteConfig.getString(
                 Config.Analytics.remoteConfigCallNotificationPackages);
@@ -100,11 +91,16 @@ public class Blocker_O extends NotificationListenerService {
                 .anyMatch(callPackageHash -> callPackageHash.equals(packageName.toLowerCase()));
     }
 
+    @RequiresApi(26)
     private boolean isCallDeclineAction(String action) {
         String serializedArray = remoteConfig.getString(
                 Config.Analytics.remoteConfigCallNotificationDeclineActions);
 
         return Arrays.stream(new GsonBuilder().create().fromJson(serializedArray, String[].class))
                 .anyMatch(declineAction -> declineAction.equals(action.toLowerCase()));
+    }
+
+    public static void tryStop() {
+        if (instance != null) instance.stopSelf();
     }
 }

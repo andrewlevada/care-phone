@@ -14,10 +14,10 @@ public class Config {
         public static final String userPropertyBlockerType = "blocker_type";
         public static final String userPropertyNotificationActions = "notification_actions";
 
-        public static final String eventAddToWhitelist = "whitelist_state";
-        public static final String eventRemoveFromWhitelist = "whitelist_state";
-        public static final String eventLinkUser = "whitelist_state";
-        public static final String eventUnlinkUser = "whitelist_state";
+        public static final String eventAddToWhitelist = "add_to_whitelist";
+        public static final String eventRemoveFromWhitelist = "remove_from_whitelist";
+        public static final String eventLinkUser = "link_user";
+        public static final String eventUnlinkUser = "unlink_user";
 
         public static final String remoteConfigCallNotificationPackages = "call_notification_packages";
         public static final String remoteConfigCallNotificationDeclineActions = "call_notification_decline_actions";

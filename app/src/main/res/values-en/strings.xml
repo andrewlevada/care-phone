@@ -68,6 +68,8 @@
     <string name="settings_thanks">Thanks</string>
     <string name="settings_donate">Support financially</string>
 
+    <string name="settings_dialog_no_browser">No browser was found on your device!</string>
+
     <string name="cared_settings_title">Settings</string>
     <string name="cared_settings_about_dialog_title">Thanks</string>
     <string name="cared_settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko.</string>

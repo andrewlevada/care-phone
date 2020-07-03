@@ -10,7 +10,7 @@ import com.andrewlevada.carephone.Toolbox;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-public class Blocker {
+public class BlockerAccesser {
 
     public static boolean enable(Context context) {
         Class<?> blockerClass;
@@ -48,6 +48,12 @@ public class Blocker {
         }
 
         return true;
+    }
+
+    public static void stop() {
+        Blocker_L_to_N_MR1.tryStop();
+        Blocker_O.tryStop();
+        Blocker_P.tryStop();
     }
 
     private static boolean isServiceRunning(Class<?> serviceClass, Context context) {

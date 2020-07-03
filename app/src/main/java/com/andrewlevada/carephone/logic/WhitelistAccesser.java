@@ -9,8 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.util.ArrayList;
@@ -210,7 +210,9 @@ public class WhitelistAccesser {
     }
 
     public void clearData() {
-        if (whitelist != null) whitelist.clear();
+        if (whitelist == null) return;
+
+        whitelist.clear();
         whitelistState = true;
         saveToLocal();
     }

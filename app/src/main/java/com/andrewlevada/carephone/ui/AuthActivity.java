@@ -17,8 +17,8 @@ import androidx.core.content.ContextCompat;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
@@ -193,6 +193,7 @@ public class AuthActivity extends AppCompatActivity {
     private void onUnprocessedError() {
         editText.setText("");
         editText.setError(getString(R.string.general_something_wrong));
+        authButtonController.onCodeFailedToSend();
     }
 
     private static class AuthCallback extends PhoneAuthProvider.OnVerificationStateChangedCallbacks {

@@ -19,8 +19,9 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import java.lang.reflect.Method;
 
 public class Blocker_L_to_N_MR1 extends Service {
-    private DefaultLogger logger;
+    private static Blocker_L_to_N_MR1 instance;
 
+    private DefaultLogger logger;
     private IncomingCallReceiver receiver;
 
     private String prevPhoneState;
@@ -29,6 +30,8 @@ public class Blocker_L_to_N_MR1 extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        instance = this;
+
         NotificationFactory.getInstance(this).pushServiceNotification(this);
 
         Toolbox.fastLog("REGISTERING RECEIVER");
@@ -121,5 +124,9 @@ public class Blocker_L_to_N_MR1 extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    public static void tryStop() {
+        if (instance != null) instance.stopSelf();
     }
 }

@@ -17,11 +17,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.WhitelistAccesser;
+import com.andrewlevada.carephone.logic.blockers.BlockerAccesser;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.HelloActivity;
 import com.andrewlevada.carephone.ui.extra.CloudActivity;
-import com.andrewlevada.carephone.logic.WhitelistAccesser;
-import com.andrewlevada.carephone.logic.blockers.Blocker;
-import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -246,7 +246,7 @@ public class HomeActivity extends CloudActivity {
     }
 
     private void tryToLaunchBlocker() {
-        if (!Blocker.enable(getApplicationContext())) {
+        if (!BlockerAccesser.enable(getApplicationContext())) {
             FirebaseCrashlytics.getInstance().setCustomKey("blocker_type", "none");
             // TODO: Process unsupported device
         }

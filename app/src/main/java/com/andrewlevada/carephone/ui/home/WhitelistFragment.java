@@ -27,10 +27,10 @@ import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerWhitelistAdapter;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerWhitelistAdapter;
 
 import java.util.List;
 
@@ -87,12 +87,7 @@ public class WhitelistFragment extends Fragment {
 
         // Setup Whitelist Processing
         setupRecyclerView();
-        whitelistAccesser = WhitelistAccesser.getInstance();
-        whitelistAccesser.setAdapter(adapter);
-        whitelistAccesser.setWhitelistChangedCallback(new OnGotWhitelist());
-        whitelistAccesser.setWhitelistStateChangedCallback(new OnGotWhitelistState());
-        whitelistAccesser.syncWhitelist();
-        whitelistAccesser.syncWhitelistState();
+        setupWhitelistAccesser();
 
         // Setup ConstraintSets for fullscreen animations
         defaultConstraint = new ConstraintSet();
@@ -113,7 +108,6 @@ public class WhitelistFragment extends Fragment {
         });
 
         // Whitelist State processing
-        memoryWhitelistState = whitelistAccesser.getWhitelistState();
         if (!memoryWhitelistState) {
             stateText.setText(R.string.whitelist_state_turn_on);
             ((GradientDrawable) stateOnclick.getBackground()).setColor(context.getResources().getColor(R.color.colorOnSurface));
@@ -241,6 +235,16 @@ public class WhitelistFragment extends Fragment {
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.play(backgroundAnimation).with(textAnimation);
         animatorSet.start();
+    }
+
+    private void setupWhitelistAccesser() {
+        whitelistAccesser = WhitelistAccesser.getInstance();
+        memoryWhitelistState = whitelistAccesser.getWhitelistState();
+        whitelistAccesser.setAdapter(adapter);
+        whitelistAccesser.setWhitelistChangedCallback(new OnGotWhitelist());
+        whitelistAccesser.setWhitelistStateChangedCallback(new OnGotWhitelistState());
+        whitelistAccesser.syncWhitelist();
+        whitelistAccesser.syncWhitelistState();
     }
 
     private class OnGotWhitelistState implements Toolbox.CallbackOne<Boolean> {
