@@ -15,6 +15,7 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends CloudActivity {
+    private static final String PREFS_OREO_WARNING = "oreo_warning";
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
     private int currentHomeFragmentId;
@@ -120,12 +122,6 @@ public class HomeActivity extends CloudActivity {
         });
 
         WhitelistAccesser.getInstance().initialize(getApplicationContext(), isRemote);
-
-        if (isRemote) return;
-
-        // Load whitelist blocker
-        if (!checkPermissions()) return;
-        tryToLaunchBlocker();
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id, FragmentIndex fragmentIndex) {
@@ -151,15 +147,14 @@ public class HomeActivity extends CloudActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        Toolbox.fastLog("home onDestroy()");
-        super.onDestroy();
-    }
+    protected void onResume() {
+        super.onResume();
 
-    @Override
-    protected void onStop() {
-        Toolbox.fastLog("home onStop()");
-        super.onStop();
+        if (isRemote) return;
+
+        // Load whitelist blocker
+        if (!checkPermissions()) return;
+        tryToLaunchBlocker();
     }
 
     @SuppressLint("InlinedApi")
@@ -196,6 +191,15 @@ public class HomeActivity extends CloudActivity {
                         startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)));
                 return false;
             }
+
+            if (!getSharedPreferences(Config.appSharedPreferences, MODE_PRIVATE)
+                    .getBoolean(PREFS_OREO_WARNING, false)) {
+                getSharedPreferences(Config.appSharedPreferences, MODE_PRIVATE).edit()
+                        .putBoolean(PREFS_OREO_WARNING, true).apply();
+                Toolbox.showSimpleDialog(this,
+                        R.string.general_warning,
+                        R.string.permission_dialog_oreo_warning);
+            }
         }
 
         return true;
@@ -230,9 +234,6 @@ public class HomeActivity extends CloudActivity {
                 break;
             }
         }
-
-        if (!checkPermissions()) return;
-        tryToLaunchBlocker();
     }
 
     private void tryToLaunchBlocker() {

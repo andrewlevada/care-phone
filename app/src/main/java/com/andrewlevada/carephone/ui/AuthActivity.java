@@ -136,7 +136,10 @@ public class AuthActivity extends AppCompatActivity {
                 continueToNextActivity(user);
             } else {
                 if (verificationId != null) editText.setError(getText(R.string.auth_wrong_code));
-                else editText.setError(getString(R.string.general_something_wrong));
+                else {
+                    editText.setError(getString(R.string.general_something_wrong));
+                    authButtonController.onCodeFailedToSend();
+                }
             }
         });
     }
