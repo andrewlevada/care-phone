@@ -3,25 +3,25 @@ package com.andrewlevada.carephone.logic;
 import java.util.List;
 
 public class StatisticsPack {
-    private List<Integer> periodsHours;
+    private List<Integer> periodsMinutes;
     private List<String> phonesLabels;
-    private List<Integer> phonesHours;
+    private List<Integer> phonesMinutes;
 
-    public StatisticsPack(List<Integer> periodsHours, List<String> phonesLabels, List<Integer> phonesHours) {
-        this.periodsHours = periodsHours;
+    public StatisticsPack(List<Integer> periodsMinutes, List<String> phonesLabels, List<Integer> phonesMinutes) {
+        this.periodsMinutes = periodsMinutes;
         this.phonesLabels = phonesLabels;
-        this.phonesHours = phonesHours;
+        this.phonesMinutes = phonesMinutes;
     }
 
-    public List<Integer> getPeriodsHours() {
-        return periodsHours;
+    public List<Integer> getPeriodsMinutes() {
+        return periodsMinutes;
     }
 
     public List<String> getPhonesLabels() {
         return phonesLabels;
     }
 
-    public List<Integer> getPhonesHours() {
-        return phonesHours;
+    public List<Integer> getPhonesMinutes() {
+        return phonesMinutes;
     }
 }

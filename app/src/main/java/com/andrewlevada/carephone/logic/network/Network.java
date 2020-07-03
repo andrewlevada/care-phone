@@ -16,7 +16,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Network {
-    private static final boolean doLog = false;
+    private static final boolean doLog = true;
     private static final String LOG_ERROR_PREFIX = "--------------- SERVER ERROR: ";
     private static final String LOG_PREFIX = "SERVER: ";
 

@@ -17,7 +17,7 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
-import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerHoursAdapter;
+import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerMinutesAdapter;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.gson.GsonBuilder;
 
@@ -32,18 +32,18 @@ import java.util.Locale;
  */
 public class StatisticsFragment extends Fragment {
     private static final String PREF_UPDATE_DATE = "PREF_UPDATE_DATE";
-    private static final String PREF_PERIOD_HOURS = "PREF_PERIOD_HOURS";
+    private static final String PREF_PERIOD_MINUTES = "PREF_PERIOD_MINUTES";
     private static final String PREF_PHONES_LENGTH = "PREF_PHONES_LENGTH";
-    private static final String PREF_PHONES_HOURS = "PREF_PHONES_HOURS";
+    private static final String PREF_PHONES_MINUTES = "PREF_PHONES_MINUTES";
     private static final String PREF_PHONES_LABELS = "PREF_PHONES_LABELS";
 
     private RecyclerAdapter periodsAdapter;
     private RecyclerAdapter phonesAdapter;
 
     private String[] periodsLabels;
-    private List<Integer> periodsHours;
+    private List<Integer> periodsMinutes;
     private List<String> phonesLabels;
-    private List<Integer> phonesHours;
+    private List<Integer> phonesMinutes;
 
     private HomeActivity parentingActivity;
     private RecyclerView phonesRecyclerView;
@@ -75,9 +75,9 @@ public class StatisticsFragment extends Fragment {
         syncData();
 
         periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
-                Arrays.asList(getPeriodsLabels()), periodsHours);
+                Arrays.asList(getPeriodsLabels()), periodsMinutes);
         phonesAdapter = setupRecyclerView(phonesRecyclerView,
-                phonesLabels, phonesHours);
+                phonesLabels, phonesMinutes);
 
         return layout;
     }
@@ -87,16 +87,16 @@ public class StatisticsFragment extends Fragment {
         SharedPreferences preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
 
         periodsLabels = getPeriodsLabels();
-        periodsHours = new ArrayList<>();
+        periodsMinutes = new ArrayList<>();
         for (int i = 0; i < periodsLabels.length; i++)
-            periodsHours.add(preferences.getInt(PREF_PERIOD_HOURS + i, 0));
+            periodsMinutes.add(preferences.getInt(PREF_PERIOD_MINUTES + i, 0));
 
         phonesLabels = new ArrayList<>();
-        phonesHours = new ArrayList<>();
+        phonesMinutes = new ArrayList<>();
         int phonesLength = preferences.getInt(PREF_PHONES_LENGTH, 0);
         for (int i = 0; i < phonesLength; i++) {
             phonesLabels.add(preferences.getString(PREF_PHONES_LABELS + i, ""));
-            phonesHours.add(preferences.getInt(PREF_PHONES_HOURS + i, 0));
+            phonesMinutes.add(preferences.getInt(PREF_PHONES_MINUTES + i, 0));
         }
 
         // Empty processing
@@ -122,9 +122,13 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void processStatisticsPack(StatisticsPack statisticsPack) {
-        periodsHours = statisticsPack.getPeriodsHours();
-        phonesLabels = statisticsPack.getPhonesLabels();
-        phonesHours = statisticsPack.getPhonesHours();
+        // Replace data
+        periodsMinutes.clear();
+        phonesLabels.clear();
+        phonesMinutes.clear();
+        periodsMinutes.addAll(statisticsPack.getPeriodsMinutes());
+        phonesLabels.addAll(statisticsPack.getPhonesLabels());
+        phonesMinutes.addAll(statisticsPack.getPhonesMinutes());
 
         periodsAdapter.notifyDataSetChanged();
         phonesAdapter.notifyDataSetChanged();
@@ -134,18 +138,20 @@ public class StatisticsFragment extends Fragment {
         emptyView.setVisibility(phonesLabels.size() == 0 ? View.VISIBLE : View.GONE);
 
         if (getContext() == null) return;
-        SharedPreferences.Editor preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor preferences = getContext().getSharedPreferences(
+                Config.appSharedPreferences, Context.MODE_PRIVATE).edit();
 
-        for (int i = 0; i < periodsHours.size(); i++)
-            preferences.putInt(PREF_PERIOD_HOURS + i, periodsHours.get(i));
+        for (int i = 0; i < periodsMinutes.size(); i++)
+            preferences.putInt(PREF_PERIOD_MINUTES + i, periodsMinutes.get(i));
 
         preferences.putInt(PREF_PHONES_LENGTH, phonesLabels.size());
         for (int i = 0; i < phonesLabels.size(); i++) {
             preferences.putString(PREF_PHONES_LABELS + i, phonesLabels.get(i));
-            preferences.putInt(PREF_PHONES_HOURS + i, phonesHours.get(i));
+            preferences.putInt(PREF_PHONES_MINUTES + i, phonesMinutes.get(i));
         }
 
-        preferences.putLong(PREF_UPDATE_DATE, System.currentTimeMillis() + Config.statisticsSyncPeriodHours * 60 * 60 * 1000);
+        preferences.putLong(PREF_UPDATE_DATE, System.currentTimeMillis() +
+                Config.statisticsSyncPeriodHours * 60 * 60 * 1000);
         preferences.apply();
     }
 
@@ -153,7 +159,7 @@ public class StatisticsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerAdapter adapter = new RecyclerHoursAdapter(recyclerView, labels, hours);
+        RecyclerAdapter adapter = new RecyclerMinutesAdapter(recyclerView, labels, hours);
         recyclerView.setAdapter(adapter);
 
         return adapter;

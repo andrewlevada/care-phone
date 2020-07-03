@@ -10,11 +10,11 @@ import com.andrewlevada.carephone.Toolbox;
 
 import java.util.List;
 
-public class RecyclerHoursAdapter extends RecyclerAdapter {
+public class RecyclerMinutesAdapter extends RecyclerAdapter {
     private List<String> labels;
     private List<Integer> hours;
 
-    public RecyclerHoursAdapter(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {
+    public RecyclerMinutesAdapter(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {
         super(recyclerView);
         itemLayout = R.layout.recyclable_hours_template;
 
@@ -30,6 +30,7 @@ public class RecyclerHoursAdapter extends RecyclerAdapter {
     @Override
     void fillItemWithData(ViewGroup item, int position) {
         ((TextView) item.findViewById(R.id.text_label)).setText(labels.get(position));
-        ((TextView) item.findViewById(R.id.text_hours)).setText(Toolbox.intToHoursString(hours.get(position)));
+        ((TextView) item.findViewById(R.id.text_hours)).setText(
+                Toolbox.getShortStringFromMinutes(hours.get(position)));
     }
 }

@@ -54,16 +54,7 @@ public class Toolbox {
         if (DOLOG) Log.e(LOG_TAG, value);
     }
 
-    public static String intToHoursString(int num) {
-        if (num == 0) return "Меньше часа";
-        else if (num > 9999) return "Невероятно много";
-        else if (num >= 11 && num <= 14) return num + " часов";
-        else if (num % 10 == 1) return num + " час";
-        else if (num % 10 >= 2 && num % 10 <= 4) return num + " часа";
-        else return num + " часов";
-    }
-
-    public static String getShortStringFromTime(int seconds) {
+    public static String getShortStringFromSeconds(int seconds) {
         String label;
         if (seconds < 60) {
             label = "с";
@@ -75,7 +66,19 @@ public class Toolbox {
             label = "ч";
         }
 
-        return seconds + label;
+        return seconds + " " + label;
+    }
+
+    public static String getShortStringFromMinutes(int minutes) {
+        String label;
+        if (minutes < 60) {
+            label = "м";
+        } else {
+            minutes /= 60;
+            label = "ч";
+        }
+
+        return minutes + " " + label;
     }
 
     public static String processPhone(String phone) {

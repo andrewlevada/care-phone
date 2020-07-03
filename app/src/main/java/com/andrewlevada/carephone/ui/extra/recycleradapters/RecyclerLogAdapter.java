@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
-import com.andrewlevada.carephone.ui.home.LogFragment;
 import com.andrewlevada.carephone.logic.LogRecord;
+import com.andrewlevada.carephone.ui.home.LogFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
         // Duration
         int duration = log.getSecondsDuration();
         ((TextView) item.findViewById(R.id.recycler_duration)).setText(
-                Toolbox.getShortStringFromTime(duration));
+                Toolbox.getShortStringFromSeconds(duration));
 
         // Icon
         if (log.getType() == LogFragment.TYPE_INCOMING)
