@@ -63,6 +63,7 @@
     <string name="action_copy_phone">Copy phone number</string>
     <string name="action_copy_label">Copy name</string>
 
+    <string name="settings_tutorial">View abilities</string>
     <string name="settings_change_user_type">Change user type</string>
     <string name="settings_sign_out">Sign out</string>
     <string name="settings_thanks">Thanks</string>
@@ -72,7 +73,19 @@
 
     <string name="cared_settings_title">Settings</string>
     <string name="cared_settings_about_dialog_title">Thanks</string>
-    <string name="cared_settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko.</string>
+    <string name="cared_settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko. \n \nSome icons made by Freepik and Dinosoftlabs from flaticon.com</string>
 
     <string name="log_title">Calls log:</string>
+
+    <string-array name="tutorial_cared">
+        <item>Create a list of phone numbers which will not be blocked when calling.</item>
+        <item>Establish a remote connection with person who cares about you.</item>
+        <item>View time and frequency of your phone calls.</item>
+    </string-array>
+
+    <string-array name="tutorial_caretaker">
+        <item>Remotely control list of phone numbers which will not be blocked when calling.</item>
+        <item>Change parameters on linked device via sms, even without internet.</item>
+        <item>Study phone calls statistics of a person you care about.</item>
+    </string-array>
 </resources>

@@ -28,8 +28,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +66,6 @@ public class HomeActivity extends CloudActivity {
             FirebaseCrashlytics.getInstance().setUserId(userUid);
             FirebaseAnalytics.getInstance(this).setUserId(userUid);
         });
-
-        // Firebase Remote Config
-        FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(30 * 60)
-                .build();
-        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings);
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_default);
 
         // Get remote option from intent
         isRemote = getIntent().getBooleanExtra(INTENT_REMOTE, false);

@@ -3,6 +3,7 @@ package com.andrewlevada.carephone;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ public class Toolbox {
 
     private static final String LOG_TAG = "CAREPHONE";
     private static final boolean DOLOG = true;
+
+    private static final String PREFS_IS_FIRST_LAUNCH = "is_first_launch";
 
     @Nullable
     public static View getLastChild(@NonNull ViewGroup parent) {
@@ -103,6 +106,15 @@ public class Toolbox {
         StringBuilder string = new StringBuilder();
         for (int i = 0; i < array.length; i++) string.append(array[i].toString()).append(i == array.length - 1 ? ", " : "");
         return string.toString();
+    }
+
+    public static boolean isFirstUserTypeOpen(Context context, int userType) {
+        SharedPreferences preferences = context
+                .getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
+
+        boolean result = preferences.getBoolean(PREFS_IS_FIRST_LAUNCH + userType, true);
+        preferences.edit().putBoolean(PREFS_IS_FIRST_LAUNCH + userType, false).apply();
+        return result;
     }
 
     // Dialogs

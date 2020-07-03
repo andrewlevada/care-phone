@@ -11,10 +11,17 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.BlockerAccesser;
 import com.andrewlevada.carephone.ui.HelloActivity;
+import com.andrewlevada.carephone.ui.TutorialActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 public class CommonSettings {
+    public static void showTutorial(Activity activity, int userType) {
+        Intent intent = new Intent(activity, TutorialActivity.class);
+        intent.putExtra(TutorialActivity.INTENT_USER_TYPE, userType);
+        activity.startActivity(intent);
+    }
+
     public static void switchActivityToHello(Activity activity) {
         BlockerAccesser.stop();
         Intent intent = new Intent(activity, HelloActivity.class);

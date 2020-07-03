@@ -61,6 +61,9 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ui.home.HomeActivity" />
+
+        <activity android:name=".ui.TutorialActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

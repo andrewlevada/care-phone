@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="tutorial_cared_drawables">
+        <item>@drawable/ic_tutorial_list</item>
+        <item>@drawable/ic_tutorial_help</item>
+        <item>@drawable/ic_tutorial_stats</item>
+    </integer-array>
+
+    <integer-array name="tutorial_caretaker_drawables">
+        <item>@drawable/ic_tutorial_remote</item>
+        <item>@drawable/ic_tutorial_sms</item>
+        <item>@drawable/ic_tutorial_stats</item>
+    </integer-array>
+</resources>

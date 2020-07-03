@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
+import com.andrewlevada.carephone.logic.CaredUser;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.extra.CloudActivity;
 import com.andrewlevada.carephone.ui.extra.CommonSettings;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerOnlyPhoneAdapter;
 import com.andrewlevada.carephone.ui.home.HomeActivity;
-import com.andrewlevada.carephone.logic.CaredUser;
-import com.andrewlevada.carephone.logic.network.Network;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
@@ -166,7 +166,9 @@ public class CaretakerListActivity extends CloudActivity {
         public boolean onMenuItemClick(MenuItem item) {
             int id = item.getItemId();
 
-            if (id == R.id.caretaker_settings_change_user_type)
+            if (id == R.id.caretaker_settings_tutorial)
+                CommonSettings.showTutorial(itself, AuthActivity.TYPE_CARETAKER);
+            else if (id == R.id.caretaker_settings_change_user_type)
                 CommonSettings.switchActivityToHello(itself);
             else if (id == R.id.caretaker_settings_sign_out)
                 CommonSettings.logout(itself);

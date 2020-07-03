@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.ui.AuthActivity;
 import com.andrewlevada.carephone.ui.extra.CommonSettings;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerClickMenuAdapter;
@@ -65,21 +66,21 @@ public class SettingsFragment extends Fragment {
     private class SettingsRecyclerOnclick implements RecyclerAdapter.OnRecyclerItemClick {
         @Override
         public void onClick(int index) {
-            if (index == SettingsItems.changeUserType.ordinal())
+            if (index == SettingsItems.tutorial.ordinal()) {
+                CommonSettings.showTutorial(parentingActivity, AuthActivity.TYPE_CARED);
+            } else if (index == SettingsItems.changeUserType.ordinal())
                 CommonSettings.switchActivityToHello(parentingActivity);
             else if (index == SettingsItems.logout.ordinal())
                 CommonSettings.logout(parentingActivity);
             else if (index == SettingsItems.thanks.ordinal())
                 CommonSettings.showThanksDialog(parentingActivity);
-            else if (index == SettingsItems.donate.ordinal())
-                CommonSettings.gotoDonateWebPage(parentingActivity);
         }
     }
 
     private enum SettingsItems {
+        tutorial,
         changeUserType,
         logout,
-        thanks,
-        donate
+        thanks
     }
 }

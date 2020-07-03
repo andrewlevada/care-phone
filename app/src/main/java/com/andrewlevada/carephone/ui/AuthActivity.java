@@ -18,7 +18,6 @@ import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
-import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
@@ -36,14 +35,12 @@ public class AuthActivity extends AppCompatActivity {
     private static final String PREF_FAILED_ATTEMPTS = "auth_failed_attempts";
     private static final String ANALYTICS_FAILED_ATTEMPTS = "failed_attempts";
 
-    public static final String PARAM_NAME = "user_type";
     public static final int TYPE_CARED = 0;
     public static final int TYPE_CARETAKER = 1;
 
     private static final int STATE_PHONE = 0;
     private static final int STATE_CODE = 1;
 
-    private int userType;
     private int state;
 
     private TextView infoTextView;
@@ -66,9 +63,6 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auth);
 
         authButtonController = new AuthButtonAppearanceController();
-
-        // Get state from intent
-        userType = getIntent().getIntExtra(PARAM_NAME, TYPE_CARED);
         state = STATE_PHONE;
 
         // Setup auth
@@ -160,14 +154,8 @@ public class AuthActivity extends AppCompatActivity {
         // Reset failed attempts counter
         prefs.edit().putInt(PREF_FAILED_ATTEMPTS, 0).apply();
 
-        getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
-                .edit().putInt(PARAM_NAME, userType).apply();
-
         // Move to next activity
-        Intent intent = null;
-        if (userType == TYPE_CARED) intent = new Intent(AuthActivity.this, HomeActivity.class);
-        else if (userType == TYPE_CARETAKER) intent = new Intent(AuthActivity.this, CaretakerListActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(AuthActivity.this, HelloActivity.class));
         finish();
     }
 
