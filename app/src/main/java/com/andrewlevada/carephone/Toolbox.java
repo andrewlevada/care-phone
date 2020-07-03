@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,28 +55,28 @@ public class Toolbox {
         if (DOLOG) Log.e(LOG_TAG, value);
     }
 
-    public static String getShortStringFromSeconds(int seconds) {
+    public static String getShortStringFromSeconds(Resources res, int seconds) {
         String label;
         if (seconds < 60) {
-            label = "с";
+            label = res.getString(R.string.time_label_short_second);
         } else if (seconds < 60 * 60) {
             seconds /= 60;
-            label = "м";
+            label = res.getString(R.string.time_label_short_minute);
         } else {
             seconds /= 60 * 60;
-            label = "ч";
+            label = res.getString(R.string.time_label_short_hour);
         }
 
         return seconds + " " + label;
     }
 
-    public static String getShortStringFromMinutes(int minutes) {
+    public static String getShortStringFromMinutes(Resources res, int minutes) {
         String label;
         if (minutes < 60) {
-            label = "м";
+            label = res.getString(R.string.time_label_short_minute);
         } else {
             minutes /= 60;
-            label = "ч";
+            label = res.getString(R.string.time_label_short_hour);
         }
 
         return minutes + " " + label;

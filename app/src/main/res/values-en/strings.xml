@@ -89,4 +89,8 @@
         <item>Change parameters on the linked device via sms, even without the internet connection.</item>
         <item>Study the phone calls statistics of a person you care for.</item>
     </string-array>
+
+    <string name="time_label_short_second">s</string>
+    <string name="time_label_short_minute">m</string>
+    <string name="time_label_short_hour">h</string>
 </resources>

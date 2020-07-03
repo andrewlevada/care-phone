@@ -1,5 +1,6 @@
 package com.andrewlevada.carephone.ui.extra.recycleradapters;
 
+import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 public class RecyclerLogAdapter extends RecyclerAdapter {
     private static final String dateFormatString = "HH:mm dd LLLL";
+    private Resources res;
     private List<LogRecord> dataset;
     private OnEndReachedCallback callback;
     private SimpleDateFormat dateFormat;
@@ -26,6 +28,7 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
     public RecyclerLogAdapter(RecyclerView recyclerView, List<LogRecord> dataset, OnEndReachedCallback callback) {
         super(recyclerView);
         itemLayout = R.layout.recyclable_log_template;
+        res = recyclerView.getResources();
 
         this.dataset = dataset;
         this.callback = callback;
@@ -41,7 +44,7 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
         // Duration
         int duration = log.getSecondsDuration();
         ((TextView) item.findViewById(R.id.recycler_duration)).setText(
-                Toolbox.getShortStringFromSeconds(duration));
+                Toolbox.getShortStringFromSeconds(res, duration));
 
         // Icon
         if (log.getType() == LogFragment.TYPE_INCOMING)

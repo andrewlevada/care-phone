@@ -94,4 +94,8 @@
         <item>Изменяйте параметры на управляемом устройстве по смс, даже без интернета.</item>
         <item>Просматривайте статистику разговоров того, о ком вы заботитесь.</item>
     </string-array>
+
+    <string name="time_label_short_second">с</string>
+    <string name="time_label_short_minute">м</string>
+    <string name="time_label_short_hour">ч</string>
 </resources>
