@@ -46,6 +46,8 @@ public class RecyclerWhitelistAdapter extends RecyclerAdapter {
         // Hide divider on last element
         // if (position == getItemCount() - 1)
         //     item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
+
+        fadeAddAnimate(item, position);
     }
 
     @Override

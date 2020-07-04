@@ -3,6 +3,7 @@ package com.andrewlevada.carephone.ui.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.StatisticsPack;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
@@ -70,9 +72,16 @@ public class StatisticsFragment extends Fragment {
         phonesRecyclerView = layout.findViewById(R.id.phones_recycler);
         emptyView = layout.findViewById(R.id.empty_view);
 
+        // Init arrays
+        periodsMinutes = new ArrayList<>();
+        phonesLabels = new ArrayList<>();
+        phonesMinutes = new ArrayList<>();
+
         // Setup recycler views
-        loadDataFromLocal();
-        syncData();
+        new Handler().postDelayed(() -> {
+            if (Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()) syncData();
+            else loadDataFromLocal();
+        }, 150);
 
         periodsAdapter = setupRecyclerView(layout.findViewById(R.id.periods_recycler),
                 Arrays.asList(getPeriodsLabels()), periodsMinutes);
@@ -86,13 +95,9 @@ public class StatisticsFragment extends Fragment {
         if (getContext() == null) return;
         SharedPreferences preferences = getContext().getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE);
 
-        periodsLabels = getPeriodsLabels();
-        periodsMinutes = new ArrayList<>();
-        for (int i = 0; i < periodsLabels.length; i++)
+        for (int i = 0; i < getPeriodsLabels().length; i++)
             periodsMinutes.add(preferences.getInt(PREF_PERIOD_MINUTES + i, 0));
 
-        phonesLabels = new ArrayList<>();
-        phonesMinutes = new ArrayList<>();
         int phonesLength = preferences.getInt(PREF_PHONES_LENGTH, 0);
         for (int i = 0; i < phonesLength; i++) {
             phonesLabels.add(preferences.getString(PREF_PHONES_LABELS + i, ""));
@@ -102,6 +107,9 @@ public class StatisticsFragment extends Fragment {
         // Empty processing
         phonesRecyclerView.setVisibility(phonesLabels.size() == 0 ? View.GONE : View.VISIBLE);
         emptyView.setVisibility(phonesLabels.size() == 0 ? View.VISIBLE : View.GONE);
+
+        if (periodsAdapter != null) periodsAdapter.notifyDataSetChanged();
+        if (phonesAdapter != null) phonesAdapter.notifyDataSetChanged();
 
         // Date nextUpdateDate = new Date(preferences.getLong(PREF_UPDATE_DATE, 0));
         // if (nextUpdateDate.before(new Date(System.currentTimeMillis()))) syncData();
@@ -130,8 +138,8 @@ public class StatisticsFragment extends Fragment {
         phonesLabels.addAll(statisticsPack.getPhonesLabels());
         phonesMinutes.addAll(statisticsPack.getPhonesMinutes());
 
-        periodsAdapter.notifyDataSetChanged();
-        phonesAdapter.notifyDataSetChanged();
+        if (periodsAdapter != null) periodsAdapter.notifyDataSetChanged();
+        if (phonesAdapter != null) phonesAdapter.notifyDataSetChanged();
 
         // Empty processing
         phonesRecyclerView.setVisibility(phonesLabels.size() == 0 ? View.GONE : View.VISIBLE);
@@ -166,12 +174,16 @@ public class StatisticsFragment extends Fragment {
     }
 
     private String[] getPeriodsLabels() {
-        String remoteConfigParamName =
-                getResources().getConfiguration().locale.equals(new Locale("ru","RU"))
-                ? Config.Analytics.remoteConfigCallPeriodsLabelsRU
-                : Config.Analytics.remoteConfigCallPeriodsLabelsEN;
+        if (periodsLabels == null) {
+            String remoteConfigParamName =
+                    getResources().getConfiguration().locale.equals(new Locale("ru","RU"))
+                            ? Config.Analytics.remoteConfigCallPeriodsLabelsRU
+                            : Config.Analytics.remoteConfigCallPeriodsLabelsEN;
 
-        return new GsonBuilder().create().fromJson(
-                FirebaseRemoteConfig.getInstance().getString(remoteConfigParamName), String[].class);
+            periodsLabels = new GsonBuilder().create().fromJson(
+                    FirebaseRemoteConfig.getInstance().getString(remoteConfigParamName), String[].class);
+        }
+
+        return periodsLabels;
     }
 }

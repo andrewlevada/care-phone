@@ -27,7 +27,7 @@ public class RecyclerMinutesAdapter extends RecyclerAdapter {
 
     @Override
     public int getItemCount() {
-        return labels.size();
+        return hours.size();
     }
 
     @Override
@@ -35,5 +35,7 @@ public class RecyclerMinutesAdapter extends RecyclerAdapter {
         ((TextView) item.findViewById(R.id.text_label)).setText(labels.get(position));
         ((TextView) item.findViewById(R.id.text_hours)).setText(
                 Toolbox.getShortStringFromMinutes(res, hours.get(position)));
+
+        fadeAddAnimate(item, position);
     }
 }

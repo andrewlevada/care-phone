@@ -22,16 +22,14 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
     private static final String dateFormatString = "HH:mm dd LLLL";
     private Resources res;
     private List<LogRecord> dataset;
-    private OnEndReachedCallback callback;
     private SimpleDateFormat dateFormat;
 
-    public RecyclerLogAdapter(RecyclerView recyclerView, List<LogRecord> dataset, OnEndReachedCallback callback) {
+    public RecyclerLogAdapter(RecyclerView recyclerView, List<LogRecord> dataset) {
         super(recyclerView);
         itemLayout = R.layout.recyclable_log_template;
         res = recyclerView.getResources();
 
         this.dataset = dataset;
-        this.callback = callback;
         dateFormat = new SimpleDateFormat(dateFormatString, Locale.getDefault());
     }
 
@@ -64,18 +62,14 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
             iconImage.setImageResource(R.drawable.ic_close);
 
         // Only for last element
-        if (position == 0) {
+        if (position == getItemCount() - 1)
             item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
-            callback.reached();
-        }
+
+        fadeAddAnimate(item, position % LogFragment.numberPerLoad);
     }
 
     @Override
     public int getItemCount() {
         return dataset.size();
-    }
-
-    public interface OnEndReachedCallback {
-        void reached();
     }
 }

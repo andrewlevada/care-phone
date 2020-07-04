@@ -30,6 +30,8 @@ public class RecyclerOnlyPhoneAdapter extends RecyclerAdapter {
         if (position == getItemCount() - 1) item.findViewById(R.id.recycler_divider).setVisibility(View.GONE);
 
         item.setOnClickListener(v -> { if (onItemClick != null) onItemClick.onClick(position); });
+
+        fadeAddAnimate(item, position);
     }
 
     @Override

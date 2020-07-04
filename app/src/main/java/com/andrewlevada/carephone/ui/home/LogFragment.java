@@ -27,7 +27,7 @@ public class LogFragment extends Fragment {
     public static final int TYPE_INCOMING = 0;
     public static final int TYPE_OUTGOING = 1;
     public static final int TYPE_BLOCKED = 2;
-    private static final int numberPerLoad = 20;
+    public static final int numberPerLoad = 20;
 
     private View emptyView;
     private RecyclerView recyclerView;
@@ -60,6 +60,8 @@ public class LogFragment extends Fragment {
         emptyView = layout.findViewById(R.id.empty_view);
         recyclerView = layout.findViewById(R.id.recycler);
 
+        ((LogScrollView) layout.findViewById(R.id.scroll_layout)).setBottomCallback(this::loadMoreRecords);
+
         setupRecyclerView();
         new Handler().postDelayed(this::loadMoreRecords, 100);
 
@@ -67,13 +69,21 @@ public class LogFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+
+        layoutManager.setStackFromEnd(false);
+        layoutManager.setReverseLayout(false);
+        layoutManager.setItemPrefetchEnabled(false);
+
         recyclerView.setLayoutManager(layoutManager);
 
         logRecords = new ArrayList<>();
-        adapter = new RecyclerLogAdapter(recyclerView, logRecords, this::loadMoreRecords);
+        adapter = new RecyclerLogAdapter(recyclerView, logRecords);
         recyclerView.setAdapter(adapter);
     }
 
@@ -89,8 +99,7 @@ public class LogFragment extends Fragment {
                 if (arg.size() != 0) {
                     loadedNumber += arg.size();
                     logRecords.addAll(arg);
-                    adapter.notifyDataSetChanged();
-                    recyclerView.scheduleLayoutAnimation();
+                    adapter.notifyItemRangeInserted(loadedNumber - arg.size(), arg.size());
                 } else if (loadedNumber == 0) {
                     emptyView.setVisibility(View.VISIBLE);
                 }

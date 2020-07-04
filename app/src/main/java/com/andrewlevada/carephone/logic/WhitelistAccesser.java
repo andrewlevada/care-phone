@@ -163,7 +163,7 @@ public class WhitelistAccesser {
         Network.router().syncWhitelist(isRemote, new Network.NetworkCallbackOne<List<PhoneNumber>>() {
             @Override
             public void onSuccess(List<PhoneNumber> arg) {
-                if (whitelist.hashCode() == arg.hashCode()) return;
+                if (whitelist.equals(arg)) return;
 
                 if (whitelist.size() != arg.size()) analytics.setUserProperty(
                         Config.Analytics.userPropertyWhitelistLength, String.valueOf(arg.size()));

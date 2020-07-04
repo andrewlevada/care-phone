@@ -3,11 +3,14 @@ package com.andrewlevada.carephone.ui.extra.recycleradapters;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.SimpleInflater;
 
 /**
@@ -57,5 +60,11 @@ public abstract class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapt
 
     public interface OnRecyclerItemClick {
         void onClick(int index);
+    }
+
+    void fadeAddAnimate(View view, int position) {
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.fade_in);
+        animation.setStartOffset(100 * position);
+        view.startAnimation(animation);
     }
 }
