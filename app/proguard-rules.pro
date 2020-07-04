@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-keepclassmembers class com.andrewlevada.carephone.logic.network.RetrofitRequests { <fields>; }
+-keepclassmembers class com.andrewlevada.carephone.logic.CaredUser { <fields>; }
+-keepclassmembers class com.andrewlevada.carephone.logic.LogRecord { <fields>; }
+-keepclassmembers class com.andrewlevada.carephone.logic.PhoneNumber { <fields>; }
+-keepclassmembers class com.andrewlevada.carephone.logic.StatisticsPack { <fields>; }
