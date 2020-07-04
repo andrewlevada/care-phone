@@ -4,14 +4,16 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 
+import com.andrewlevada.carephone.BuildConfig;
+
 public class BugReportInfo {
     public int sdkNum;
-    public String versionCodeName;
+    public int versionCode;
     public String deviceModel;
 
     private BugReportInfo() {
         sdkNum = Build.VERSION.SDK_INT;
-        versionCodeName = Build.VERSION.RELEASE;
+        versionCode = BuildConfig.VERSION_CODE;
         deviceModel = Build.BRAND + " : " + Build.MODEL;
     }
 
@@ -22,7 +24,7 @@ public class BugReportInfo {
     @Override @NonNull
     public String toString() {
         return "{sdkNum:" + sdkNum +
-                ",versionCodeName:" + versionCodeName +
+                ",versionCode:" + versionCode +
                 ",deviceModel:" + deviceModel +
                 '}';
     }
