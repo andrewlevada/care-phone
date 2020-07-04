@@ -89,8 +89,7 @@ public class Blocker_P extends Service {
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
-                Toolbox.fastLog(e.getMessage());
-                // TODO: Show Unsupported message
+                Toolbox.registerErrorOccurred(instance);
             }
         }
     }
@@ -112,7 +111,7 @@ public class Blocker_P extends Service {
     }
 
     @RequiresApi(28)
-    void declineCall() {
+    private void declineCall() {
         try {
             Toolbox.fastLog("BLOCKING CALL");
 
@@ -125,7 +124,7 @@ public class Blocker_P extends Service {
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
-            // TODO: Show Unsupported message
+            Toolbox.registerErrorOccurred(this);
         }
     }
 

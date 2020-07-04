@@ -45,7 +45,6 @@ public class Blocker_O extends NotificationListenerService {
                         if (Blocker_P.doDeclineCurrentCall) {
                             endCall(action.actionIntent);
                             cancelNotification(barNotification.getKey());
-
                         }
                         return;
                     }
@@ -53,6 +52,7 @@ public class Blocker_O extends NotificationListenerService {
             }
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
+            Toolbox.registerErrorOccurred(this);
         }
     }
 
@@ -80,6 +80,7 @@ public class Blocker_O extends NotificationListenerService {
             remoteConfig.fetchAndActivate();
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
+            Toolbox.registerErrorOccurred(this);
         }
     }
 

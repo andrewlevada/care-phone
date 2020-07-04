@@ -9,7 +9,9 @@
     <string name="permission_dialog_title">Permissions</string>
     <string name="permission_dialog_notification_listener">To work properly, the app must be granted the permission to view notifications. This is necessary for the detection and the rejection of an incoming call.</string>
     <string name="permission_dialog_must_accept">To work properly, the app must be granted all required permissions.</string>
-    <string name="permission_dialog_oreo_warning">Unfortunately, Care Phone is not working particularly well on your device model at the moment. If something goes wrong, don\'t be sad, and send us an error report from \'Settings\' tab on main screen. Thank you!</string>
+
+    <string name="other_dialog_oreo_warning">Unfortunately, Care Phone is not working particularly well on your device model at the moment. If something goes wrong, don\'t be sad, and send us an error report from \'Settings\' tab on main screen. Thank you!</string>
+    <string name="other_dialog_error_occurred">An error might have occurred while declining a call. We are sorry if app have not worked as expected. We are going to fix this bug as soon as we can. Thank you for understanding!</string>
 
     <string name="whitelist_title">Whitelist:</string>
     <string name="whitelist_state_turn_off">Disable block</string>

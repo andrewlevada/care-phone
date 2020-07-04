@@ -3,6 +3,7 @@ package com.andrewlevada.carephone.ui.home;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends CloudActivity {
-    private static final String PREFS_OREO_WARNING = "oreo_warning";
+    public static final String PREFS_OREO_WARNING = "oreo_warning";
+    public static final String PREFS_ERROR_OCCURRED = "error_occurred";
     public static final String INTENT_REMOTE = "INTENT_REMOTE";
 
     private int currentHomeFragmentId;
@@ -122,6 +124,17 @@ public class HomeActivity extends CloudActivity {
         });
 
         WhitelistAccesser.getInstance().initialize(getApplicationContext(), isRemote);
+
+        // Check if error have occurred
+        SharedPreferences preferences =
+                getSharedPreferences(Config.appSharedPreferences, MODE_PRIVATE);
+
+        if (preferences.getBoolean(PREFS_ERROR_OCCURRED, false)) {
+            Toolbox.showSimpleDialog(this,
+                    R.string.general_oh_oh, R.string.other_dialog_error_occurred);
+
+            preferences.edit().putBoolean(PREFS_ERROR_OCCURRED, false).apply();
+        }
     }
 
     private boolean loadHomeFragment(Fragment fragment, int id, FragmentIndex fragmentIndex) {
@@ -198,7 +211,7 @@ public class HomeActivity extends CloudActivity {
                         .putBoolean(PREFS_OREO_WARNING, true).apply();
                 Toolbox.showSimpleDialog(this,
                         R.string.general_warning,
-                        R.string.permission_dialog_oreo_warning);
+                        R.string.other_dialog_oreo_warning);
             }
         }
 

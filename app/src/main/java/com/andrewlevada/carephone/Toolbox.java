@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -130,6 +131,11 @@ public class Toolbox {
         FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
         remoteConfig.setConfigSettingsAsync(remoteConfigSettings);
         remoteConfig.setDefaultsAsync(R.xml.remote_config_default);
+    }
+
+    public static void registerErrorOccurred(Context context) {
+        context.getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).edit()
+                .putBoolean(HomeActivity.PREFS_ERROR_OCCURRED, true).apply();
     }
 
     // Dialogs

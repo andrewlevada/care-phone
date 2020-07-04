@@ -85,7 +85,7 @@ public class Blocker_L_to_N_MR1 extends Service {
                 }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
-                // TODO: Show Unsupported message
+                Toolbox.registerErrorOccurred(instance);
             }
         }
     }
@@ -106,7 +106,7 @@ public class Blocker_L_to_N_MR1 extends Service {
             Toolbox.fastLog("BLOCKED");
         } catch (Exception e) {
             FirebaseCrashlytics.getInstance().recordException(e);
-            // TODO: Show Unsupported message
+            Toolbox.registerErrorOccurred(instance);
         }
     }
 
