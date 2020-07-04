@@ -26,6 +26,7 @@ import java.util.List;
 public class LogFragment extends Fragment {
     public static final int TYPE_INCOMING = 0;
     public static final int TYPE_OUTGOING = 1;
+    public static final int TYPE_BLOCKED = 2;
     private static final int numberPerLoad = 20;
 
     private View emptyView;

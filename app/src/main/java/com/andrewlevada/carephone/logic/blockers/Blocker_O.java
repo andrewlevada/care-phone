@@ -45,6 +45,7 @@ public class Blocker_O extends NotificationListenerService {
                         if (Blocker_P.doDeclineCurrentCall) {
                             endCall(action.actionIntent);
                             cancelNotification(barNotification.getKey());
+
                         }
                         return;
                     }

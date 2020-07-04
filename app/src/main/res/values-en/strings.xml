@@ -78,6 +78,8 @@
     <string name="cared_settings_about_dialog_message">This project would not be possible without Samsung IT School. Special thanks to my teacher Dmitriy Vladimirovich Yacenko. \n \nSome icons were made by Freepik and Dinosoftlabs from flaticon.com</string>
 
     <string name="log_title">Calls log:</string>
+    <string name="log_unknown">Unknown</string>
+    <string name="log_blocked">Blocked</string>
 
     <string-array name="tutorial_cared">
         <item>Create a list of the phone numbers which will not be blocked when calling.</item>

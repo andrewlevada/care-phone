@@ -65,20 +65,24 @@ public class Blocker_L_to_N_MR1 extends Service {
                 String phone = intent.getExtras() != null ?
                         intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER) : null;
 
-                logAction(phone, state);
-
                 Toolbox.fastLog("CHANGE: " + phone);
                 Toolbox.fastLog("STATE: " + state);
+                if (state == null) return;
 
-                if (state == null || !state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING))
-                    return;
+                logAction(phone, state);
+
+                if (!state.equalsIgnoreCase(TelephonyManager.EXTRA_STATE_RINGING)) return;
 
                 if (phone == null) {
                     declineCall(context);
+                    logger.onBlocked(null);
                     return;
                 }
 
-                if (WhitelistAccesser.getInstance().doDeclineCall(phone)) declineCall(context);
+                if (WhitelistAccesser.getInstance().doDeclineCall(phone)) {
+                    declineCall(context);
+                    logger.onBlocked(phone);
+                }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 // TODO: Show Unsupported message

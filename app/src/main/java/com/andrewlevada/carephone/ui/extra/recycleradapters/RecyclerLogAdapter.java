@@ -38,20 +38,30 @@ public class RecyclerLogAdapter extends RecyclerAdapter {
     @Override
     void fillItemWithData(ViewGroup item, int position) {
         LogRecord log = dataset.get(position);
-        ((TextView) item.findViewById(R.id.recycler_phone)).setText(log.getPhoneNumber());
-        ((TextView) item.findViewById(R.id.recycler_date)).setText(dateFormat.format(new Date(log.getStartTimestamp())));
+
+        String phoneNumber = log.getPhoneNumber().length() == 0
+                ? res.getString(R.string.log_unknown) : log.getPhoneNumber();
+        ((TextView) item.findViewById(R.id.recycler_phone)).setText(phoneNumber);
+
+        String startTimeText = dateFormat.format(new Date(log.getStartTimestamp()));
+        ((TextView) item.findViewById(R.id.recycler_date)).setText(startTimeText);
 
         // Duration
-        int duration = log.getSecondsDuration();
-        ((TextView) item.findViewById(R.id.recycler_duration)).setText(
-                Toolbox.getShortStringFromSeconds(res, duration));
+        String durationText = log.getSecondsDuration() == 0 ? res.getString(R.string.log_blocked)
+                : Toolbox.getShortStringFromSeconds(res, log.getSecondsDuration());
+        ((TextView) item.findViewById(R.id.recycler_duration)).setText(durationText);
 
         // Icon
+        ImageView iconImage = item.findViewById(R.id.recycler_type_icon);
+
         if (log.getType() == LogFragment.TYPE_INCOMING)
-            ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_call_received);
+            iconImage.setImageResource(R.drawable.ic_call_received);
         else if (log.getType() == LogFragment.TYPE_OUTGOING)
-            ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_call_made);
-        else ((ImageView) item.findViewById(R.id.recycler_type_icon)).setImageResource(R.drawable.ic_close);
+            iconImage.setImageResource(R.drawable.ic_call_made);
+        else if (log.getType() == LogFragment.TYPE_BLOCKED)
+            iconImage.setImageResource(R.drawable.ic_call_blocked);
+        else
+            iconImage.setImageResource(R.drawable.ic_close);
 
         // Only for last element
         if (position == 0) {

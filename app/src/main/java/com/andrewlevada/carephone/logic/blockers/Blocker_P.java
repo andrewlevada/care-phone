@@ -77,12 +77,16 @@ public class Blocker_P extends Service {
 
                 if (incomingNumber == null) {
                     doDeclineCurrentCall = true;
+                    logger.onBlocked(null);
                     if (!isAsLogger) declineCall();
                     return;
                 }
 
                 doDeclineCurrentCall = WhitelistAccesser.getInstance().doDeclineCall(incomingNumber);
-                if (doDeclineCurrentCall && !isAsLogger) declineCall();
+                if (doDeclineCurrentCall && !isAsLogger) {
+                    logger.onBlocked(incomingNumber);
+                    declineCall();
+                }
             } catch (Exception e) {
                 FirebaseCrashlytics.getInstance().recordException(e);
                 Toolbox.fastLog(e.getMessage());
