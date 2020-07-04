@@ -13,11 +13,9 @@ import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 public class HelloActivity extends AppCompatActivity {
-    private static final String PARAM_NAME = "user_type";
+    public static final String PREFS_USER_TYPE = "user_type";
     public static final String INTENT_EXTRA_STAY = "INTENT_EXTRA_STAY";
 
     private boolean isStayState;
@@ -39,12 +37,7 @@ public class HelloActivity extends AppCompatActivity {
         });
 
         // Firebase Remote Config
-        FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setMinimumFetchIntervalInSeconds(30 * 60)
-                .build();
-        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
-        remoteConfig.setConfigSettingsAsync(remoteConfigSettings);
-        remoteConfig.setDefaultsAsync(R.xml.remote_config_default);
+        Toolbox.setupFirebaseRemoteConfig();
 
         // Process buttons
         caredButton.setOnClickListener(v -> {
@@ -61,7 +54,7 @@ public class HelloActivity extends AppCompatActivity {
     private void authCheck() {
         // Switch to other activity if user is authed
         if (FirebaseAuth.getInstance().getCurrentUser() != null && !isStayState) {
-            int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(PARAM_NAME, -1);
+            int userType = getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE).getInt(PREFS_USER_TYPE, -1);
 
             if (userType != -1) {
                 FirebaseCrashlytics.getInstance().setCustomKey("auth_redirect", userType);
@@ -80,7 +73,7 @@ public class HelloActivity extends AppCompatActivity {
 
     private void switchToAuth(int type) {
         getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
-                .edit().putInt(PARAM_NAME, type).apply();
+                .edit().putInt(PREFS_USER_TYPE, type).apply();
 
         if (Toolbox.isFirstUserTypeOpen(this, type)) {
             Intent intent = new Intent(HelloActivity.this, TutorialActivity.class);
@@ -95,7 +88,7 @@ public class HelloActivity extends AppCompatActivity {
 
     private void switchTo(Class<?> activity, int userType) {
         if (isStayState) getSharedPreferences(Config.appSharedPreferences, Context.MODE_PRIVATE)
-                .edit().putInt(PARAM_NAME, userType).apply();
+                .edit().putInt(PREFS_USER_TYPE, userType).apply();
 
         Intent intent = new Intent(HelloActivity.this, activity);
         startActivity(intent);

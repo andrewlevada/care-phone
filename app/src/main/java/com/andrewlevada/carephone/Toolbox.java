@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -121,6 +123,15 @@ public class Toolbox {
         return result;
     }
 
+    public static void setupFirebaseRemoteConfig() {
+        FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(30 * 60)
+                .build();
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        remoteConfig.setConfigSettingsAsync(remoteConfigSettings);
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_default);
+    }
+
     // Dialogs
 
     public static void showErrorDialog(Context context) {
@@ -195,7 +206,7 @@ public class Toolbox {
 
         private boolean hadInternet;
 
-        public void hasInternet(CallbackOne<Boolean> callback) {
+        public void hasInternet(@Nullable CallbackOne<Boolean> callback) {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -208,10 +219,10 @@ public class Toolbox {
                         sock.close();
 
                         hadInternet = true;
-                        callback.invoke(true);
+                        if (callback != null) callback.invoke(true);
                     } catch (IOException e) {
                         hadInternet = false;
-                        callback.invoke(false);
+                        if (callback != null) callback.invoke(false);
                     }
                 }
             };
