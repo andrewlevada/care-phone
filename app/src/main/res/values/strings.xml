@@ -37,6 +37,7 @@
     <string name="general_great">Супер!</string>
     <string name="general_empty">Пусто</string>
     <string name="general_warning">Внимание!</string>
+    <string name="general_send">Отправить</string>
 
     <string name="hello_button_caretaker">Я забочусь</string>
     <string name="hello_button_cared">Обо мне заботятся</string>
@@ -98,4 +99,16 @@
     <string name="time_label_short_second">с</string>
     <string name="time_label_short_minute">м</string>
     <string name="time_label_short_hour">ч</string>
+
+    <string name="contact_dev_title">Связь с разработчиком</string>
+    <string name="contact_dev_subject">Тип сообщения</string>
+    <string name="contact_dev_text_label">Что случилось?</string>
+    <string name="contact_dev_select_subject">Выбирите тип сообщения</string>
+    <string name="contact_dev_enter_text">Введите текст</string>
+    <string name="contact_dev_wrong_text_length">Текст слишком длинный</string>
+    <string-array name="contact_dev_subjects">
+        <item>Ошибка в приложении</item>
+        <item>Другая проблема</item>
+        <item>Благодарность</item>
+    </string-array>
 </resources>
