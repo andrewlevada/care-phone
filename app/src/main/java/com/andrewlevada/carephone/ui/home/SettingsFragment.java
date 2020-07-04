@@ -23,7 +23,6 @@ import java.util.Arrays;
  */
 public class SettingsFragment extends Fragment {
     private HomeActivity parentingActivity;
-    private RecyclerClickMenuAdapter adapter;
 
     private RecyclerView recyclerView;
 
@@ -56,7 +55,7 @@ public class SettingsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecyclerClickMenuAdapter(recyclerView,
+        RecyclerClickMenuAdapter adapter = new RecyclerClickMenuAdapter(recyclerView,
                 Arrays.asList(getResources().getStringArray(R.array.cared_settings)),
                 new SettingsRecyclerOnclick());
 
@@ -66,9 +65,11 @@ public class SettingsFragment extends Fragment {
     private class SettingsRecyclerOnclick implements RecyclerAdapter.OnRecyclerItemClick {
         @Override
         public void onClick(int index) {
-            if (index == SettingsItems.tutorial.ordinal()) {
+            if (index == SettingsItems.tutorial.ordinal())
                 CommonSettings.showTutorial(parentingActivity, AuthActivity.TYPE_CARED);
-            } else if (index == SettingsItems.changeUserType.ordinal())
+            else if (index == SettingsItems.contactDev.ordinal())
+                CommonSettings.contactDev(parentingActivity);
+            else if (index == SettingsItems.changeUserType.ordinal())
                 CommonSettings.switchActivityToHello(parentingActivity);
             else if (index == SettingsItems.logout.ordinal())
                 CommonSettings.logout(parentingActivity);
@@ -79,6 +80,7 @@ public class SettingsFragment extends Fragment {
 
     private enum SettingsItems {
         tutorial,
+        contactDev,
         changeUserType,
         logout,
         thanks

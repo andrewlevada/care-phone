@@ -66,6 +66,7 @@
     <string name="action_copy_label">Copy the name</string>
 
     <string name="settings_tutorial">View abilities</string>
+    <string name="settings_contact_dev">Contact developer</string>
     <string name="settings_change_user_type">Change user type</string>
     <string name="settings_sign_out">Sign out</string>
     <string name="settings_thanks">Thanks</string>
@@ -100,9 +101,10 @@
     <string name="contact_dev_title">Contact developer</string>
     <string name="contact_dev_subject">Message subject</string>
     <string name="contact_dev_text_label">What happened?</string>
-    <string name="contact_dev_select_subject">Select message subject</string>
-    <string name="contact_dev_enter_text">Введите текст</string>
-    <string name="contact_dev_wrong_text_length">Текст слишком длинный</string>
+    <string name="contact_dev_select_subject">Select subject</string>
+    <string name="contact_dev_enter_text">Enter text</string>
+    <string name="contact_dev_wrong_text_length">The message is too long</string>
+    <string name="contact_dev_sent">Your message was successfully sent.</string>
     <string-array name="contact_dev_subjects">
         <item>Error in app</item>
         <item>Other issue</item>

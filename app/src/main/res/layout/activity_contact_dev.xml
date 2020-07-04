@@ -77,4 +77,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <LinearLayout
+        android:id="@+id/sent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:alpha="0"
+        android:background="@color/colorPrimary"
+        android:elevation="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_slab_bold"
+            android:text="@string/contact_dev_sent"
+            android:textAlignment="textStart"
+            android:textAllCaps="true"
+            android:textColor="@color/colorOnPrimary"
+            android:textSize="32sp"
+            android:layout_margin="32dp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

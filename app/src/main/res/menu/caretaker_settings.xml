@@ -6,6 +6,11 @@
         android:title="@string/settings_tutorial"/>
 
     <item
+        android:id="@+id/caretaker_settings_contact_dev"
+        android:enabled="true"
+        android:title="@string/settings_contact_dev"/>
+
+    <item
         android:id="@+id/caretaker_settings_change_user_type"
         android:enabled="true"
         android:title="@string/settings_change_user_type"/>

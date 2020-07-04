@@ -95,4 +95,9 @@ public interface RetrofitRequests {
 
     @POST("/link")
     Call<Integer> postLink(@Query("userToken") String userToken, @Query("code") String code);
+
+    // Other
+
+    @PUT("/bugreport")
+    Call<Void> putBugReport(@Query("userToken") String userToken, @Query("subject") String subject, @Query("message") String message, @Query("info") String info);
 }

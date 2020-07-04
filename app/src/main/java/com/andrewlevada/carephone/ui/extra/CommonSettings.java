@@ -10,6 +10,7 @@ import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.blockers.BlockerAccesser;
+import com.andrewlevada.carephone.ui.ContactDevActivity;
 import com.andrewlevada.carephone.ui.HelloActivity;
 import com.andrewlevada.carephone.ui.TutorialActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +21,11 @@ public class CommonSettings {
         Intent intent = new Intent(activity, TutorialActivity.class);
         intent.putExtra(TutorialActivity.INTENT_USER_TYPE, userType);
         activity.startActivity(intent);
+    }
+
+
+    public static void contactDev(Activity activity) {
+        activity.startActivity(new Intent(activity, ContactDevActivity.class));
     }
 
     public static void switchActivityToHello(Activity activity) {

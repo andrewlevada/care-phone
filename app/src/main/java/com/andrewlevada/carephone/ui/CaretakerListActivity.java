@@ -168,6 +168,8 @@ public class CaretakerListActivity extends CloudActivity {
 
             if (id == R.id.caretaker_settings_tutorial)
                 CommonSettings.showTutorial(itself, AuthActivity.TYPE_CARETAKER);
+            else if (id == R.id.caretaker_settings_contact_dev)
+                CommonSettings.contactDev(itself);
             else if (id == R.id.caretaker_settings_change_user_type)
                 CommonSettings.switchActivityToHello(itself);
             else if (id == R.id.caretaker_settings_sign_out)

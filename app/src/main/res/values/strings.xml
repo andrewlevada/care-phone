@@ -66,6 +66,7 @@
     <string name="action_copy_label">Копировать имя</string>
 
     <string name="settings_tutorial">Просмотреть возможности</string>
+    <string name="settings_contact_dev">Связаться с разработчиком</string>
     <string name="settings_change_user_type">Сменить тип пользователя</string>
     <string name="settings_sign_out">Выйти из аккаунта</string>
     <string name="settings_thanks">Благодарности</string>
@@ -77,6 +78,7 @@
     <string name="cared_settings_about_dialog_message">Благодарю IT школу Samsung, без которой этот проект был бы не возможен. Отдельное спасибо преподавателю Дмитрию Владимировичу Яценко. \n \nНекоторые иконки сделаны Freepik и Dinosoftlabs с flaticon.com</string>
     <string-array name="cared_settings">
         <item>@string/settings_tutorial</item>
+        <item>@string/settings_contact_dev</item>
         <item>@string/settings_change_user_type</item>
         <item>@string/settings_sign_out</item>
         <item>@string/settings_thanks</item>
@@ -108,6 +110,7 @@
     <string name="contact_dev_select_subject">Выбирите тип сообщения</string>
     <string name="contact_dev_enter_text">Введите текст</string>
     <string name="contact_dev_wrong_text_length">Текст слишком длинный</string>
+    <string name="contact_dev_sent">Ваше сообщение успешно отправленно.</string>
     <string-array name="contact_dev_subjects">
         <item>Ошибка в приложении</item>
         <item>Другая проблема</item>

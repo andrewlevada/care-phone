@@ -3,6 +3,7 @@ package com.andrewlevada.carephone.logic.network;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.andrewlevada.carephone.logic.BugReportInfo;
 import com.andrewlevada.carephone.logic.LogRecord;
 import com.andrewlevada.carephone.logic.PhoneNumber;
 import com.andrewlevada.carephone.logic.StatisticsPack;
@@ -58,5 +59,13 @@ public class NetworkBothRouter extends Network {
     public void getLog(boolean isRemote, int limit, int offset, @NonNull final NetworkCallbackOne<List<LogRecord>> callback) {
         if (isRemote) Network.caretaker().getLogR(limit, offset, callback);
         else Network.cared().getLog(limit, offset, callback);
+    }
+
+    // other
+
+    public void sendBugReport(@NonNull String subject, @NonNull String message, @Nullable final NetworkCallbackZero callback) {
+        if (queueIfNotAuthedYet(() -> sendBugReport(subject, message, callback))) return;
+        getRetrofitRequests().putBugReport(userToken, subject, message, BugReportInfo.generate().toString())
+                .enqueue(getDefaultVoidCallback(callback));
     }
 }
