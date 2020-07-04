@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.LogFragment"
+    tools:context=".ui.home.StatisticsFragment"
     android:overScrollMode="never"
     android:scrollbars="none"
     android:id="@+id/scroll_layout">
@@ -27,35 +27,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/periods_inner_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round_16dp"
+                android:clipChildren="true"
+                android:clickable="true"
+                android:focusable="true"
                 android:minHeight="128dp"
-                android:orientation="vertical"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/periods_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:fontFamily="@font/roboto_slab_bold"
                     android:text="@string/statistics_periods_title"
                     android:textColor="@color/colorOnSurface"
-                    android:textSize="28sp" />
+                    android:textSize="28sp"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/periods_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:layout_marginBottom="20dp"
-                    android:overScrollMode="never"/>
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:overScrollMode="never"
+                    app:layout_constraintTop_toBottomOf="@+id/periods_title"/>
 
-            </LinearLayout>
+                <View
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:background="@drawable/float_with_ripple"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </RelativeLayout>
 

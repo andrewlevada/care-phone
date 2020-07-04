@@ -164,7 +164,12 @@ public class StatisticsFragment extends Fragment {
     }
 
     private RecyclerAdapter setupRecyclerView(RecyclerView recyclerView, List<String> labels, List<Integer> hours) {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
         recyclerView.setLayoutManager(layoutManager);
 
         RecyclerAdapter adapter = new RecyclerMinutesAdapter(recyclerView, labels, hours);
