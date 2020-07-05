@@ -6,15 +6,20 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerAdapter;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WhitelistAccesser {
     private static final String PREF_WHITELIST_LENGTH = "PREF_WHITELIST_LENGTH";
@@ -221,6 +226,46 @@ public class WhitelistAccesser {
         return new ArrayList<>(whitelist);
     }
 
+    public void loadSyncSms(Context context, String message) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) return;
+        if (whitelist == null) initialize(context, false);
+
+        String data = SyncSmsSender.StringXORer.decode(message.substring(SyncSmsSender.smsPrefix.length()),
+                FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        Pattern whitelistPattern = Pattern.compile("(.{11})([^_]+)_");
+
+        List<PhoneNumber> newWhitelist = new ArrayList<>();
+        boolean newWhitelistState = false;
+
+        try {
+            boolean isWhitelistEmpty = true;
+            Matcher whitelistMatcher = whitelistPattern.matcher(data);
+
+            while (whitelistMatcher.find()) {
+                isWhitelistEmpty = false;
+
+                if (Config.smsSyncEmptyWhitelist.contains(
+                        Objects.requireNonNull(whitelistMatcher.group(0)))) break;
+
+                newWhitelist.add(new PhoneNumber(
+                        whitelistMatcher.group(1), whitelistMatcher.group(2)));
+            }
+
+            if (isWhitelistEmpty) return;
+
+            newWhitelistState = data.substring(data.length() - 1).equals("1");
+        } catch (Exception ignored) { }
+
+        whitelist.clear();
+        whitelist.addAll(newWhitelist);
+        whitelistState = newWhitelistState;
+
+        saveToLocal();
+        if (adapter != null) adapter.notifyDataSetChanged();
+    }
+
+    @UiThread
     public static WhitelistAccesser getInstance() {
         if (instance == null) instance = new WhitelistAccesser();
         return instance;

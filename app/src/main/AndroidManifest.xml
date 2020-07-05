@@ -58,7 +58,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".logic.blockers.SMSBlocker$SmsReceiver"
+        <receiver android:name=".logic.blockers.SMSReceiver$Receiver"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="9999999">
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />

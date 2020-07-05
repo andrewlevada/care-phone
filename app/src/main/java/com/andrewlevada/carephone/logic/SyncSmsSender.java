@@ -2,21 +2,21 @@ package com.andrewlevada.carephone.logic;
 
 import android.telephony.SmsManager;
 
+import com.andrewlevada.carephone.Config;
 import com.google.android.gms.common.util.Base64Utils;
 
 import java.util.List;
 
 public class SyncSmsSender {
-    private static final String smsPefix = "carephone_";
+    public static final String smsPrefix = "cp_";
 
     private StringBuilder message;
 
     public void addWhitelist(List<PhoneNumber> whitelist) {
-        message.append(whitelist.size()).append("|");
-
-        for (PhoneNumber phoneNumber: whitelist)
-            message.append(phoneNumber.getPhone().substring(1))
-                    .append(phoneNumber.getLabel()).append("_");
+        if (whitelist.size() == 0) message.append(Config.smsSyncEmptyWhitelist);
+        else for (PhoneNumber phoneNumber: whitelist) message
+                .append(phoneNumber.getPhone().substring(1))
+                .append(phoneNumber.getLabel()).append("_");
     }
 
     public void addWhitelistState(Boolean state) {
@@ -28,14 +28,14 @@ public class SyncSmsSender {
     }
 
     public void send(String phone) {
-        SmsManager.getDefault().sendTextMessage(phone, null, smsPefix + message.toString(), null, null);
+        SmsManager.getDefault().sendTextMessage(phone, null, smsPrefix + message.toString(), null, null);
     }
 
     public SyncSmsSender() {
         message = new StringBuilder();
     }
 
-    private static class StringXORer {
+    public static class StringXORer {
 
         public static String encode(String s, String key) {
             return base64Encode(xorWithKey(s.getBytes(), key.getBytes()));
