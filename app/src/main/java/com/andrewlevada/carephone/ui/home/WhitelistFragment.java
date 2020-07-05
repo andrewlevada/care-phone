@@ -345,8 +345,8 @@ public class WhitelistFragment extends Fragment {
                 public void onSuccess(List<CaredUser> list) {
                     for (int i = 0; i < list.size(); i++) {
                         if (list.get(i).getUid().equals(Network.caretaker().rUid)) {
-                            syncSms.send(list.get(i).getPhone());
-                            Toolbox.showSimpleDialog(parentingActivity,
+                            if (syncSms.send(parentingActivity, list.get(i).getPhone()))
+                                Toolbox.showSimpleDialog(parentingActivity,
                                     R.string.general_great, R.string.whitelist_sms_sync_dialog);
                             return;
                         }

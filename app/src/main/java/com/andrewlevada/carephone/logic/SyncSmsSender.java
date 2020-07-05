@@ -1,6 +1,12 @@
 package com.andrewlevada.carephone.logic;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.telephony.SmsManager;
+
+import androidx.annotation.RequiresApi;
 
 import com.andrewlevada.carephone.Config;
 import com.google.android.gms.common.util.Base64Utils;
@@ -27,8 +33,25 @@ public class SyncSmsSender {
         message = new StringBuilder(StringXORer.encode(message.toString(), rUid));
     }
 
-    public void send(String phone) {
-        SmsManager.getDefault().sendTextMessage(phone, null, smsPrefix + message.toString(), null, null);
+    public boolean send(Activity activity, String phone) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkPermissions(activity))
+            return false;
+
+        SmsManager.getDefault().sendTextMessage(phone, null,
+                smsPrefix + message.toString(), null, null);
+
+        return true;
+    }
+
+    @RequiresApi(23)
+    private boolean checkPermissions(Activity activity) {
+        if (activity.checkSelfPermission(Manifest.permission.SEND_SMS)
+                == PackageManager.PERMISSION_DENIED) {
+           activity.requestPermissions(new String[] { Manifest.permission.SEND_SMS }, 1);
+           return false;
+        }
+
+        return true;
     }
 
     public SyncSmsSender() {

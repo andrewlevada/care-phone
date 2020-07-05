@@ -192,16 +192,8 @@ public class HomeActivity extends CloudActivity {
             }
         }
 
-        if (checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
-                || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED
-                || checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
-            requestedPermissions.add(Manifest.permission.READ_SMS);
-            requestedPermissions.add(Manifest.permission.RECEIVE_SMS);
-            requestedPermissions.add(Manifest.permission.SEND_SMS);
-        }
-
         if (requestedPermissions.size() != 0) {
-            requestPermissions(requestedPermissions.toArray(new String[0]), 0);
+            requestPermissions(requestedPermissions.toArray(new String[0]), 1);
             return false;
         }
 
@@ -222,6 +214,9 @@ public class HomeActivity extends CloudActivity {
                         R.string.other_dialog_oreo_warning);
             }
         }
+
+        if (checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
+            requestPermissions(new String[] { Manifest.permission.RECEIVE_SMS }, 1);
 
         return true;
     }
