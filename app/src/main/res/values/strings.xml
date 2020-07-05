@@ -22,6 +22,9 @@
     <string name="whitelist_enter_name">Введите имя</string>
     <string name="whitelist_long_name">Длинное имя</string>
     <string name="whitelist_add_first">Нажмите тут, чтобы добавить первый номер телефона в белый список.</string>
+    <string name="whitelist_sms_sync">СМС Синхронизация</string>
+    <string name="whitelist_sms_sync_guide">С вашего телефона отправится специальное СМС с зашифрованными данными. Перед отправкой внесите все необходимые изменения, чтобы не отправлять несколько сообщений.</string>
+    <string name="whitelist_sms_sync_dialog">СМС с данными синхронизации успешно отправлено!</string>
 
     <string name="general_yes">Да</string>
     <string name="general_no">Нет</string>

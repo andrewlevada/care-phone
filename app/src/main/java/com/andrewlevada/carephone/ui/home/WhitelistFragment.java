@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,11 +27,15 @@ import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 
 import com.andrewlevada.carephone.R;
+import com.andrewlevada.carephone.SimpleInflater;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.CaredUser;
 import com.andrewlevada.carephone.logic.PhoneNumber;
+import com.andrewlevada.carephone.logic.SyncSmsSender;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
 import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.extra.recycleradapters.RecyclerWhitelistAdapter;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import java.util.List;
 
@@ -43,6 +48,7 @@ public class WhitelistFragment extends Fragment {
     private View stateOnclick;
     private View whitelistEmptyView;
     private TextView stateText;
+    TextView extraActionText;
 
     private ConstraintSet defaultConstraint;
     private ConstraintSet fullscreenConstraint;
@@ -84,6 +90,7 @@ public class WhitelistFragment extends Fragment {
         stateOnclick = layout.findViewById(R.id.whitelist_state_inner_layout);
         whitelistEmptyView = layout.findViewById(R.id.whitelist_empty_layout);
         stateText = layout.findViewById(R.id.whitelist_state_text);
+        extraActionText = layout.findViewById(R.id.extra_action_text);
 
         // Setup Whitelist Processing
         setupRecyclerView();
@@ -127,31 +134,16 @@ public class WhitelistFragment extends Fragment {
             skipWhitelistStateSync = true;
         });
 
-        // Disable linking without internet and from remote
-        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
-                || parentingActivity.isRemote) {
-            layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
-        } else {
-            // Link user onclick processing
-            layout.findViewById(R.id.whitelist_link_inner_layout).setOnClickListener(
-                    v -> parentingActivity.fillCloud(R.layout.cloud_content_whitelist_link,
-                            view -> {
-                                Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
-                                    @Override
-                                    public void onSuccess(String arg) {
-                                        ((TextView) view.findViewById(R.id.cloud_code)).setText(arg);
-                                        parentingActivity.doCloseLinkOnCloudCollapse = true;
-                                    }
+        // Process extra action button
+        updateExtraButton();
 
-                                    @Override
-                                    public void onFailure(@Nullable Throwable throwable) {
-                                        // TODO: Process failure better
-                                        ((TextView) view.findViewById(R.id.cloud_code))
-                                                .setText(R.string.whitelist_link_blank_code);
-                                    }
-                                });
-                                parentingActivity.updateCloud(true);
-                            }, null));
+        if (Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()) {
+            // Link user onclick processing
+            layout.findViewById(R.id.extra_action_inner_layout).setOnClickListener(
+                    v -> parentingActivity.fillCloud(parentingActivity.isRemote ?
+                                    R.layout.cloud_content_whitelist_sync_sms :
+                                    R.layout.cloud_content_whitelist_link,
+                            new OnExtraActionCloudInflated(), new OnExtraActionCloudResult()));
         }
 
         return layout;
@@ -184,11 +176,6 @@ public class WhitelistFragment extends Fragment {
         TransitionManager.beginDelayedTransition(layout, transition);
         constraintSet.applyTo(layout);
 
-        // Hide linking button if remote
-        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
-                || parentingActivity.isRemote)
-            layout.findViewById(R.id.whitelist_link_layout).setVisibility(View.GONE);
-
         // Empty label process
         doHideEmpty = doExtend;
         if (doExtend) {
@@ -202,6 +189,8 @@ public class WhitelistFragment extends Fragment {
         // Fill cloud after delay
         if (doExtend) new Handler().postDelayed(() ->
                 parentingActivity.fillCloud(R.layout.cloud_content_whitelist_add, null, new OnCloudResultClick()), 650);
+
+        updateExtraButton();
     }
 
     private void setupRecyclerView() {
@@ -213,7 +202,7 @@ public class WhitelistFragment extends Fragment {
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy){
                 if (dy > 0) parentingActivity.hideFAB();
                 else if (dy < 0) parentingActivity.requestFAB(new OnFABClick());
             }
@@ -245,6 +234,14 @@ public class WhitelistFragment extends Fragment {
         whitelistAccesser.setWhitelistStateChangedCallback(new OnGotWhitelistState());
         whitelistAccesser.syncWhitelist();
         whitelistAccesser.syncWhitelistState();
+    }
+
+    private void updateExtraButton() {
+        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync())
+            layout.findViewById(R.id.extra_action_layout).setVisibility(View.GONE);
+
+        if (parentingActivity.isRemote) extraActionText.setText(R.string.whitelist_sms_sync);
+        else extraActionText.setText(R.string.whitelist_link_user);
     }
 
     private class OnGotWhitelistState implements Toolbox.CallbackOne<Boolean> {
@@ -306,6 +303,62 @@ public class WhitelistFragment extends Fragment {
             labelView.setText("");
             phoneView.setText("");
             parentingActivity.updateCloud(false);
+        }
+    }
+
+    private class OnExtraActionCloudInflated implements SimpleInflater.OnViewInflated {
+        @Override
+        public void inflated(View view) {
+            parentingActivity.updateCloud(true);
+
+            if (parentingActivity.isRemote) return;
+
+            Network.cared().makeLinkRequest(new Network.NetworkCallbackOne<String>() {
+                @Override
+                public void onSuccess(String arg) {
+                    ((TextView) view.findViewById(R.id.cloud_code)).setText(arg);
+                    parentingActivity.doCloseLinkOnCloudCollapse = true;
+                }
+
+                @Override
+                public void onFailure(@Nullable Throwable throwable) {
+                    // TODO: Process failure better
+                    ((TextView) view.findViewById(R.id.cloud_code))
+                            .setText(R.string.whitelist_link_blank_code);
+                }
+            });
+        }
+    }
+
+    private class OnExtraActionCloudResult implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            if (!parentingActivity.isRemote) return;
+
+            SyncSmsSender syncSms = new SyncSmsSender();
+            syncSms.addWhitelist(whitelistAccesser.getWhitelistCopy());
+            syncSms.addWhitelistState(whitelistAccesser.getWhitelistState());
+            syncSms.pack(Network.caretaker().rUid);
+
+            Network.caretaker().getCaredList(new Network.NetworkCallbackOne<List<CaredUser>>() {
+                @Override
+                public void onSuccess(List<CaredUser> list) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getUid().equals(Network.caretaker().rUid)) {
+                            syncSms.send(list.get(i).getPhone());
+                            Toolbox.showSimpleDialog(parentingActivity,
+                                    R.string.general_great, R.string.whitelist_sms_sync_dialog);
+                            return;
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@Nullable Throwable throwable) {
+                    if (throwable != null) FirebaseCrashlytics.getInstance().recordException(throwable);
+                    Toolbox.showErrorDialog(parentingActivity);
+                }
+            });
         }
     }
 }

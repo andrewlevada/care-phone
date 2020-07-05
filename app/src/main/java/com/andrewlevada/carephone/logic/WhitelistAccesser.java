@@ -217,6 +217,10 @@ public class WhitelistAccesser {
         saveToLocal();
     }
 
+    public List<PhoneNumber> getWhitelistCopy() {
+        return new ArrayList<>(whitelist);
+    }
+
     public static WhitelistAccesser getInstance() {
         if (instance == null) instance = new WhitelistAccesser();
         return instance;

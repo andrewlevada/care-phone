@@ -28,7 +28,7 @@
         android:textColor="@color/colorOnSurface"
         android:fontFamily="@font/comfortaa_bold"
         android:textSize="20sp"
-        android:layout_margin="16dp"
+        android:layout_margin="32dp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

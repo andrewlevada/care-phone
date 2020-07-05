@@ -127,7 +127,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/whitelist_link_layout"
+        android:id="@+id/extra_action_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/float_general_margin"
@@ -141,7 +141,7 @@
         app:layout_constraintTop_toBottomOf="@+id/whitelist_state_layout">
 
         <RelativeLayout
-            android:id="@+id/whitelist_link_inner_layout"
+            android:id="@+id/extra_action_inner_layout"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@drawable/round_28dp"
@@ -154,7 +154,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"/>
 
             <TextView
-                android:id="@+id/whitelist_link_text"
+                android:id="@+id/extra_action_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/comfortaa_bold"

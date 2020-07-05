@@ -22,6 +22,9 @@
     <string name="whitelist_enter_name">Enter name</string>
     <string name="whitelist_long_name">Name is too long</string>
     <string name="whitelist_add_first">Click here to add the first number to the whitelist</string>
+    <string name="whitelist_sms_sync">SMS Sync</string>
+    <string name="whitelist_sms_sync_guide">Decoded data will be sent from your phone via SMS. Please, make sure that you made all the desired changes before sending sms.</string>
+    <string name="whitelist_sms_sync_dialog">SMS containing sync data was successfully sent!</string>
 
     <string name="general_yes">Yes</string>
     <string name="general_no">No</string>

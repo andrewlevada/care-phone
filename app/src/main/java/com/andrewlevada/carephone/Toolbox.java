@@ -174,7 +174,7 @@ public class Toolbox {
         public void run() {
             while (fragment != null && fragment.isAdded()) {
                 try {
-                    Thread.sleep(2500);
+                    Thread.sleep(3400);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

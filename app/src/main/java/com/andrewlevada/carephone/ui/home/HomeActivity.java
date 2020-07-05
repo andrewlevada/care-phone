@@ -192,6 +192,14 @@ public class HomeActivity extends CloudActivity {
             }
         }
 
+        if (checkSelfPermission(Manifest.permission.READ_SMS) == PackageManager.PERMISSION_DENIED
+                || checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED
+                || checkSelfPermission(Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_DENIED) {
+            requestedPermissions.add(Manifest.permission.READ_SMS);
+            requestedPermissions.add(Manifest.permission.RECEIVE_SMS);
+            requestedPermissions.add(Manifest.permission.SEND_SMS);
+        }
+
         if (requestedPermissions.size() != 0) {
             requestPermissions(requestedPermissions.toArray(new String[0]), 0);
             return false;
