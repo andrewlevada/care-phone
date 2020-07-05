@@ -75,6 +75,9 @@
 
         <View
             android:id="@+id/whitelist_onclick"
+            android:background="@drawable/float_ripple"
+            android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -11,8 +11,8 @@ android {
         applicationId "com.andrewlevada.carephone"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 6
-        versionName "1.1"
+        versionCode 8
+        versionName "1.1d"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
