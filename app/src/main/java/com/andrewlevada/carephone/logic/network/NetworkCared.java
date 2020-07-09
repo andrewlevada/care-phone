@@ -65,12 +65,24 @@ public class NetworkCared extends Network {
     // Log
 
     public void getLog(int limit, int offset, @NonNull final NetworkCallbackOne<List<LogRecord>> callback) {
+        if (!internetChecker.hasInternetSync()) {
+            LocalNetworkProxy.getInstance().getLog(limit, offset, callback);
+            return;
+        }
+
         if (queueIfNotAuthedYet(() -> getLog(limit, offset, callback))) return;
+
         getRetrofitRequests().getLog(userToken, limit, offset).enqueue(getDefaultOneCallback(callback));
     }
 
     public void addToLog(@NonNull LogRecord logRecord, @Nullable final NetworkCallbackZero callback) {
+        if (!internetChecker.hasInternetSync()) {
+            LocalNetworkProxy.getInstance().addToLog(logRecord, callback);
+            return;
+        }
+
         if (queueIfNotAuthedYet(() -> addToLog(logRecord, callback))) return;
+
         getRetrofitRequests().putLog(userToken, logRecord.getPhoneNumber(), logRecord.getStartTimestamp(),
                 logRecord.getSecondsDuration(), logRecord.getType()).enqueue(getDefaultVoidCallback(callback));
     }

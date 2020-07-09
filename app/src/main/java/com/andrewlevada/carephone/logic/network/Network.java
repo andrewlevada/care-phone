@@ -1,5 +1,7 @@
 package com.andrewlevada.carephone.logic.network;
 
+import android.content.Context;
+
 import androidx.annotation.Nullable;
 
 import com.andrewlevada.carephone.Config;
@@ -24,6 +26,12 @@ public class Network {
     private static RetrofitRequests retrofitRequests;
     private ExtendedAuthTokenCallback authTokenCallback;
     String userToken;
+
+    Toolbox.InternetConnectionChecker internetChecker;
+
+    public void init(Context appContext) {
+        LocalNetworkProxy.getInstance().initDatabase(appContext);
+    }
 
     public void useFirebaseAuthToken() {
         authTokenCallback = new ExtendedAuthTokenCallback() {
@@ -144,5 +152,9 @@ public class Network {
 
     private interface ExtendedAuthTokenCallback extends Toolbox.AuthTokenCallback {
         void addCallback(Runnable callback);
+    }
+
+    Network() {
+        internetChecker = Toolbox.InternetConnectionChecker.getInstance();
     }
 }

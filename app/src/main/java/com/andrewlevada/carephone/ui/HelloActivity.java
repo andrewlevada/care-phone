@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.R;
 import com.andrewlevada.carephone.Toolbox;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -25,6 +26,8 @@ public class HelloActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello);
         isStayState = getIntent().getBooleanExtra(INTENT_EXTRA_STAY, false);
+
+        Network.config().init(getApplicationContext());
 
         // Find views by ids
         Button caredButton = findViewById(R.id.button_cared);

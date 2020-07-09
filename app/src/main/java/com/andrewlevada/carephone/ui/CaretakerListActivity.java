@@ -176,8 +176,8 @@ public class CaretakerListActivity extends CloudActivity {
                 CommonSettings.logout(itself);
             else if (id == R.id.caretaker_settings_thanks)
                 CommonSettings.showThanksDialog(itself);
-            else if (id == R.id.caretaker_settings_donate)
-                CommonSettings.gotoDonateWebPage(itself);
+//            else if (id == R.id.caretaker_settings_donate)
+//                CommonSettings.gotoDonateWebPage(itself);
 
             return true;
         }

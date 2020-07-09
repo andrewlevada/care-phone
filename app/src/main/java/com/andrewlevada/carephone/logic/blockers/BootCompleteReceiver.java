@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.andrewlevada.carephone.Config;
 import com.andrewlevada.carephone.Toolbox;
 import com.andrewlevada.carephone.logic.WhitelistAccesser;
+import com.andrewlevada.carephone.logic.network.Network;
 import com.andrewlevada.carephone.ui.AuthActivity;
 import com.andrewlevada.carephone.ui.HelloActivity;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -35,6 +36,8 @@ public class BootCompleteReceiver extends BroadcastReceiver {
             FirebaseCrashlytics.getInstance().setUserId(userUid);
             FirebaseAnalytics.getInstance(context).setUserId(userUid);
         } else Toolbox.fastLog("Not authed");
+
+        Network.config().init(context);
 
         WhitelistAccesser whitelistAccesser = WhitelistAccesser.getInstance();
         whitelistAccesser.initialize(context, false);

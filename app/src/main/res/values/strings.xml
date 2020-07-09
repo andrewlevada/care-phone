@@ -60,7 +60,7 @@
     <string name="statistics_periods_title">Время разговоров:</string>
     <string name="statistics_phones_title">Топ номеров:</string>
 
-    <string name="caretaker_list_title">Те, о ком вы заботитесь</string>
+    <string name="caretaker_list_title">О ком вы заботитесь</string>
     <string name="caretaker_list_code">Секретный код</string>
     <string name="caretaker_list_wrong_code">Неверный код</string>
     <string name="caretaker_list_check">Проверить</string>

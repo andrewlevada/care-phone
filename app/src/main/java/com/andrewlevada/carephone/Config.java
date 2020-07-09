@@ -4,6 +4,7 @@ public class Config {
     public static final String baseNetworkUrl = "https://carephone-server.herokuapp.com/";
     // public static String baseNetworkUrl = "http://192.168.1.46:8080";
     public static final String appSharedPreferences = "carephone_sharedpreferences";
+    public static final String localDatabaseName = "carephone_local_db";
     public static final String smsSyncEmptyWhitelist = "01234567890empty_";
 
     public static final int statisticsSyncPeriodHours = 3;

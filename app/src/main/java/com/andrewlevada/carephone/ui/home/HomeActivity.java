@@ -78,6 +78,10 @@ public class HomeActivity extends CloudActivity {
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
         fabView = findViewById(R.id.fab);
 
+        // Inflate correct menu
+        if (isRemote) navigation.inflateMenu(R.menu.home_navigation_remote);
+        else navigation.inflateMenu(R.menu.home_navigation);
+
         // Loading default fragment screen
         currentFragmentIndex = FragmentIndex.list;
         loadHomeFragment(new WhitelistFragment(this), R.id.home_nav_list, FragmentIndex.list);
@@ -215,8 +219,10 @@ public class HomeActivity extends CloudActivity {
             }
         }
 
-        if (checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED)
-            requestPermissions(new String[] { Manifest.permission.RECEIVE_SMS }, 1);
+//        if (checkSelfPermission(Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_DENIED) {
+//            requestPermissions(new String[] { Manifest.permission.RECEIVE_SMS }, 1);
+//            return false;
+//        }
 
         return true;
     }

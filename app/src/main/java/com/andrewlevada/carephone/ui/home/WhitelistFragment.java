@@ -237,11 +237,12 @@ public class WhitelistFragment extends Fragment {
     }
 
     private void updateExtraButton() {
-        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync())
+        if (!Toolbox.InternetConnectionChecker.getInstance().hasInternetSync()
+                || parentingActivity.isRemote)
             layout.findViewById(R.id.extra_action_layout).setVisibility(View.GONE);
 
-        if (parentingActivity.isRemote) extraActionText.setText(R.string.whitelist_sms_sync);
-        else extraActionText.setText(R.string.whitelist_link_user);
+        // if (parentingActivity.isRemote) extraActionText.setText(R.string.whitelist_sms_sync);
+        // else extraActionText.setText(R.string.whitelist_link_user);
     }
 
     private class OnGotWhitelistState implements Toolbox.CallbackOne<Boolean> {
